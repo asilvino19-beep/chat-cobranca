@@ -274,9 +274,9 @@
         setInputEnabled(false);
         showTyping();
 
+        // IMPORTANTE: sem 'Content-Type: application/json' para evitar preflight
         const resp = await fetch(API_URL, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
 
@@ -292,7 +292,17 @@
           return;
         }
 
-        const data = await resp.json();
+        const data = await resp.json().catch(async () => {
+          // se vier texto, tenta converter
+          const txt = await resp.text();
+          try {
+            return JSON.parse(txt);
+          } catch {
+            console.error("Resposta não é JSON válido:", txt);
+            return null;
+          }
+        });
+
         console.log("Resposta do backend:", data);
         handleBackendResponse(data);
       } catch (err) {
@@ -339,7 +349,6 @@
 
       // Roteia de acordo com o estado atual
       if (step === "consulta_divida") {
-        // Esse texto deve ser o CPF/CNPJ
         documento = text.replace(/\D/g, "");
         await sendToBackend({
           sessionId,
@@ -350,7 +359,6 @@
       }
 
       if (step === "aguardando_data_pagamento") {
-        // Aqui o texto deve ser a data do pagamento
         await sendToBackend({
           sessionId,
           step: "gerar_boleto",
@@ -361,8 +369,6 @@
       }
 
       if (step === "inicio") {
-        // Se por algum motivo o step ainda for inicio,
-        // podemos já tratar como CPF/CNPJ direto:
         documento = text.replace(/\D/g, "");
         await sendToBackend({
           sessionId,
@@ -372,7 +378,7 @@
         return;
       }
 
-      // Fallback genérico para outros steps
+      // Fallback genérico
       await sendToBackend({
         sessionId,
         step,
@@ -382,7 +388,6 @@
     }
 
     function handleOptionClick(op) {
-      // Mostra a opção escolhida como se fosse mensagem do cliente
       addMessage(op.label, "user");
 
       if (op.id === "gerar_boleto") {
@@ -410,7 +415,6 @@
     // ================= INICIALIZAÇÃO =================
 
     async function initChat() {
-      // Dispara o primeiro step direto no backend (step = inicio)
       await sendToBackend({
         sessionId,
         step: "inicio",
@@ -425,7 +429,6 @@
       }
     });
 
-    // Inicia o chat ao carregar a página
     initChat();
   </script>
 </body>
