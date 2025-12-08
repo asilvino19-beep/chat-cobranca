@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chat de Cobrança</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    /* ====== Layout geral ====== */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: #f3f4f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .chat-wrapper {
+      width: 100%;
+      max-width: 430px;
+      height: 90vh;
+      max-height: 720px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ====== Cabeçalho ====== */
+    .chat-header {
+      background: #111827;
+      color: #f9fafb;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chat-header-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #0ea5e9, #22c55e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .chat-header-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .chat-header-text span:first-child {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .chat-header-text span:last-child {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    /* ====== Área de mensagens ====== */
+    .chat-messages {
+      flex: 1;
+      padding: 12px 12px 4px;
+      background: #f3f4f6;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    .msg {
+      max-width: 80%;
+      padding: 8px 11px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.4;
+      margin-bottom: 6px;
+      white-space: pre-line;
+      word-wrap: break-word;
+    }
+
+    .msg-bot {
+      background: #ffffff;
+      color: #111827;
+      border-bottom-left-radius: 3px;
+    }
+
+    .msg-user {
+      background: #0ea5e9;
+      color: #f9fafb;
+      border-bottom-right-radius: 3px;
+      margin-left: auto;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin: 4px 0 10px;
+    }
+
+    .option-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      background: #e5e7eb;
+      color: #111827;
+      text-align: left;
+      transition: background 0.15s ease, transform 0.05s ease;
+    }
+
+    .option-btn:hover {
+      background: #d1d5db;
+      transform: translateY(-1px);
+    }
+
+    /* ====== Input ====== */
+    .chat-input-area {
+      padding: 8px;
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      gap: 8px;
+    }
+
+    .chat-input-area input {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      padding: 8px 12px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .chat-input-area input:focus {
+      border-color: #0ea5e9;
+      box-shadow: 0 0 0 1px rgba(14, 165, 233, 0.2);
+    }
+
+    .chat-input-area button {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      background: #0ea5e9;
+      color: #f9fafb;
+      font-weight: 500;
+      transition: background 0.15s ease, transform 0.05s ease;
+    }
+
+    .chat-input-area button:hover {
+      background: #0284c7;
+      transform: translateY(-1px);
+    }
+
+    .chat-input-area button:disabled {
+      opacity: 0.5;
+      cursor: default;
+      transform: none;
+    }
+
+    /* Loader simples (texto) */
+    .typing {
+      font-size: 11px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-wrapper">
+    <div class="chat-header">
+      <div class="chat-header-logo">C</div>
+      <div class="chat-header-text">
+        <span>Atendimento de Cobrança</span>
+        <span>Autoatendimento • Canal seguro</span>
+      </div>
+    </div>
+
+    <div id="chatMessages" class="chat-messages"></div>
+
+    <div class="chat-input-area">
+      <input
+        id="chatInput"
+        type="text"
+        placeholder="Digite aqui..."
+        autocomplete="off"
+      />
+      <button id="chatSend">Enviar</button>
+    </div>
+  </div>
+
+  <script>
+    // ================= CONFIGURAÇÃO =================
+    // ❗ Ajuste esta URL para o endpoint público do webhook do n8n:
+    // Exemplo: https://seu-dominio.com.br/webhook/chat-cobranca/cliente
+    const API_URL = "https://SEU_DOMINIO/webhook/chat-cobranca/cliente";
+
+    // ================= ESTADO DO CHAT =================
+    const chatMessages = document.getElementById("chatMessages");
+    const chatInput = document.getElementById("chatInput");
+    const chatSend = document.getElementById("chatSend");
+
+    let sessionId = Date.now().toString();
+    let step = "inicio"; // estado atual do fluxo
+    let documento = null; // CPF/CNPJ do cliente
+
+    // ================= FUNÇÕES DE UI =================
+
+    function addMessage(text, type = "bot") {
+      const div = document.createElement("div");
+      div.className = "msg " + (type === "bot" ? "msg-bot" : "msg-user");
+      div.textContent = text;
+      chatMessages.appendChild(div);
+      scrollToBottom();
+    }
+
+    function addOptions(opcoes) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "options";
+
+      opcoes.forEach((op) => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.textContent = op.label;
+        btn.onclick = () => handleOptionClick(op);
+        wrapper.appendChild(btn);
+      });
+
+      chatMessages.appendChild(wrapper);
+      scrollToBottom();
+    }
+
+    function showTyping() {
+      const div = document.createElement("div");
+      div.className = "typing";
+      div.textContent = "Digitando...";
+      div.id = "typingIndicator";
+      chatMessages.appendChild(div);
+      scrollToBottom();
+    }
+
+    function hideTyping() {
+      const el = document.getElementById("typingIndicator");
+      if (el) el.remove();
+    }
+
+    function scrollToBottom() {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function setInputEnabled(enabled) {
+      chatInput.disabled = !enabled;
+      chatSend.disabled = !enabled;
+    }
+
+    // ================= INTEGRAÇÃO COM BACKEND =================
+
+    async function sendToBackend(payload) {
+      try {
+        setInputEnabled(false);
+        showTyping();
+
+        const resp = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        hideTyping();
+        setInputEnabled(true);
+
+        if (!resp.ok) {
+          addMessage("Desculpe, ocorreu um erro ao processar sua solicitação.", "bot");
+          console.error("Erro HTTP", resp.status);
+          return;
+        }
+
+        const data = await resp.json();
+        handleBackendResponse(data);
+      } catch (err) {
+        hideTyping();
+        setInputEnabled(true);
+        addMessage("Não foi possível se conectar. Verifique sua conexão e tente novamente.", "bot");
+        console.error("Erro ao chamar backend", err);
+      }
+    }
+
+    function handleBackendResponse(response) {
+      if (!response) return;
+
+      // Exibe mensagens
+      if (response.mensagens && Array.isArray(response.mensagens)) {
+        response.mensagens.forEach((m) => {
+          addMessage(m.texto || "", "bot");
+
+          // Se o backend mandar opções, exibe botões
+          if (m.opcoes && Array.isArray(m.opcoes)) {
+            addOptions(m.opcoes);
+          }
+        });
+      }
+
+      // Atualiza o próximo step
+      if (response.proximoStep !== undefined && response.proximoStep !== null) {
+        step = response.proximoStep;
+      } else {
+        // Se não houver próximo step, você pode decidir se "encerra" ou só mantém estado
+        // step = "encerrado";
+      }
+    }
+
+    // ================= LÓGICA DO CLIENTE =================
+
+    async function processUserMessage() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+
+      // Mostra mensagem do cliente
+      addMessage(text, "user");
+      chatInput.value = "";
+
+      // Roteia de acordo com o estado atual
+      if (step === "consulta_divida") {
+        // Esse texto deve ser o CPF/CNPJ
+        documento = text.replace(/\D/g, "");
+        await sendToBackend({
+          sessionId,
+          step: "consulta_divida",
+          documento,
+        });
+        return;
+      }
+
+      if (step === "aguardando_data_pagamento") {
+        // Aqui o texto deve ser a data do pagamento
+        await sendToBackend({
+          sessionId,
+          step: "gerar_boleto",
+          documento,
+          dataPagamento: text,
+        });
+        return;
+      }
+
+      if (step === "inicio") {
+        // Se por algum motivo o step ainda for inicio,
+        // podemos já tratar como CPF/CNPJ direto:
+        documento = text.replace(/\D/g, "");
+        await sendToBackend({
+          sessionId,
+          step: "consulta_divida",
+          documento,
+        });
+        return;
+      }
+
+      // Fallback genérico para outros steps
+      await sendToBackend({
+        sessionId,
+        step,
+        documento,
+        message: text,
+      });
+    }
+
+    function handleOptionClick(op) {
+      // Mostra a opção escolhida como se fosse mensagem do cliente
+      addMessage(op.label, "user");
+
+      if (op.id === "gerar_boleto") {
+        addMessage(
+          "Informe a data em que pretende realizar o pagamento (formato DD/MM/AAAA).",
+          "bot"
+        );
+        step = "aguardando_data_pagamento";
+        return;
+      }
+
+      if (op.id === "falar_atendente" || op.id === "duvidas") {
+        const motivo =
+          op.id === "duvidas" ? "dúvidas/contestação" : "negociação";
+        sendToBackend({
+          sessionId,
+          step: "falar_atendente",
+          documento,
+          motivo,
+        });
+        return;
+      }
+    }
+
+    // ================= INICIALIZAÇÃO =================
+
+    async function initChat() {
+      // Dispara o primeiro step direto no backend (step = inicio)
+      await sendToBackend({
+        sessionId,
+        step: "inicio",
+      });
+    }
+
+    chatSend.addEventListener("click", processUserMessage);
+    chatInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        processUserMessage();
+      }
+    });
+
+    // Inicia o chat ao carregar a página
+    initChat();
+  </script>
+</body>
+</html>
