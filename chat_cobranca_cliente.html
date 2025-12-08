@@ -5,7 +5,6 @@
   <title>Chat de Cobrança</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    /* ====== Layout geral ====== */
     body {
       margin: 0;
       padding: 0;
@@ -31,7 +30,6 @@
       overflow: hidden;
     }
 
-    /* ====== Cabeçalho ====== */
     .chat-header {
       background: #111827;
       color: #f9fafb;
@@ -69,7 +67,6 @@
       color: #9ca3af;
     }
 
-    /* ====== Área de mensagens ====== */
     .chat-messages {
       flex: 1;
       padding: 12px 12px 4px;
@@ -126,7 +123,6 @@
       transform: translateY(-1px);
     }
 
-    /* ====== Input ====== */
     .chat-input-area {
       padding: 8px;
       background: #f9fafb;
@@ -172,7 +168,6 @@
       transform: none;
     }
 
-    /* Loader simples (texto) */
     .typing {
       font-size: 11px;
       color: #6b7280;
@@ -204,214 +199,214 @@
   </div>
 
   <script>
-  // ================= CONFIGURAÇÃO =================
-  // USA O WORKER COMO PROXY
-  const API_URL = "https://billowing-voice-6efd.asilvino19.workers.dev/";
+    // ================= CONFIGURAÇÃO =================
+    const API_URL = "https://billowing-voice-6efd.asilvino19.workers.dev/";
 
-  const chatMessages = document.getElementById("chatMessages");
-  const chatInput = document.getElementById("chatInput");
-  const chatSend = document.getElementById("chatSend");
+    const chatMessages = document.getElementById("chatMessages");
+    const chatInput = document.getElementById("chatInput");
+    const chatSend = document.getElementById("chatSend");
 
-  let sessionId = Date.now().toString();
-  let step = "inicio";
-  let documento = null;
+    let sessionId = Date.now().toString();
+    let step = "inicio";
+    let documento = null;
 
-  function addMessage(text, type = "bot") {
-    const div = document.createElement("div");
-    div.className = "msg " + (type === "bot" ? "msg-bot" : "msg-user");
-    div.textContent = text;
-    chatMessages.appendChild(div);
-    scrollToBottom();
-  }
+    function addMessage(text, type = "bot") {
+      const div = document.createElement("div");
+      div.className = "msg " + (type === "bot" ? "msg-bot" : "msg-user");
+      div.textContent = text;
+      chatMessages.appendChild(div);
+      scrollToBottom();
+    }
 
-  function addOptions(opcoes) {
-    const wrapper = document.createElement("div");
-    wrapper.className = "options";
+    function addOptions(opcoes) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "options";
 
-    opcoes.forEach((op) => {
-      const btn = document.createElement("button");
-      btn.className = "option-btn";
-      btn.textContent = op.label;
-      btn.onclick = () => handleOptionClick(op);
-      wrapper.appendChild(btn);
-    });
-
-    chatMessages.appendChild(wrapper);
-    scrollToBottom();
-  }
-
-  function showTyping() {
-    const div = document.createElement("div");
-    div.className = "typing";
-    div.textContent = "Digitando...";
-    div.id = "typingIndicator";
-    chatMessages.appendChild(div);
-    scrollToBottom();
-  }
-
-  function hideTyping() {
-    const el = document.getElementById("typingIndicator");
-    if (el) el.remove();
-  }
-
-  function scrollToBottom() {
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  }
-
-  function setInputEnabled(enabled) {
-    chatInput.disabled = !enabled;
-    chatSend.disabled = !enabled;
-  }
-
-  // ============ CHAMADA AO BACKEND (via WORKER) ============
-  async function sendToBackend(payload) {
-    try {
-      console.log("API_URL:", API_URL, "payload:", payload);
-      setInputEnabled(false);
-      showTyping();
-
-      // sem headers customizados -> reduz chance de preflight
-      const resp = await fetch(API_URL, {
-        method: "POST",
-        body: JSON.stringify(payload),
+      opcoes.forEach((op) => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.textContent = op.label;
+        btn.onclick = () => handleOptionClick(op);
+        wrapper.appendChild(btn);
       });
 
-      hideTyping();
-      setInputEnabled(true);
+      chatMessages.appendChild(wrapper);
+      scrollToBottom();
+    }
 
-      if (!resp.ok) {
-        console.error("Erro HTTP", resp.status, await resp.text());
+    function showTyping() {
+      const div = document.createElement("div");
+      div.className = "typing";
+      div.textContent = "Digitando...";
+      div.id = "typingIndicator";
+      chatMessages.appendChild(div);
+      scrollToBottom();
+    }
+
+    function hideTyping() {
+      const el = document.getElementById("typingIndicator");
+      if (el) el.remove();
+    }
+
+    function scrollToBottom() {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function setInputEnabled(enabled) {
+      chatInput.disabled = !enabled;
+      chatSend.disabled = !enabled;
+    }
+
+    async function sendToBackend(payload) {
+      try {
+        console.log("API_URL:", API_URL, "payload:", payload);
+        setInputEnabled(false);
+        showTyping();
+
+        const resp = await fetch(API_URL, {
+          method: "POST",
+          // sem headers customizados para evitar preflight extra
+          body: JSON.stringify(payload),
+        });
+
+        hideTyping();
+        setInputEnabled(true);
+
+        if (!resp.ok) {
+          console.error("Erro HTTP", resp.status, await resp.text());
+          addMessage(
+            "Desculpe, ocorreu um erro ao processar sua solicitação.",
+            "bot"
+          );
+          return;
+        }
+
+        const data = await resp.json().catch(async () => {
+          const txt = await resp.text();
+          try {
+            return JSON.parse(txt);
+          } catch {
+            console.error("Resposta não é JSON válido:", txt);
+            return null;
+          }
+        });
+
+        console.log("Resposta backend:", data);
+        handleBackendResponse(data);
+      } catch (err) {
+        hideTyping();
+        setInputEnabled(true);
+        console.error("Erro ao chamar backend", err);
         addMessage(
-          "Desculpe, ocorreu um erro ao processar sua solicitação.",
+          "Não foi possível se conectar. Verifique sua conexão e tente novamente.",
           "bot"
         );
+      }
+    }
+
+    function handleBackendResponse(response) {
+      if (!response) return;
+
+      if (response.mensagens && Array.isArray(response.mensagens)) {
+        response.mensagens.forEach((m) => {
+          addMessage(m.texto || "", "bot");
+          if (m.opcoes && Array.isArray(m.opcoes)) {
+            addOptions(m.opcoes);
+          }
+        });
+      }
+
+      if (response.proximoStep !== undefined && response.proximoStep !== null) {
+        step = response.proximoStep;
+      }
+    }
+
+    async function processUserMessage() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+
+      addMessage(text, "user");
+      chatInput.value = "";
+
+      if (step === "consulta_divida") {
+        documento = text.replace(/\D/g, "");
+        await sendToBackend({
+          sessionId,
+          step: "consulta_divida",
+          documento,
+        });
         return;
       }
 
-      const data = await resp.json().catch(async () => {
-        const txt = await resp.text();
-        try {
-          return JSON.parse(txt);
-        } catch {
-          console.error("Resposta não é JSON válido:", txt);
-          return null;
-        }
-      });
+      if (step === "aguardando_data_pagamento") {
+        await sendToBackend({
+          sessionId,
+          step: "gerar_boleto",
+          documento,
+          dataPagamento: text,
+        });
+        return;
+      }
 
-      console.log("Resposta backend:", data);
-      handleBackendResponse(data);
-    } catch (err) {
-      hideTyping();
-      setInputEnabled(true);
-      console.error("Erro ao chamar backend", err);
-      addMessage(
-        "Não foi possível se conectar. Verifique sua conexão e tente novamente.",
-        "bot"
-      );
-    }
-  }
+      if (step === "inicio") {
+        documento = text.replace(/\D/g, "");
+        await sendToBackend({
+          sessionId,
+          step: "consulta_divida",
+          documento,
+        });
+        return;
+      }
 
-  function handleBackendResponse(response) {
-    if (!response) return;
-
-    if (response.mensagens && Array.isArray(response.mensagens)) {
-      response.mensagens.forEach((m) => {
-        addMessage(m.texto || "", "bot");
-        if (m.opcoes && Array.isArray(m.opcoes)) {
-          addOptions(m.opcoes);
-        }
-      });
-    }
-
-    if (response.proximoStep !== undefined && response.proximoStep !== null) {
-      step = response.proximoStep;
-    }
-  }
-
-  async function processUserMessage() {
-    const text = chatInput.value.trim();
-    if (!text) return;
-
-    addMessage(text, "user");
-    chatInput.value = "";
-
-    if (step === "consulta_divida") {
-      documento = text.replace(/\D/g, "");
       await sendToBackend({
         sessionId,
-        step: "consulta_divida",
+        step,
         documento,
+        message: text,
       });
-      return;
     }
 
-    if (step === "aguardando_data_pagamento") {
+    function handleOptionClick(op) {
+      addMessage(op.label, "user");
+
+      if (op.id === "gerar_boleto") {
+        addMessage(
+          "Informe a data em que pretende realizar o pagamento (formato DD/MM/AAAA).",
+          "bot"
+        );
+        step = "aguardando_data_pagamento";
+        return;
+      }
+
+      if (op.id === "falar_atendente" || op.id === "duvidas") {
+        const motivo =
+          op.id === "duvidas" ? "dúvidas/contestação" : "negociação";
+        sendToBackend({
+          sessionId,
+          step: "falar_atendente",
+          documento,
+          motivo,
+        });
+        return;
+      }
+    }
+
+    async function initChat() {
       await sendToBackend({
         sessionId,
-        step: "gerar_boleto",
-        documento,
-        dataPagamento: text,
+        step: "inicio",
       });
-      return;
     }
 
-    if (step === "inicio") {
-      documento = text.replace(/\D/g, "");
-      await sendToBackend({
-        sessionId,
-        step: "consulta_divida",
-        documento,
-      });
-      return;
-    }
-
-    await sendToBackend({
-      sessionId,
-      step,
-      documento,
-      message: text,
+    chatSend.addEventListener("click", processUserMessage);
+    chatInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        processUserMessage();
+      }
     });
-  }
 
-  function handleOptionClick(op) {
-    addMessage(op.label, "user");
-
-    if (op.id === "gerar_boleto") {
-      addMessage(
-        "Informe a data em que pretende realizar o pagamento (formato DD/MM/AAAA).",
-        "bot"
-      );
-      step = "aguardando_data_pagamento";
-      return;
-    }
-
-    if (op.id === "falar_atendente" || op.id === "duvidas") {
-      const motivo =
-        op.id === "duvidas" ? "dúvidas/contestação" : "negociação";
-      sendToBackend({
-        sessionId,
-        step: "falar_atendente",
-        documento,
-        motivo,
-      });
-      return;
-    }
-  }
-
-  async function initChat() {
-    await sendToBackend({
-      sessionId,
-      step: "inicio",
-    });
-  }
-
-  chatSend.addEventListener("click", processUserMessage);
-  chatInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      processUserMessage();
-    }
-  });
-
-  initChat();
-</script>
+    initChat();
+  </script>
+</body>
+</html>
