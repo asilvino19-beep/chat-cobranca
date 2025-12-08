@@ -5,7 +5,6 @@
   <title>Chat de Cobrança</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    /* ====== Layout geral ====== */
     body {
       margin: 0;
       padding: 0;
@@ -31,7 +30,6 @@
       overflow: hidden;
     }
 
-    /* ====== Cabeçalho ====== */
     .chat-header {
       background: #111827;
       color: #f9fafb;
@@ -69,7 +67,6 @@
       color: #9ca3af;
     }
 
-    /* ====== Área de mensagens ====== */
     .chat-messages {
       flex: 1;
       padding: 12px 12px 4px;
@@ -126,7 +123,6 @@
       transform: translateY(-1px);
     }
 
-    /* ====== Input ====== */
     .chat-input-area {
       padding: 8px;
       background: #f9fafb;
@@ -172,7 +168,6 @@
       transform: none;
     }
 
-    /* Loader simples (texto) */
     .typing {
       font-size: 11px;
       color: #6b7280;
@@ -205,20 +200,15 @@
 
   <script>
     // ================= CONFIGURAÇÃO =================
-    // ❗ Ajuste esta URL para o endpoint público do webhook do n8n:
-    // Exemplo: https://seu-dominio.com.br/webhook/chat-cobranca/cliente
-    const API_URL = "https://SEU_DOMINIO/webhook/chat-cobranca/cliente";
+    const API_URL = "https://billowing-voice-6efd.asilvino19.workers.dev/";
 
-    // ================= ESTADO DO CHAT =================
     const chatMessages = document.getElementById("chatMessages");
     const chatInput = document.getElementById("chatInput");
     const chatSend = document.getElementById("chatSend");
 
     let sessionId = Date.now().toString();
-    let step = "inicio"; // estado atual do fluxo
-    let documento = null; // CPF/CNPJ do cliente
-
-    // ================= FUNÇÕES DE UI =================
+    let step = "inicio";
+    let documento = null;
 
     function addMessage(text, type = "bot") {
       const div = document.createElement("div");
@@ -267,16 +257,15 @@
       chatSend.disabled = !enabled;
     }
 
-    // ================= INTEGRAÇÃO COM BACKEND =================
-
     async function sendToBackend(payload) {
       try {
+        console.log("API_URL:", API_URL, "payload:", payload);
         setInputEnabled(false);
         showTyping();
 
         const resp = await fetch(API_URL, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          // sem headers customizados para evitar preflight extra
           body: JSON.stringify(payload),
         });
 
@@ -284,58 +273,62 @@
         setInputEnabled(true);
 
         if (!resp.ok) {
-          addMessage("Desculpe, ocorreu um erro ao processar sua solicitação.", "bot");
-          console.error("Erro HTTP", resp.status);
+          console.error("Erro HTTP", resp.status, await resp.text());
+          addMessage(
+            "Desculpe, ocorreu um erro ao processar sua solicitação.",
+            "bot"
+          );
           return;
         }
 
-        const data = await resp.json();
+        const data = await resp.json().catch(async () => {
+          const txt = await resp.text();
+          try {
+            return JSON.parse(txt);
+          } catch {
+            console.error("Resposta não é JSON válido:", txt);
+            return null;
+          }
+        });
+
+        console.log("Resposta backend:", data);
         handleBackendResponse(data);
       } catch (err) {
         hideTyping();
         setInputEnabled(true);
-        addMessage("Não foi possível se conectar. Verifique sua conexão e tente novamente.", "bot");
         console.error("Erro ao chamar backend", err);
+        addMessage(
+          "Não foi possível se conectar. Verifique sua conexão e tente novamente.",
+          "bot"
+        );
       }
     }
 
     function handleBackendResponse(response) {
       if (!response) return;
 
-      // Exibe mensagens
       if (response.mensagens && Array.isArray(response.mensagens)) {
         response.mensagens.forEach((m) => {
           addMessage(m.texto || "", "bot");
-
-          // Se o backend mandar opções, exibe botões
           if (m.opcoes && Array.isArray(m.opcoes)) {
             addOptions(m.opcoes);
           }
         });
       }
 
-      // Atualiza o próximo step
       if (response.proximoStep !== undefined && response.proximoStep !== null) {
         step = response.proximoStep;
-      } else {
-        // Se não houver próximo step, você pode decidir se "encerra" ou só mantém estado
-        // step = "encerrado";
       }
     }
-
-    // ================= LÓGICA DO CLIENTE =================
 
     async function processUserMessage() {
       const text = chatInput.value.trim();
       if (!text) return;
 
-      // Mostra mensagem do cliente
       addMessage(text, "user");
       chatInput.value = "";
 
-      // Roteia de acordo com o estado atual
       if (step === "consulta_divida") {
-        // Esse texto deve ser o CPF/CNPJ
         documento = text.replace(/\D/g, "");
         await sendToBackend({
           sessionId,
@@ -346,7 +339,6 @@
       }
 
       if (step === "aguardando_data_pagamento") {
-        // Aqui o texto deve ser a data do pagamento
         await sendToBackend({
           sessionId,
           step: "gerar_boleto",
@@ -357,8 +349,6 @@
       }
 
       if (step === "inicio") {
-        // Se por algum motivo o step ainda for inicio,
-        // podemos já tratar como CPF/CNPJ direto:
         documento = text.replace(/\D/g, "");
         await sendToBackend({
           sessionId,
@@ -368,7 +358,6 @@
         return;
       }
 
-      // Fallback genérico para outros steps
       await sendToBackend({
         sessionId,
         step,
@@ -378,7 +367,6 @@
     }
 
     function handleOptionClick(op) {
-      // Mostra a opção escolhida como se fosse mensagem do cliente
       addMessage(op.label, "user");
 
       if (op.id === "gerar_boleto") {
@@ -403,10 +391,7 @@
       }
     }
 
-    // ================= INICIALIZAÇÃO =================
-
     async function initChat() {
-      // Dispara o primeiro step direto no backend (step = inicio)
       await sendToBackend({
         sessionId,
         step: "inicio",
@@ -421,7 +406,6 @@
       }
     });
 
-    // Inicia o chat ao carregar a página
     initChat();
   </script>
 </body>
