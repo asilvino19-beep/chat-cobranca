@@ -367,29 +367,40 @@
     }
 
     function handleOptionClick(op) {
-      addMessage(op.label, "user");
+  // Mostra a escolha do usuário no chat
+  addMessage(op.label, "user");
 
-      if (op.id === "gerar_boleto") {
-        addMessage(
-          "Informe a data em que pretende realizar o pagamento (formato DD/MM/AAAA).",
-          "bot"
-        );
-        step = "aguardando_data_pagamento";
-        return;
-      }
+  // 1) Casos especiais que já existiam
+  if (op.id === "gerar_boleto") {
+    addMessage(
+      "Informe a data em que pretende realizar o pagamento (formato DD/MM/AAAA).",
+      "bot"
+    );
+    step = "aguardando_data_pagamento";
+    return;
+  }
 
-      if (op.id === "falar_atendente" || op.id === "duvidas") {
-        const motivo =
-          op.id === "duvidas" ? "dúvidas/contestação" : "negociação";
-        sendToBackend({
-          sessionId,
-          step: "falar_atendente",
-          documento,
-          motivo,
-        });
-        return;
-      }
-    }
+  if (op.id === "falar_atendente" || op.id === "duvidas") {
+    const motivo =
+      op.id === "duvidas" ? "dúvidas/contestação" : "negociação";
+
+    sendToBackend({
+      sessionId,
+      step: "falar_atendente",
+      documento,
+      motivo,
+    });
+    return;
+  }
+
+  // 2) Padrão para QUALQUER outro botão (identidade_sim / identidade_nao etc.)
+  sendToBackend({
+    sessionId,
+    step,          // aqui estará "confirmar_identidade"
+    optionId: op.id,
+    documento,
+  });
+}
 
     async function initChat() {
       await sendToBackend({
