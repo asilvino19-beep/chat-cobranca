@@ -2,1065 +2,758 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Portal de Negociação • QuatroC</title>
+  <title>QuatroC | Portal de Negociação</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <style>
     :root{
-      --bg: #f3f5f8;
-      --card: #ffffff;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --stroke: #e5e7eb;
-
-      /* QuatroC (neutro + azul) */
-      --brand: #0ea5e9;
-      --brandDark: #0284c7;
-      --brandSoft: rgba(14,165,233,.10);
-
-      --shadow: 0 16px 40px rgba(17,24,39,.10);
-      --radius: 16px;
-      --radius2: 12px;
+      /* Identidade QuatroC (ajustável) */
+      --q-red:#e11d2e;
+      --q-red-dark:#b31320;
+      --q-bg:#f5f6f8;
+      --q-card:#ffffff;
+      --q-text:#0f172a;
+      --q-muted:#64748b;
+      --q-border:#e5e7eb;
+      --q-green:#16a34a;
+      --shadow: 0 12px 30px rgba(2,6,23,.10);
+      --radius: 18px;
     }
 
-    * { box-sizing: border-box; }
+    *{box-sizing:border-box}
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
+      background: var(--q-bg);
+      color: var(--q-text);
+      min-height:100vh;
+    }
+
+    /* Top bar (portal) */
+    .topbar{
+      width:100%;
+      background:#fff;
+      border-bottom:1px solid var(--q-border);
+    }
+    .topbar-inner{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 14px 18px;
       display:flex;
-      align-items: center;
-      justify-content: center;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width: 240px;
+    }
+    .brand img{
+      height:34px;
+      width:auto;
+      display:block;
+    }
+    .brand-text{
+      display:flex;
+      flex-direction:column;
+      line-height:1.15;
+    }
+    .brand-text b{
+      font-size:15px;
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+    .brand-text span{
+      font-size:12px;
+      color:var(--q-muted);
+    }
+    .top-actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .pill{
+      border:1px solid var(--q-border);
+      background:#fff;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:12px;
+      color:var(--q-muted);
+      display:flex;
+      gap:8px;
+      align-items:center;
+      white-space:nowrap;
+    }
+    .link{
+      color: var(--q-red);
+      text-decoration:none;
+      font-weight:700;
+      font-size:12px;
+    }
+    .link:hover{ text-decoration:underline; }
+
+    /* Layout */
+    .container{
+      max-width: 980px;
+      margin: 0 auto;
       padding: 18px;
     }
 
-    .app{
-      width: 100%;
-      max-width: 980px;
-      min-height: min(92vh, 760px);
-      background: transparent;
-      display:flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    /* Top */
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px 18px;
-      background: var(--card);
-      border: 1px solid var(--stroke);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-
-    .brand{
-      display:flex; align-items:center; gap: 12px;
-      min-width: 0;
-    }
-
-    .brandMark{
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--brand), var(--brandDark));
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:#fff;
-      font-weight: 900;
-      letter-spacing: .2px;
-      flex: 0 0 auto;
-      box-shadow: 0 10px 18px rgba(14,165,233,.22);
-      user-select:none;
-    }
-
-    .brandText{
-      display:flex;
-      flex-direction: column;
-      gap: 2px;
-      min-width: 0;
-    }
-    .brandText .logo{
-      font-weight: 900;
-      color: #0f172a;
-      letter-spacing: .2px;
-      font-size: 18px;
-      line-height: 1.1;
-    }
-    .brandText .sub{
-      font-size: 12px;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .meta{
-      display:flex; align-items:center; gap: 10px; flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .link{
-      color: var(--muted);
-      font-size: 12px;
-      text-decoration: none;
-      border-bottom: 1px dotted #cbd5e1;
-      cursor: pointer;
-    }
-
-    /* VIEWs */
-    .view{
-      display:none;
-      flex:1;
-    }
-    .view.active{ display:block; }
-
-    /* ======================
-       VIEW 1 (ENTRADA)
-       ====================== */
-    .gridStart{
+    .grid{
       display:grid;
       grid-template-columns: 1fr;
-      gap: 14px;
+      gap: 16px;
     }
 
     .card{
-      background: var(--card);
-      border: 1px solid var(--stroke);
+      background: var(--q-card);
+      border:1px solid var(--q-border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
+      overflow:hidden;
     }
 
-    .cardHeader{
-      padding: 16px 18px;
-      border-bottom: 1px solid var(--stroke);
-      display:flex;
-      align-items:center;
-      justify-content: space-between;
-      gap: 12px;
+    .card-head{
+      padding: 18px 20px;
+      border-bottom:1px solid var(--q-border);
+      background: linear-gradient(180deg,#fff, #fff);
     }
-    .cardHeader h2{
+    .card-head h1{
       margin:0;
-      font-size: 16px;
-      letter-spacing: .2px;
+      font-size:22px;
+      letter-spacing:.2px;
     }
-    .cardHeader p{
-      margin: 0;
-      color: var(--muted);
-      font-size: 12px;
+    .card-head p{
+      margin:6px 0 0;
+      color:var(--q-muted);
+      font-size:13px;
     }
 
-    .cardBody{ padding: 18px; }
+    .card-body{
+      padding: 18px 20px 20px;
+    }
 
-    .heroNote{
-      background: #f9fafb;
-      border: 1px solid var(--stroke);
-      border-radius: var(--radius2);
-      padding: 12px 14px;
-      color: var(--muted);
+    /* Tela 1 - Form */
+    .hint{
+      background: #fff;
+      border: 1px solid var(--q-border);
+      border-radius: 14px;
+      padding: 14px 14px;
+      color: var(--q-muted);
       font-size: 13px;
-      line-height: 1.5;
-    }
-    .heroNote strong{ color: var(--text); }
-
-    .formRow{
-      margin-top: 14px;
-      display:flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .labelRow{
-      display:flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 10px;
-      font-size: 12px;
-      color: var(--muted);
     }
 
     .field{
+      margin-top: 14px;
+    }
+    .field label{
       display:flex;
+      justify-content:space-between;
       align-items:center;
-      gap: 10px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      background: #ffffff;
-      border: 1px solid #dbe3ee;
+      gap:10px;
+      font-size:12px;
+      color: var(--q-muted);
+      margin-bottom:8px;
     }
     .field input{
-      width: 100%;
-      border: none;
-      outline:none;
-      font-size: 14px;
-      color: var(--text);
-    }
-
-    .btnPrimary{
-      width: 100%;
-      border: none;
-      cursor: pointer;
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 14px;
-      font-weight: 800;
-      color: #ffffff;
-      background: linear-gradient(180deg, var(--brand), var(--brandDark));
-      box-shadow: 0 10px 18px rgba(14,165,233,.20);
-      transition: transform .08s ease, filter .15s ease, opacity .15s ease;
-    }
-    .btnPrimary:hover{ transform: translateY(-1px); filter: brightness(1.02); }
-    .btnPrimary:disabled{ opacity: .55; cursor: default; transform:none; }
-
-    .startFeed{
-      margin-top: 14px;
-      display:flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .bubble{
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 13px;
-      line-height: 1.5;
-      border: 1px solid var(--stroke);
-      background: #ffffff;
-      white-space: pre-line;
-    }
-    .bubble.warn{
-      border-color: rgba(239,68,68,.25);
-      background: rgba(239,68,68,.06);
-    }
-    .bubble.muted{
-      color: var(--muted);
-      background: #f9fafb;
-    }
-
-    /* ======================
-       VIEW 2 (PENDÊNCIAS)
-       ====================== */
-    .layoutDebts{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-    }
-
-    .statusBar{
-      padding: 14px 18px;
-      display:flex;
-      align-items:center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .statusTitle{
-      display:flex;
-      flex-direction: column;
-      gap: 4px;
-      min-width: 0;
-    }
-    .statusTitle .t1{
-      font-weight: 900;
+      width:100%;
+      border: 1px solid var(--q-border);
+      border-radius: 14px;
+      padding: 14px 14px;
       font-size: 16px;
-      color: #0f172a;
+      outline:none;
+      background:#fff;
     }
-    .statusTitle .t2{
-      color: var(--muted);
-      font-size: 12px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .field input:focus{
+      border-color: rgba(225,29,46,.45);
+      box-shadow: 0 0 0 4px rgba(225,29,46,.08);
     }
 
-    .tabs{
-      display:flex;
-      gap: 8px;
-      padding: 0 18px 14px;
-    }
-    .tab{
-      border: 1px solid var(--stroke);
-      background: #f9fafb;
-      color: var(--muted);
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      cursor: pointer;
-      user-select:none;
-    }
-    .tab.active{
-      background: var(--brandSoft);
-      border-color: rgba(14,165,233,.35);
-      color: var(--brandDark);
-      font-weight: 800;
-    }
-
-    .debtList{
-      padding: 0 18px 18px;
-      display:flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .debtCard{
-      border: 1px solid var(--stroke);
-      background: #ffffff;
-      border-radius: var(--radius);
-      box-shadow: 0 10px 24px rgba(17,24,39,.06);
-      overflow:hidden;
-    }
-
-    .debtCardTop{
-      padding: 14px 16px;
-      display:flex;
-      justify-content: space-between;
-      gap: 12px;
-      border-bottom: 1px solid var(--stroke);
-      background: #ffffff;
-    }
-
-    .debtCredor{
-      display:flex;
-      flex-direction: column;
-      gap: 4px;
-      min-width:0;
-    }
-    .debtCredor .c1{
-      font-weight: 900;
-      font-size: 13px;
-      color: var(--text);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .debtCredor .c2{
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .debtMeta{
-      text-align: right;
-      font-size: 12px;
-      color: var(--muted);
-      white-space: nowrap;
-    }
-
-    .debtCardBody{
-      padding: 14px 16px;
-      background: rgba(14,165,233,.06);
-      border-top: 1px solid rgba(14,165,233,.14);
-    }
-
-    .priceRow{
-      display:flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .priceLabel{
-      color: var(--muted);
-      font-size: 12px;
-    }
-    .priceValue{
-      font-size: 22px;
-      font-weight: 900;
-      color: var(--text);
-    }
-
-    .debtDetails{
-      margin-top: 10px;
-      font-size: 12px;
-      color: var(--muted);
-      white-space: pre-line;
-      line-height: 1.5;
-    }
-
-    .actions{
-      padding: 12px 16px 16px;
-      display:flex;
-      flex-direction: column;
-      gap: 10px;
-      background: #ffffff;
-    }
-
-    .btnBrand{
+    .btn-primary{
+      width:100%;
+      margin-top: 14px;
       border:none;
-      cursor:pointer;
-      border-radius: 10px;
-      padding: 12px 14px;
-      font-weight: 900;
-      font-size: 13px;
-      color:#ffffff;
-      background: linear-gradient(180deg, var(--brand), var(--brandDark));
-      transition: transform .08s ease, filter .15s ease, opacity .15s ease;
-    }
-    .btnBrand:hover{ transform: translateY(-1px); filter: brightness(1.02); }
-
-    .btnOutline{
-      border: 1px solid #cbd5e1;
-      background: #ffffff;
-      cursor:pointer;
-      border-radius: 10px;
-      padding: 12px 14px;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 16px;
       font-weight: 800;
-      font-size: 13px;
-      color: #111827;
-      transition: transform .08s ease, background .15s ease;
+      color:#fff;
+      background: linear-gradient(180deg, var(--q-red), var(--q-red-dark));
+      cursor:pointer;
+      transition: transform .05s ease, filter .15s ease;
     }
-    .btnOutline:hover{ transform: translateY(-1px); background: #f9fafb; }
+    .btn-primary:hover{ filter: brightness(1.02); }
+    .btn-primary:active{ transform: translateY(1px); }
+    .btn-primary:disabled{ opacity:.55; cursor:default; }
 
-    /* fallback chat */
-    .chatBox{
-      margin-top: 8px;
-      border: 1px solid var(--stroke);
-      border-radius: var(--radius);
-      background: #ffffff;
-      overflow:hidden;
-    }
-    .chatHeader{
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--stroke);
-      display:flex;
-      align-items:center;
-      justify-content: space-between;
-      gap: 12px;
-      background: #f9fafb;
-    }
-    .chatHeader strong{
-      font-size: 13px;
-    }
-    .chatHeader span{
+    .toggle-row{
+      margin-top: 10px;
+      text-align:center;
       font-size: 12px;
-      color: var(--muted);
+      color: var(--q-muted);
+    }
+    .toggle-row button{
+      border:none;
+      background:none;
+      color: var(--q-red);
+      font-weight:800;
+      cursor:pointer;
+      padding:0;
+    }
+    .toggle-row button:hover{ text-decoration:underline; }
+
+    .trust{
+      margin-top: 16px;
+      text-align:center;
+      color: var(--q-muted);
+      font-size: 12px;
+    }
+    .trust a{ color: var(--q-red); font-weight:800; text-decoration:none; }
+    .trust a:hover{ text-decoration:underline; }
+
+    .inline-result{
+      margin-top: 14px;
+      border: 1px solid var(--q-border);
+      background: #fff;
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 13px;
+      color: var(--q-text);
+      white-space: pre-line;
     }
 
-    .chatMessages{
-      max-height: 280px;
-      overflow-y:auto;
-      padding: 12px 12px 6px;
-      background: #ffffff;
-      scroll-behavior: smooth;
+    /* Tela 2 - Conversa/resultado */
+    .chat-wrap{
+      display:flex;
+      flex-direction:column;
+      height: min(76vh, 720px);
     }
-    .msg{
-      max-width: 86%;
+    .chat-messages{
+      flex:1;
+      overflow:auto;
+      padding: 14px;
+      background: var(--q-bg);
+    }
+
+    .bubble{
+      max-width: 92%;
+      border-radius: 16px;
       padding: 10px 12px;
-      border-radius: 12px;
       font-size: 13px;
-      line-height: 1.45;
-      margin-bottom: 8px;
+      line-height:1.45;
       white-space: pre-line;
-      border: 1px solid var(--stroke);
+      word-break: break-word;
+      margin-bottom: 8px;
+      border:1px solid transparent;
     }
-    .msg-bot{
-      background: #ffffff;
-      color: var(--text);
+    .bot{
+      background:#fff;
+      border-color: var(--q-border);
       border-bottom-left-radius: 6px;
     }
-    .msg-user{
-      background: #111827;
-      color: #ffffff;
-      border-color: rgba(17,24,39,.22);
+    .user{
+      margin-left:auto;
+      background: linear-gradient(180deg, var(--q-red), var(--q-red-dark));
+      color:#fff;
       border-bottom-right-radius: 6px;
-      margin-left: auto;
     }
 
     .options{
       display:flex;
-      flex-direction: column;
-      gap: 8px;
-      margin: 6px 0 12px;
-      padding: 0 12px 12px;
+      flex-direction:column;
+      gap:8px;
+      margin: 6px 0 14px;
     }
-    .option-btn{
-      border: 1px solid var(--stroke);
-      border-radius: 10px;
-      padding: 10px 12px;
+    .opt{
+      border: 1px solid var(--q-border);
+      background:#fff;
+      border-radius: 14px;
+      padding: 12px 12px;
       font-size: 13px;
-      cursor: pointer;
-      background: #f9fafb;
-      color: var(--text);
-      text-align: left;
-      transition: transform .08s ease, background .15s ease;
+      text-align:left;
+      cursor:pointer;
+      transition: transform .05s ease, background .15s ease;
     }
-    .option-btn:hover{
-      transform: translateY(-1px);
-      background: #f3f4f6;
-    }
+    .opt:hover{ background:#f8fafc; }
+    .opt:active{ transform: translateY(1px); }
 
-    .chatInputArea{
-      display:flex;
-      gap: 10px;
+    .chat-input{
       padding: 12px;
-      border-top: 1px solid var(--stroke);
-      background: #ffffff;
+      border-top:1px solid var(--q-border);
+      background:#fff;
+      display:flex;
+      gap:10px;
+      align-items:center;
     }
-    .chatInputArea input{
+    .chat-input input{
       flex:1;
-      border-radius: 10px;
-      border: 1px solid #dbe3ee;
-      background: #ffffff;
-      padding: 10px 12px;
-      font-size: 13px;
-      outline: none;
-      color: var(--text);
+      border:1px solid var(--q-border);
+      border-radius: 999px;
+      padding: 12px 14px;
+      font-size: 14px;
+      outline:none;
     }
-    .chatInputArea input:focus{
-      border-color: rgba(14,165,233,.55);
-      box-shadow: 0 0 0 3px rgba(14,165,233,.12);
+    .chat-input input:focus{
+      border-color: rgba(225,29,46,.45);
+      box-shadow: 0 0 0 4px rgba(225,29,46,.08);
     }
-    .chatInputArea button{
+    .chat-input button{
       border:none;
-      border-radius: 10px;
-      padding: 10px 14px;
-      font-weight: 900;
-      font-size: 13px;
-      cursor: pointer;
-      background: linear-gradient(180deg, var(--brand), var(--brandDark));
-      color: #ffffff;
-      min-width: 96px;
-      transition: transform .08s ease, opacity .15s ease;
+      border-radius: 999px;
+      padding: 12px 16px;
+      background: linear-gradient(180deg, var(--q-red), var(--q-red-dark));
+      color:#fff;
+      font-weight:800;
+      cursor:pointer;
     }
-    .chatInputArea button:hover{ transform: translateY(-1px); }
-    .chatInputArea button:disabled{ opacity: .55; cursor: default; transform:none; }
+    .chat-input button:disabled{ opacity:.55; cursor:default; }
 
     .typing{
       font-size: 12px;
-      color: var(--muted);
-      padding: 0 16px 10px;
+      color: var(--q-muted);
+      margin: 8px 0 0;
+      padding-left: 4px;
     }
 
-    @media (min-width: 900px){
-      .layoutDebts{
-        grid-template-columns: 1.25fr .75fr;
-        align-items: start;
-      }
-      .chatBox{ margin-top: 0; }
-      .chatMessages{ max-height: 520px; }
+    /* Views */
+    .view{ display:none; }
+    .view.active{ display:block; }
+
+    @media (max-width: 560px){
+      .topbar-inner{ padding: 12px 12px; }
+      .container{ padding: 12px; }
+      .brand-text span{ display:none; }
+      .card-head h1{ font-size:20px; }
+      .chat-wrap{ height: 78vh; }
     }
   </style>
 </head>
 
 <body>
-  <div class="app">
-    <div class="topbar">
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-inner">
       <div class="brand">
-        <div class="brandMark">4C</div>
-        <div class="brandText">
-          <div class="logo">QuatroC</div>
-          <div class="sub">Portal de negociação • canal seguro</div>
+        <img id="brandLogo" alt="QuatroC" />
+        <div class="brand-text">
+          <b>QuatroC</b>
+          <span>Portal de negociação • canal seguro</span>
         </div>
       </div>
 
-      <div class="meta">
-        <a class="link" href="javascript:void(0)" id="btnReiniciar">Reiniciar</a>
+      <div class="top-actions">
+        <div class="pill" id="pillStep" style="display:none;">
+          <span>Etapa:</span>
+          <b id="pillStepText" style="color:var(--q-text); font-weight:900;"></b>
+        </div>
+        <a class="link" href="#" id="btnReset">Reiniciar</a>
       </div>
     </div>
+  </div>
 
-    <!-- VIEW 1 -->
-    <div class="view active" id="viewStart">
-      <div class="gridStart">
+  <div class="container">
+    <div class="grid">
+
+      <!-- VIEW 1: INICIAL -->
+      <div id="viewLogin" class="view active">
         <div class="card">
-          <div class="cardHeader">
-            <div>
-              <h2>Bem-vindo(a)!</h2>
-              <p>Informe seu CPF ou CNPJ para iniciarmos a consulta.</p>
-            </div>
+          <div class="card-head">
+            <h1>Bem-vindo(a)!</h1>
+            <p>Informe seu documento para localizarmos as informações e seguir com o atendimento.</p>
           </div>
 
-          <div class="cardBody">
-            <div class="heroNote">
-              Para começar, digite o <strong>CPF ou CNPJ</strong>. Em seguida, apresentaremos as informações disponíveis para continuidade do atendimento.
+          <div class="card-body">
+            <div class="hint" id="loginHint">
+              Para começar, informe seu <b>CPF</b> ou <b>CNPJ</b>.
             </div>
 
-            <div class="formRow">
-              <div class="labelRow">
-                <span>CPF / CNPJ</span>
-              </div>
-
-              <div class="field">
-                <input id="docInput" type="text" inputmode="numeric" autocomplete="off" placeholder="Digite seu CPF ou CNPJ" />
-              </div>
-
-              <button id="btnContinuar" class="btnPrimary">Continuar</button>
+            <div class="field">
+              <label>
+                <span id="docLabel">CPF</span>
+                <span style="color:var(--q-muted)">Aceita colar com pontuação</span>
+              </label>
+              <input id="docInput" type="text" inputmode="numeric" autocomplete="off" placeholder="Digite seu CPF" />
             </div>
 
-            <!-- respostas quando NÃO há pendência ou não localiza -->
-            <div class="startFeed" id="startFeed"></div>
+            <button class="btn-primary" id="btnConfirm">Confirmar</button>
+
+            <div class="toggle-row">
+              <span id="toggleText">É pessoa jurídica?</span>
+              <button id="btnToggleDoc" type="button">Entrar com CNPJ</button>
+            </div>
+
+            <div class="trust">
+              Não se preocupe, seus dados estão seguros conosco.
+              Caso tenha dúvidas, consulte nossos
+              <a href="#" target="_blank" rel="noopener" id="termsLink">Termos e Política</a>.
+            </div>
+
+            <div id="inlineResult" class="inline-result" style="display:none;"></div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- VIEW 2 -->
-    <div class="view" id="viewDebts">
-      <div class="card">
-        <div class="statusBar">
-          <div class="statusTitle">
-            <div class="t1" id="debtTitle">Consulta concluída</div>
-            <div class="t2" id="debtSubtitle">Confira abaixo as informações localizadas.</div>
-          </div>
-          <div class="meta">
-            <div class="link" id="pillDoc" style="border-bottom:none; cursor:default; color:var(--muted); font-size:12px;"></div>
-          </div>
-        </div>
-
-        <div class="tabs">
-          <div class="tab active" id="tabDividas">Pendências</div>
-          <div class="tab" id="tabAcordos">Acordos</div>
-        </div>
-
-        <div class="layoutDebts">
-          <!-- Cards -->
-          <div>
-            <div class="debtList" id="debtList"></div>
+      <!-- VIEW 2: RESULTADO / CHAT -->
+      <div id="viewChat" class="view">
+        <div class="card">
+          <div class="card-head">
+            <h1>Informações encontradas</h1>
+            <p>Abaixo, siga pelo autoatendimento para concluir a tratativa.</p>
           </div>
 
-          <!-- Atendimento (mantém a lógica atual do back) -->
-          <div class="chatBox">
-            <div class="chatHeader">
-              <strong>Atendimento</strong>
-              <span>Use os botões ou envie uma mensagem</span>
-            </div>
+          <div class="chat-wrap">
+            <div id="chatMessages" class="chat-messages"></div>
 
-            <div id="chatMessages" class="chatMessages"></div>
-            <div class="chatInputArea">
+            <div class="chat-input">
               <input id="chatInput" type="text" placeholder="Digite aqui..." autocomplete="off" />
               <button id="chatSend">Enviar</button>
             </div>
+
+            <div id="typingIndicator" class="typing" style="display:none;">Digitando...</div>
           </div>
         </div>
-
-        <div class="typing" id="typingIndicator" style="display:none;">Processando...</div>
       </div>
+
     </div>
   </div>
 
   <script>
     // ================= CONFIGURAÇÃO =================
-    const API_URL = "https://billowing-voice-6efd.asilvino19.workers.dev/";
+    const API_URL   = "https://billowing-voice-6efd.asilvino19.workers.dev/";
+    const LOGO_URL  = "COLE_AQUI_A_URL_DO_LOGO_DA_QUATROC"; // Ex: https://seusite.com/quatroc.png
+    const TERMS_URL = "https://acerto.com.br/seguranca"; // Troque para o link oficial QuatroC quando tiver
 
-    // ================= ELEMENTOS =================
-    const viewStart = document.getElementById("viewStart");
-    const viewDebts  = document.getElementById("viewDebts");
-
-    const pillDoc   = document.getElementById("pillDoc");
-
-    const docInput = document.getElementById("docInput");
-    const btnContinuar = document.getElementById("btnContinuar");
-    const startFeed = document.getElementById("startFeed");
-
-    const debtList = document.getElementById("debtList");
-    const debtTitle = document.getElementById("debtTitle");
-    const debtSubtitle = document.getElementById("debtSubtitle");
-
-    const chatMessages = document.getElementById("chatMessages");
-    const chatInput = document.getElementById("chatInput");
-    const chatSend = document.getElementById("chatSend");
-    const typingEl = document.getElementById("typingIndicator");
-
-    const btnReiniciar = document.getElementById("btnReiniciar");
-
-    const tabDividas = document.getElementById("tabDividas");
-    const tabAcordos = document.getElementById("tabAcordos");
-
-    // ================= ESTADO =================
+    // ====== Estado ======
     let sessionId = Date.now().toString();
     let step = "inicio";
     let documento = null;
 
-    function setStep(next) {
-      step = next;
-    }
+    let docMode = "cpf"; // cpf | cnpj
 
-    function sanitizeDoc(text) {
-      return String(text || "").replace(/\D/g, "");
-    }
+    // ====== Elementos ======
+    const viewLogin = document.getElementById("viewLogin");
+    const viewChat  = document.getElementById("viewChat");
 
-    function showView(which){
-      if (which === "start"){
-        viewStart.classList.add("active");
-        viewDebts.classList.remove("active");
+    const brandLogo = document.getElementById("brandLogo");
+    const termsLink = document.getElementById("termsLink");
+
+    const pillStep = document.getElementById("pillStep");
+    const pillStepText = document.getElementById("pillStepText");
+
+    const docInput  = document.getElementById("docInput");
+    const docLabel  = document.getElementById("docLabel");
+    const btnConfirm= document.getElementById("btnConfirm");
+    const btnToggle = document.getElementById("btnToggleDoc");
+    const toggleText= document.getElementById("toggleText");
+    const inlineResult = document.getElementById("inlineResult");
+
+    const chatMessages = document.getElementById("chatMessages");
+    const chatInput    = document.getElementById("chatInput");
+    const chatSend     = document.getElementById("chatSend");
+    const typingIndicator = document.getElementById("typingIndicator");
+
+    const btnReset = document.getElementById("btnReset");
+
+    // ====== Init branding ======
+    brandLogo.src = LOGO_URL || "";
+    termsLink.href = TERMS_URL;
+
+    // Se não setar LOGO_URL, mostra fallback simples
+    brandLogo.onerror = () => {
+      brandLogo.style.display = "none";
+    };
+
+    // ====== Helpers UI ======
+    function setView(which){
+      if (which === "login"){
+        viewLogin.classList.add("active");
+        viewChat.classList.remove("active");
+        pillStep.style.display = "none";
       } else {
-        viewDebts.classList.add("active");
-        viewStart.classList.remove("active");
+        viewLogin.classList.remove("active");
+        viewChat.classList.add("active");
+        pillStep.style.display = "flex";
       }
     }
 
-    function clearStartFeed() { startFeed.innerHTML = ""; }
-    function addStartBubble(text, variant="normal"){
-      const div = document.createElement("div");
-      div.className = "bubble" + (variant==="warn" ? " warn" : (variant==="muted" ? " muted" : ""));
-      div.textContent = text || "";
-      startFeed.appendChild(div);
-      startFeed.scrollIntoView({behavior:"smooth", block:"end"});
+    function setStepPill(){
+      pillStepText.textContent = step || "-";
     }
 
-    function scrollChatBottom(){
+    function setLoading(isLoading){
+      btnConfirm.disabled = isLoading;
+      chatSend.disabled   = isLoading;
+      chatInput.disabled  = isLoading;
+      docInput.disabled   = isLoading;
+      typingIndicator.style.display = isLoading ? "block" : "none";
+    }
+
+    function addBubble(text, who="bot"){
+      const div = document.createElement("div");
+      div.className = "bubble " + (who === "bot" ? "bot" : "user");
+      div.textContent = text || "";
+      chatMessages.appendChild(div);
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    function addChatMessage(text, type="bot"){
-      const div = document.createElement("div");
-      div.className = "msg " + (type==="bot" ? "msg-bot" : "msg-user");
-      div.textContent = text || "";
-      chatMessages.appendChild(div);
-      scrollChatBottom();
-    }
-
     function addOptions(opcoes){
-      const wrapper = document.createElement("div");
-      wrapper.className = "options";
-      opcoes.forEach(op => {
-        const btn = document.createElement("button");
-        btn.className = "option-btn";
-        btn.textContent = op.label;
-        btn.onclick = () => handleOptionClick(op);
-        wrapper.appendChild(btn);
+      const wrap = document.createElement("div");
+      wrap.className = "options";
+
+      (opcoes || []).forEach(op => {
+        const b = document.createElement("button");
+        b.className = "opt";
+        b.textContent = op.label;
+        b.onclick = () => handleOptionClick(op);
+        wrap.appendChild(b);
       });
-      chatMessages.appendChild(wrapper);
-      scrollChatBottom();
+
+      chatMessages.appendChild(wrap);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    function setInputEnabled(enabled){
-      btnContinuar.disabled = !enabled;
-      docInput.disabled = !enabled;
-      chatInput.disabled = !enabled;
-      chatSend.disabled = !enabled;
+    function clearChat(){
+      chatMessages.innerHTML = "";
     }
 
-    function showTyping(show){
-      typingEl.style.display = show ? "block" : "none";
+    function showInlineResult(text){
+      inlineResult.style.display = "block";
+      inlineResult.textContent = text || "";
+      inlineResult.scrollIntoView({behavior:"smooth", block:"center"});
     }
 
-    // ================= CARDS =================
-    function formatCurrency(v){
-      const n = Number(String(v ?? "0").replace(/[^0-9,.-]/g,"").replace(".","").replace(",", ".")) || 0;
-      return n.toLocaleString("pt-BR", { style:"currency", currency:"BRL" });
+    function hideInlineResult(){
+      inlineResult.style.display = "none";
+      inlineResult.textContent = "";
     }
 
-    function formatDate(iso){
-      if (!iso) return "—";
-      const d = new Date(iso);
-      if (isNaN(d.getTime())) return String(iso);
-      return d.toLocaleDateString("pt-BR");
-    }
+    // ====== Documento (toggle CPF/CNPJ) ======
+    function setDocMode(mode){
+      docMode = mode;
 
-    function renderDebtCards(response){
-      debtList.innerHTML = "";
-
-      const credor = response?.credor || response?.Credor || response?.dadosCliente?.credor || "Pendência localizada";
-      const contrato = response?.dadosCliente?.contrato || response?.dadosCliente?.NumeroContrato || response?.contrato || "—";
-      const parcelas = Array.isArray(response?.parcelas) ? response.parcelas : null;
-
-      if (parcelas && parcelas.length){
-        let total = 0;
-        const linhas = parcelas.map((p, idx) => {
-          const valor = p.Valor ?? p.ValorOriginal ?? p._ValorEmAberto ?? p.valor ?? 0;
-          total += Number(valor) || 0;
-          const venc = formatDate(p.Vencimento);
-          return `Parcela ${idx+1}: vencimento ${venc} • valor ${formatCurrency(valor)}`;
-        });
-
-        const card = document.createElement("div");
-        card.className = "debtCard";
-        card.innerHTML = `
-          <div class="debtCardTop">
-            <div class="debtCredor">
-              <div class="c1">${credor}</div>
-              <div class="c2">Contrato: ${contrato}</div>
-            </div>
-            <div class="debtMeta">Atualizado em ${new Date().toLocaleDateString("pt-BR")}</div>
-          </div>
-          <div class="debtCardBody">
-            <div class="priceRow">
-              <div class="priceLabel">Valor total em aberto</div>
-              <div class="priceValue">${formatCurrency(total)}</div>
-            </div>
-            <div class="debtDetails">${linhas.join("\n")}</div>
-          </div>
-          <div class="actions">
-            <button class="btnBrand" data-action="focusChat">Continuar pelo atendimento</button>
-            <button class="btnOutline" data-action="details">Ver detalhes no atendimento</button>
-          </div>
-        `;
-        debtList.appendChild(card);
-
-        card.querySelector('[data-action="focusChat"]').onclick = () => {
-          chatInput.focus();
-          addChatMessage("Continuar pelo atendimento", "user");
-          addChatMessage("Certo. Use as opções disponíveis abaixo para prosseguir.", "bot");
-          scrollChatBottom();
-        };
-
-        card.querySelector('[data-action="details"]').onclick = () => {
-          chatInput.focus();
-          addChatMessage("Ver detalhes", "user");
-          addChatMessage("Perfeito. As informações e opções seguem no atendimento.", "bot");
-          scrollChatBottom();
-        };
-
-        return;
+      if (docMode === "cpf"){
+        docLabel.textContent = "CPF";
+        docInput.placeholder = "Digite seu CPF";
+        toggleText.textContent = "É pessoa jurídica?";
+        btnToggle.textContent = "Entrar com CNPJ";
+      } else {
+        docLabel.textContent = "CNPJ";
+        docInput.placeholder = "Digite seu CNPJ";
+        toggleText.textContent = "É pessoa física?";
+        btnToggle.textContent = "Entrar com CPF";
       }
-
-      const fallback = document.createElement("div");
-      fallback.className = "debtCard";
-      fallback.innerHTML = `
-        <div class="debtCardTop">
-          <div class="debtCredor">
-            <div class="c1">Informações disponíveis</div>
-            <div class="c2">Utilize o atendimento para visualizar detalhes e opções</div>
-          </div>
-          <div class="debtMeta">—</div>
-        </div>
-        <div class="debtCardBody">
-          <div class="priceRow">
-            <div class="priceLabel">Encontramos registros vinculados ao documento informado.</div>
-          </div>
-          <div class="debtDetails">A seguir, o atendimento exibirá as orientações e botões para continuidade.</div>
-        </div>
-        <div class="actions">
-          <button class="btnBrand" data-action="focusChat">Abrir atendimento</button>
-        </div>
-      `;
-      debtList.appendChild(fallback);
-      fallback.querySelector('[data-action="focusChat"]').onclick = () => {
-        chatInput.focus();
-        addChatMessage("Abrir atendimento", "user");
-        addChatMessage("Certo. Use as opções disponíveis abaixo para prosseguir.", "bot");
-      };
     }
 
-    // ================= BACKEND =================
+    btnToggle.addEventListener("click", () => {
+      setDocMode(docMode === "cpf" ? "cnpj" : "cpf");
+      docInput.value = "";
+      docInput.focus();
+    });
+
+    // ====== Backend ======
     async function sendToBackend(payload){
       try{
-        console.log("API_URL:", API_URL, "payload:", payload);
-        setInputEnabled(false);
-        showTyping(true);
+        setLoading(true);
 
         const resp = await fetch(API_URL, {
           method: "POST",
           body: JSON.stringify(payload),
         });
 
-        showTyping(false);
-        setInputEnabled(true);
+        const raw = await resp.text();
+        let data = null;
+        try { data = JSON.parse(raw); } catch { data = null; }
 
-        if (!resp.ok){
-          const t = await resp.text();
-          console.error("Erro HTTP", resp.status, t);
-          if (viewDebts.classList.contains("active")){
-            addChatMessage("Desculpe, ocorreu um erro ao processar sua solicitação.", "bot");
+        if (!resp.ok || !data){
+          setLoading(false);
+          if (viewLogin.classList.contains("active")){
+            showInlineResult("Desculpe, ocorreu um erro ao processar sua solicitação. Tente novamente.");
           } else {
-            clearStartFeed();
-            addStartBubble("Desculpe, ocorreu um erro ao processar sua solicitação.", "warn");
+            addBubble("Desculpe, ocorreu um erro ao processar sua solicitação.", "bot");
           }
-          return;
+          return null;
         }
 
-        const data = await resp.json().catch(async () => {
-          const txt = await resp.text();
-          try { return JSON.parse(txt); } catch { return null; }
-        });
-
-        console.log("Resposta backend:", data);
+        setLoading(false);
         handleBackendResponse(data);
+        return data;
 
-      } catch(err){
-        showTyping(false);
-        setInputEnabled(true);
-        console.error("Erro ao chamar backend", err);
-        if (viewDebts.classList.contains("active")){
-          addChatMessage("Não foi possível se conectar. Verifique sua conexão e tente novamente.", "bot");
+      } catch (e){
+        setLoading(false);
+        if (viewLogin.classList.contains("active")){
+          showInlineResult("Não foi possível se conectar. Verifique sua conexão e tente novamente.");
         } else {
-          clearStartFeed();
-          addStartBubble("Não foi possível se conectar. Verifique sua conexão e tente novamente.", "warn");
+          addBubble("Não foi possível se conectar. Verifique sua conexão e tente novamente.", "bot");
         }
-      }
-    }
-
-    function shouldGoToSecondScreen(response){
-      const ps = response?.proximoStep;
-
-      if (response?.temDivida === true) return true;
-
-      const stepsQueIndicamPendencia = new Set([
-        "confirmar_identidade",
-        "selecionar_credor",
-        "pos_identidade",
-        "escolher_caminho",
-        "escolher_caminho_ira",
-        "aguardando_data_pagamento",
-        "falar_atendente"
-      ]);
-
-      if (ps && stepsQueIndicamPendencia.has(ps)) return true;
-
-      if (response?.mensagens?.some(m => Array.isArray(m?.opcoes) && m.opcoes.length)) return true;
-
-      return false;
-    }
-
-    function renderMensagensTela1(response){
-      clearStartFeed();
-      if (response?.mensagens && Array.isArray(response.mensagens)){
-        response.mensagens.forEach(m => addStartBubble(m.texto || "", "normal"));
-      } else {
-        addStartBubble("Não foi possível interpretar a resposta do sistema.", "warn");
-      }
-    }
-
-    function renderMensagensChat(response){
-      if (response?.mensagens && Array.isArray(response.mensagens)){
-        response.mensagens.forEach(m => {
-          addChatMessage(m.texto || "", "bot");
-          if (m.opcoes && Array.isArray(m.opcoes) && m.opcoes.length){
-            addOptions(m.opcoes);
-          }
-        });
+        return null;
       }
     }
 
     function handleBackendResponse(response){
       if (!response) return;
 
+      // Atualiza step se vier
       if (response.proximoStep !== undefined && response.proximoStep !== null){
-        setStep(response.proximoStep);
+        step = response.proximoStep;
       }
 
-      const docShown = response?.documento || response?.dadosCliente?.documento || documento;
-      pillDoc.textContent = docShown ? ("Documento: " + docShown) : "";
+      setStepPill();
 
-      if (shouldGoToSecondScreen(response)){
-        showView("debts");
+      // Regra de telas:
+      // - Se temDivida = true, vamos para a Tela 2 (onde ficam identidade/resumo/opções)
+      // - Se temDivida = false ou não existir, mantém na Tela 1 e mostra texto lá
+      const hasDebt = response.temDivida === true;
 
-        const nome = response?.dadosCliente?.nome || response?.nome || null;
-        debtTitle.textContent = "Consulta concluída";
-        debtSubtitle.textContent = nome ? `Olá, ${String(nome).split(" ")[0]}. Confira as informações localizadas.` : "Confira as informações localizadas.";
+      if (hasDebt){
+        // Se estamos saindo da tela 1 para a 2, limpa e inicia a conversa
+        if (viewLogin.classList.contains("active")){
+          clearChat();
+          setView("chat");
+        }
 
-        renderDebtCards(response);
-        renderMensagensChat(response);
+        // Renderiza mensagens no chat
+        if (Array.isArray(response.mensagens)){
+          response.mensagens.forEach(m => {
+            addBubble(m.texto || "", "bot");
+            if (Array.isArray(m.opcoes) && m.opcoes.length){
+              addOptions(m.opcoes);
+            }
+          });
+        }
       } else {
-        showView("start");
-        renderMensagensTela1(response);
+        // Fica na tela 1 (retorno inline)
+        if (Array.isArray(response.mensagens) && response.mensagens.length){
+          const txt = response.mensagens.map(m => m.texto || "").join("\n\n").trim();
+          showInlineResult(txt || "Nenhuma informação retornada.");
+        } else {
+          showInlineResult("Nenhuma pendência foi identificada para o documento informado.");
+        }
       }
     }
 
-    // ================= AÇÕES =================
-    async function startWithDocumento(){
-      const raw = docInput.value.trim();
-      const doc = sanitizeDoc(raw);
+    // ====== Ações Tela 1 ======
+    btnConfirm.addEventListener("click", async () => {
+      hideInlineResult();
 
-      if (!doc){
-        clearStartFeed();
-        addStartBubble("Por favor, informe um CPF ou CNPJ para continuar.", "warn");
+      const raw = docInput.value.trim();
+      if (!raw){
+        showInlineResult("Por favor, informe o CPF ou CNPJ para continuar.");
         return;
       }
 
-      documento = doc;
-      clearStartFeed();
-      addStartBubble("Consultando informações…", "muted");
+      documento = raw.replace(/\D/g, "");
 
-      await sendToBackend({ sessionId, step: "consulta_divida", documento });
-    }
+      // Validação básica de tamanho só para UX (backend continua validando)
+      if (documento.length !== 11 && documento.length !== 14){
+        showInlineResult("Documento inválido. Informe um CPF (11 dígitos) ou CNPJ (14 dígitos).");
+        return;
+      }
 
+      step = "consulta_divida";
+      setStepPill();
+
+      await sendToBackend({
+        sessionId,
+        step: "consulta_divida",
+        documento,
+      });
+    });
+
+    docInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter"){
+        e.preventDefault();
+        btnConfirm.click();
+      }
+    });
+
+    // ====== Ações Tela 2 ======
     async function processUserMessage(){
-      const text = chatInput.value.trim();
+      const text = (chatInput.value || "").trim();
       if (!text) return;
 
-      addChatMessage(text, "user");
+      addBubble(text, "user");
       chatInput.value = "";
 
-      if (step === "consulta_divida"){
-        documento = sanitizeDoc(text);
-        await sendToBackend({ sessionId, step: "consulta_divida", documento });
-        return;
-      }
-
+      // Mantém seu comportamento atual:
+      // - se estiver aguardando data, manda step gerar_boleto
       if (step === "aguardando_data_pagamento"){
-        await sendToBackend({ sessionId, step: "gerar_boleto", documento, dataPagamento: text });
+        await sendToBackend({
+          sessionId,
+          step: "gerar_boleto",
+          documento,
+          dataPagamento: text,
+        });
         return;
       }
 
-      if (step === "inicio"){
-        documento = sanitizeDoc(text);
-        await sendToBackend({ sessionId, step: "consulta_divida", documento });
-        return;
-      }
-
-      await sendToBackend({ sessionId, step, documento, message: text });
+      // caso geral: texto vira "message"
+      await sendToBackend({
+        sessionId,
+        step,
+        documento,
+        message: text,
+      });
     }
 
-    function handleOptionClick(op){
-      addChatMessage(op.label, "user");
+    chatSend.addEventListener("click", processUserMessage);
+    chatInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter"){
+        e.preventDefault();
+        processUserMessage();
+      }
+    });
 
+    function handleOptionClick(op){
+      addBubble(op.label, "user");
+
+      // Casos especiais que você já tinha
       if (op.id === "gerar_boleto"){
-        addChatMessage("Informe a data prevista para pagamento (DD/MM/AAAA).", "bot");
-        setStep("aguardando_data_pagamento");
+        addBubble("Informe a data em que pretende realizar o pagamento (formato DD/MM/AAAA).", "bot");
+        step = "aguardando_data_pagamento";
+        setStepPill();
         return;
       }
 
       if (op.id === "falar_atendente" || op.id === "duvidas"){
         const motivo = op.id === "duvidas" ? "dúvidas/contestação" : "negociação";
-        sendToBackend({ sessionId, step: "falar_atendente", documento, motivo });
+
+        sendToBackend({
+          sessionId,
+          step: "falar_atendente",
+          documento,
+          motivo,
+        });
         return;
       }
 
-      sendToBackend({ sessionId, step, optionId: op.id, documento });
+      // Padrão para botões (identidade_sim / identidade_nao / negociar_auto etc.)
+      sendToBackend({
+        sessionId,
+        step,
+        optionId: op.id,
+        documento,
+      });
     }
 
-    async function init(){
-      setStep("inicio");
-      showView("start");
-      clearStartFeed();
-
-      await sendToBackend({ sessionId, step: "inicio" });
-    }
-
-    function resetAll(){
+    // ====== Reset ======
+    btnReset.addEventListener("click", (e) => {
+      e.preventDefault();
       sessionId = Date.now().toString();
+      step = "inicio";
       documento = null;
-      setStep("inicio");
+
       docInput.value = "";
       chatInput.value = "";
-      chatMessages.innerHTML = "";
-      debtList.innerHTML = "";
-      pillDoc.textContent = "";
-      clearStartFeed();
-      showView("start");
-      init();
-    }
-
-    // tabs (visual only)
-    tabDividas.onclick = () => {
-      tabDividas.classList.add("active");
-      tabAcordos.classList.remove("active");
-    };
-    tabAcordos.onclick = () => {
-      tabAcordos.classList.add("active");
-      tabDividas.classList.remove("active");
-      // visual only
-    };
-
-    // events
-    btnContinuar.addEventListener("click", startWithDocumento);
-    docInput.addEventListener("keypress", (e) => {
-      if (e.key === "Enter"){ e.preventDefault(); startWithDocumento(); }
+      clearChat();
+      hideInlineResult();
+      setView("login");
+      setStepPill();
     });
 
-    chatSend.addEventListener("click", processUserMessage);
-    chatInput.addEventListener("keypress", (e) => {
-      if (e.key === "Enter"){ e.preventDefault(); processUserMessage(); }
-    });
-
-    btnReiniciar.addEventListener("click", resetAll);
-
-    // start
-    init();
+    // ====== Start ======
+    setDocMode("cpf");
+    setStepPill();
   </script>
 </body>
 </html>
