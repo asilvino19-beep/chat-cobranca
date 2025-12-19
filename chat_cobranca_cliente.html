@@ -2,199 +2,421 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Chat de Cobrança</title>
+  <title>Atendimento de Cobrança • QuatroC</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-      background: #f3f4f6;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
+    :root{
+      --bg: #0b1220;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.08);
+      --stroke: rgba(255,255,255,.12);
+      --text: #e5e7eb;
+      --muted: rgba(229,231,235,.72);
+      --muted2: rgba(229,231,235,.55);
+      --brand: #0ea5e9;
+      --brand2: #22c55e;
+      --danger: #ef4444;
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --radius: 18px;
     }
 
-    .chat-wrapper {
-      width: 100%;
-      max-width: 430px;
-      height: 90vh;
-      max-height: 720px;
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-      display: flex;
-      flex-direction: column;
+    *{ box-sizing: border-box; }
+    body{
+      margin:0; min-height:100vh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(1200px 700px at 20% 10%, rgba(14,165,233,.22), transparent 55%),
+        radial-gradient(900px 600px at 85% 20%, rgba(34,197,94,.18), transparent 55%),
+        radial-gradient(1200px 800px at 60% 100%, rgba(99,102,241,.12), transparent 55%),
+        var(--bg);
+      color: var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 18px;
+    }
+
+    /* App container */
+    .app{
+      width:100%;
+      max-width: 520px;
+      height: min(92vh, 760px);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.10);
       overflow: hidden;
+      display:flex;
+      flex-direction: column;
+      backdrop-filter: blur(14px);
     }
 
-    .chat-header {
-      background: #111827;
-      color: #f9fafb;
+    /* Header */
+    .topbar{
       padding: 14px 16px;
-      display: flex;
-      align-items: center;
+      display:flex;
+      gap: 12px;
+      align-items:center;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(17,24,39,.65), rgba(17,24,39,.25));
+    }
+
+    .logo{
+      width: 38px; height: 38px; border-radius: 999px;
+      display:flex; align-items:center; justify-content:center;
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      font-weight: 800; color: white;
+      box-shadow: 0 10px 30px rgba(0,0,0,.28);
+      flex: 0 0 auto;
+    }
+    .topbar .title{
+      display:flex; flex-direction:column; gap: 2px;
+      min-width: 0;
+    }
+    .topbar .title .h1{
+      font-size: 14px; font-weight: 700; letter-spacing: .2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .topbar .title .sub{
+      font-size: 12px; color: var(--muted);
+      display:flex; gap: 8px; align-items:center;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:6px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .dot{
+      width: 7px; height: 7px; border-radius: 99px;
+      background: var(--brand2);
+      box-shadow: 0 0 0 3px rgba(34,197,94,.12);
+    }
+
+    /* Content area */
+    .content{
+      flex:1;
+      position: relative;
+      overflow: hidden;
+      display:flex;
+      flex-direction: column;
+    }
+
+    /* Views */
+    .view{
+      position:absolute; inset:0;
+      padding: 16px;
+      overflow-y:auto;
+      display:none;
+    }
+    .view.active{ display:block; }
+
+    /* Screen 1 (Entrada) */
+    .hero{
+      margin-top: 6px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 18px;
+      padding: 16px;
+    }
+    .hero h2{
+      margin:0 0 6px; font-size: 16px; letter-spacing:.2px;
+    }
+    .hero p{
+      margin:0; color: var(--muted); font-size: 13px; line-height: 1.5;
+    }
+
+    .formCard{
+      margin-top: 14px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 18px;
+      padding: 14px;
+    }
+    .label{
+      font-size: 12px; color: var(--muted); margin-bottom: 6px;
+      display:flex; justify-content: space-between; gap: 10px;
+    }
+    .hint{ color: var(--muted2); font-size: 11px; }
+    .field{
+      display:flex; gap: 10px;
+      align-items:center;
+      background: rgba(17,24,39,.35);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+    .field input{
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 14px;
+      letter-spacing: .2px;
+    }
+    .field input::placeholder{ color: rgba(229,231,235,.45); }
+
+    .btn{
+      border: none;
+      cursor: pointer;
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #06111f;
+      background: linear-gradient(135deg, var(--brand), #60a5fa);
+      box-shadow: 0 12px 30px rgba(14,165,233,.18);
+      transition: transform .08s ease, filter .15s ease, opacity .15s ease;
+      width: 100%;
+      margin-top: 12px;
+    }
+    .btn:hover{ transform: translateY(-1px); filter: brightness(1.02); }
+    .btn:disabled{ opacity: .55; cursor: default; transform:none; }
+
+    .infoRow{
+      margin-top: 12px;
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .badge strong{ color: var(--text); font-weight: 700; }
+
+    /* Inline messages for screen 1 */
+    .inlineFeed{
+      margin-top: 14px;
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .bubble{
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 16px;
+      padding: 12px;
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+    .bubble.muted{ color: var(--muted); }
+    .bubble.warn{
+      border-color: rgba(239,68,68,.35);
+      background: rgba(239,68,68,.10);
+    }
+
+    /* Screen 2 (Chat) */
+    .chatWrap{
+      height: 100%;
+      display:flex;
+      flex-direction: column;
       gap: 10px;
     }
 
-    .chat-header-logo {
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #0ea5e9, #22c55e);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .chat-header-text {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .chat-header-text span:first-child {
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .chat-header-text span:last-child {
-      font-size: 11px;
-      color: #9ca3af;
-    }
-
-    .chat-messages {
+    .chatMessages{
       flex: 1;
-      padding: 12px 12px 4px;
-      background: #f3f4f6;
-      overflow-y: auto;
-      scroll-behavior: smooth;
+      padding: 10px;
+      border-radius: 18px;
+      background: rgba(17,24,39,.30);
+      border: 1px solid rgba(255,255,255,.10);
+      overflow-y:auto;
+      scroll-behavior:smooth;
     }
-
-    .msg {
-      max-width: 80%;
-      padding: 8px 11px;
-      border-radius: 12px;
+    .msg{
+      max-width: 86%;
+      padding: 10px 12px;
+      border-radius: 16px;
       font-size: 13px;
-      line-height: 1.4;
-      margin-bottom: 6px;
+      line-height: 1.45;
+      margin-bottom: 8px;
       white-space: pre-line;
       word-wrap: break-word;
+      border: 1px solid rgba(255,255,255,.10);
     }
-
-    .msg-bot {
-      background: #ffffff;
-      color: #111827;
-      border-bottom-left-radius: 3px;
+    .msg-bot{
+      background: rgba(255,255,255,.07);
+      color: var(--text);
+      border-bottom-left-radius: 6px;
     }
-
-    .msg-user {
-      background: #0ea5e9;
-      color: #f9fafb;
-      border-bottom-right-radius: 3px;
+    .msg-user{
+      background: linear-gradient(135deg, rgba(14,165,233,.95), rgba(59,130,246,.92));
+      color: white;
+      border-color: rgba(255,255,255,.10);
+      border-bottom-right-radius: 6px;
       margin-left: auto;
     }
 
-    .options {
-      display: flex;
+    .options{
+      display:flex;
       flex-direction: column;
-      gap: 6px;
-      margin: 4px 0 10px;
-    }
-
-    .option-btn {
-      border: none;
-      border-radius: 999px;
-      padding: 7px 12px;
-      font-size: 12px;
-      cursor: pointer;
-      background: #e5e7eb;
-      color: #111827;
-      text-align: left;
-      transition: background 0.15s ease, transform 0.05s ease;
-    }
-
-    .option-btn:hover {
-      background: #d1d5db;
-      transform: translateY(-1px);
-    }
-
-    .chat-input-area {
-      padding: 8px;
-      background: #f9fafb;
-      border-top: 1px solid #e5e7eb;
-      display: flex;
       gap: 8px;
+      margin: 6px 0 12px;
+    }
+    .option-btn{
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      text-align: left;
+      transition: transform .08s ease, background .15s ease, border-color .15s ease;
+    }
+    .option-btn:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.08);
+      border-color: rgba(255,255,255,.18);
     }
 
-    .chat-input-area input {
-      flex: 1;
-      border-radius: 999px;
-      border: 1px solid #d1d5db;
-      padding: 8px 12px;
+    .typing{
+      font-size: 12px;
+      color: var(--muted);
+      padding: 6px 2px 10px;
+    }
+
+    .chatInputArea{
+      display:flex;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 18px;
+      background: rgba(17,24,39,.30);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    .chatInputArea input{
+      flex:1;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      padding: 10px 12px;
       font-size: 13px;
       outline: none;
+      color: var(--text);
     }
-
-    .chat-input-area input:focus {
-      border-color: #0ea5e9;
-      box-shadow: 0 0 0 1px rgba(14, 165, 233, 0.2);
+    .chatInputArea input:focus{
+      border-color: rgba(14,165,233,.55);
+      box-shadow: 0 0 0 3px rgba(14,165,233,.12);
     }
-
-    .chat-input-area button {
-      border-radius: 999px;
+    .chatInputArea button{
+      border-radius: 14px;
       border: none;
-      padding: 8px 14px;
+      padding: 10px 14px;
       font-size: 13px;
       cursor: pointer;
-      background: #0ea5e9;
-      color: #f9fafb;
-      font-weight: 500;
-      transition: background 0.15s ease, transform 0.05s ease;
+      background: linear-gradient(135deg, var(--brand), #60a5fa);
+      color: #06111f;
+      font-weight: 800;
+      transition: transform .08s ease, opacity .15s ease;
+      min-width: 98px;
     }
+    .chatInputArea button:hover{ transform: translateY(-1px); }
+    .chatInputArea button:disabled{ opacity: .55; cursor: default; transform:none; }
 
-    .chat-input-area button:hover {
-      background: #0284c7;
-      transform: translateY(-1px);
-    }
-
-    .chat-input-area button:disabled {
-      opacity: 0.5;
-      cursor: default;
-      transform: none;
-    }
-
-    .typing {
+    /* Footer micro */
+    .footer{
+      padding: 10px 14px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      background: rgba(17,24,39,.25);
       font-size: 11px;
-      color: #6b7280;
-      margin-bottom: 8px;
+      color: var(--muted2);
+      display:flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items:center;
+    }
+    .link{
+      color: rgba(229,231,235,.8);
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(229,231,235,.35);
     }
   </style>
 </head>
+
 <body>
-  <div class="chat-wrapper">
-    <div class="chat-header">
-      <div class="chat-header-logo">C</div>
-      <div class="chat-header-text">
-        <span>Atendimento de Cobrança</span>
-        <span>Autoatendimento • Canal seguro</span>
+  <div class="app">
+    <div class="topbar">
+      <div class="logo">C</div>
+      <div class="title">
+        <div class="h1">Atendimento de Cobrança</div>
+        <div class="sub">
+          <span class="pill"><span class="dot"></span> Autoatendimento • Canal seguro</span>
+          <span class="pill" id="pillStep">step: inicio</span>
+        </div>
       </div>
     </div>
 
-    <div id="chatMessages" class="chat-messages"></div>
+    <div class="content">
+      <!-- VIEW 1: Entrada -->
+      <div class="view active" id="viewStart">
+        <div class="hero">
+          <h2>Identificação do titular</h2>
+          <p>
+            Para iniciar o atendimento, informe seu <strong>CPF ou CNPJ</strong>.
+            Usaremos o documento apenas para localizar os dados do contrato e as pendências.
+          </p>
+        </div>
 
-    <div class="chat-input-area">
-      <input
-        id="chatInput"
-        type="text"
-        placeholder="Digite aqui..."
-        autocomplete="off"
-      />
-      <button id="chatSend">Enviar</button>
+        <div class="formCard">
+          <div class="label">
+            <span>CPF / CNPJ</span>
+            <span class="hint">somente números (aceita colar com pontuação)</span>
+          </div>
+
+          <div class="field">
+            <input id="docInput" type="text" inputmode="numeric" autocomplete="off" placeholder="Digite o CPF ou CNPJ" />
+          </div>
+
+          <button id="btnContinuar" class="btn">Continuar</button>
+
+          <div class="infoRow">
+            <div class="badge">
+              <span>🔒</span>
+              <span>Atendimento seguro</span>
+            </div>
+            <div class="badge">
+              <span>⚡</span>
+              <span>Resposta em segundos</span>
+            </div>
+            <div class="badge">
+              <span>📌</span>
+              <span><strong>Importante:</strong> confirme o titular</span>
+            </div>
+          </div>
+
+          <!-- respostas de "sem pendência" / "não localizado" ficam aqui -->
+          <div class="inlineFeed" id="startFeed"></div>
+        </div>
+      </div>
+
+      <!-- VIEW 2: Pendências / Chat -->
+      <div class="view" id="viewChat">
+        <div class="chatWrap">
+          <div id="chatMessages" class="chatMessages"></div>
+
+          <div class="chatInputArea">
+            <input id="chatInput" type="text" placeholder="Digite aqui..." autocomplete="off" />
+            <button id="chatSend">Enviar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>QuatroC • Atendimento automatizado</span>
+      <a class="link" href="javascript:void(0)" id="btnReiniciar">Reiniciar</a>
     </div>
   </div>
 
@@ -202,18 +424,50 @@
     // ================= CONFIGURAÇÃO =================
     const API_URL = "https://billowing-voice-6efd.asilvino19.workers.dev/";
 
+    // ================= ELEMENTOS =================
+    const viewStart = document.getElementById("viewStart");
+    const viewChat  = document.getElementById("viewChat");
+    const pillStep  = document.getElementById("pillStep");
+
+    const docInput = document.getElementById("docInput");
+    const btnContinuar = document.getElementById("btnContinuar");
+    const startFeed = document.getElementById("startFeed");
+
     const chatMessages = document.getElementById("chatMessages");
     const chatInput = document.getElementById("chatInput");
     const chatSend = document.getElementById("chatSend");
 
+    const btnReiniciar = document.getElementById("btnReiniciar");
+
+    // ================= ESTADO =================
     let sessionId = Date.now().toString();
     let step = "inicio";
     let documento = null;
 
-    function addMessage(text, type = "bot") {
+    function setStep(next) {
+      step = next;
+      pillStep.textContent = "step: " + (step ?? "null");
+    }
+
+    function showView(which) {
+      if (which === "start") {
+        viewStart.classList.add("active");
+        viewChat.classList.remove("active");
+      } else {
+        viewChat.classList.add("active");
+        viewStart.classList.remove("active");
+      }
+    }
+
+    // ================= UI HELPERS (CHAT) =================
+    function scrollToBottom() {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function addChatMessage(text, type = "bot") {
       const div = document.createElement("div");
       div.className = "msg " + (type === "bot" ? "msg-bot" : "msg-user");
-      div.textContent = text;
+      div.textContent = text || "";
       chatMessages.appendChild(div);
       scrollToBottom();
     }
@@ -248,93 +502,181 @@
       if (el) el.remove();
     }
 
-    function scrollToBottom() {
-      chatMessages.scrollTop = chatMessages.scrollHeight;
+    // ================= UI HELPERS (START) =================
+    function clearStartFeed() {
+      startFeed.innerHTML = "";
+    }
+
+    function addStartBubble(text, variant="normal") {
+      const div = document.createElement("div");
+      div.className = "bubble " + (variant === "warn" ? "warn" : (variant === "muted" ? "muted" : ""));
+      div.textContent = text || "";
+      startFeed.appendChild(div);
+      startFeed.scrollIntoView({behavior:"smooth", block:"end"});
     }
 
     function setInputEnabled(enabled) {
+      btnContinuar.disabled = !enabled;
+      docInput.disabled = !enabled;
+
       chatInput.disabled = !enabled;
       chatSend.disabled = !enabled;
     }
 
+    // ================= BACKEND =================
     async function sendToBackend(payload) {
       try {
         console.log("API_URL:", API_URL, "payload:", payload);
         setInputEnabled(false);
-        showTyping();
+
+        // typing só faz sentido no chat
+        if (viewChat.classList.contains("active")) showTyping();
 
         const resp = await fetch(API_URL, {
           method: "POST",
-          // sem headers customizados para evitar preflight extra
           body: JSON.stringify(payload),
         });
 
-        hideTyping();
+        if (viewChat.classList.contains("active")) hideTyping();
         setInputEnabled(true);
 
         if (!resp.ok) {
           console.error("Erro HTTP", resp.status, await resp.text());
-          addMessage(
-            "Desculpe, ocorreu um erro ao processar sua solicitação.",
-            "bot"
-          );
+          if (viewChat.classList.contains("active")) {
+            addChatMessage("Desculpe, ocorreu um erro ao processar sua solicitação.", "bot");
+          } else {
+            addStartBubble("Desculpe, ocorreu um erro ao processar sua solicitação.", "warn");
+          }
           return;
         }
 
         const data = await resp.json().catch(async () => {
           const txt = await resp.text();
-          try {
-            return JSON.parse(txt);
-          } catch {
-            console.error("Resposta não é JSON válido:", txt);
-            return null;
-          }
+          try { return JSON.parse(txt); } catch { return null; }
         });
 
         console.log("Resposta backend:", data);
         handleBackendResponse(data);
+
       } catch (err) {
-        hideTyping();
+        if (viewChat.classList.contains("active")) hideTyping();
         setInputEnabled(true);
+
         console.error("Erro ao chamar backend", err);
-        addMessage(
-          "Não foi possível se conectar. Verifique sua conexão e tente novamente.",
-          "bot"
-        );
+        if (viewChat.classList.contains("active")) {
+          addChatMessage("Não foi possível se conectar. Verifique sua conexão e tente novamente.", "bot");
+        } else {
+          addStartBubble("Não foi possível se conectar. Verifique sua conexão e tente novamente.", "warn");
+        }
+      }
+    }
+
+    /**
+     * Regra de navegação:
+     * - Se tem dívida (temDivida === true) OU proximoStep típico de fluxo de pendências, abre Tela 2.
+     * - Se não tem dívida / não localizado / encerrado, mantém Tela 1 e mostra ali.
+     */
+    function shouldGoToSecondScreen(response) {
+      const ps = response?.proximoStep;
+
+      // seu backend já manda temDivida em alguns pontos
+      if (response?.temDivida === true) return true;
+
+      // proximoStep que indica que entrou no fluxo de pendências
+      const stepsQueIndicamPendencia = new Set([
+        "confirmar_identidade",
+        "selecionar_credor",
+        "pos_identidade",
+        "escolher_caminho",
+        "escolher_caminho_ira",
+        "aguardando_data_pagamento",
+        "falar_atendente"
+      ]);
+
+      if (ps && stepsQueIndicamPendencia.has(ps)) return true;
+
+      return false;
+    }
+
+    function renderMensagensNaTela1(response) {
+      clearStartFeed();
+
+      if (response?.mensagens && Array.isArray(response.mensagens)) {
+        response.mensagens.forEach((m) => {
+          addStartBubble(m.texto || "", "normal");
+        });
+      } else {
+        addStartBubble("Não foi possível interpretar a resposta do sistema.", "warn");
+      }
+    }
+
+    function renderMensagensNoChat(response) {
+      if (response?.mensagens && Array.isArray(response.mensagens)) {
+        response.mensagens.forEach((m) => {
+          addChatMessage(m.texto || "", "bot");
+          if (m.opcoes && Array.isArray(m.opcoes) && m.opcoes.length) {
+            addOptions(m.opcoes);
+          }
+        });
       }
     }
 
     function handleBackendResponse(response) {
       if (!response) return;
 
-      if (response.mensagens && Array.isArray(response.mensagens)) {
-        response.mensagens.forEach((m) => {
-          addMessage(m.texto || "", "bot");
-          if (m.opcoes && Array.isArray(m.opcoes)) {
-            addOptions(m.opcoes);
-          }
-        });
+      // atualizar step se vier
+      if (response.proximoStep !== undefined && response.proximoStep !== null) {
+        setStep(response.proximoStep);
       }
 
-      if (response.proximoStep !== undefined && response.proximoStep !== null) {
-        step = response.proximoStep;
+      // Decide qual tela mostrar
+      if (shouldGoToSecondScreen(response)) {
+        // abre tela 2 e renderiza em chat
+        showView("chat");
+        renderMensagensNoChat(response);
+      } else {
+        // mantém tela 1 e renderiza no feed
+        showView("start");
+        renderMensagensNaTela1(response);
       }
+    }
+
+    // ================= AÇÕES =================
+    function sanitizeDoc(text) {
+      return String(text || "").replace(/\D/g, "");
+    }
+
+    async function startWithDocumento() {
+      const raw = docInput.value.trim();
+      const doc = sanitizeDoc(raw);
+
+      if (!doc) {
+        clearStartFeed();
+        addStartBubble("Por favor, informe um CPF ou CNPJ para continuar.", "warn");
+        return;
+      }
+
+      documento = doc;
+      clearStartFeed();
+      addStartBubble("Consultando…", "muted");
+
+      await sendToBackend({
+        sessionId,
+        step: "consulta_divida",
+        documento
+      });
     }
 
     async function processUserMessage() {
       const text = chatInput.value.trim();
       if (!text) return;
 
-      addMessage(text, "user");
+      addChatMessage(text, "user");
       chatInput.value = "";
 
       if (step === "consulta_divida") {
-        documento = text.replace(/\D/g, "");
-        await sendToBackend({
-          sessionId,
-          step: "consulta_divida",
-          documento,
-        });
+        documento = sanitizeDoc(text);
+        await sendToBackend({ sessionId, step: "consulta_divida", documento });
         return;
       }
 
@@ -349,15 +691,12 @@
       }
 
       if (step === "inicio") {
-        documento = text.replace(/\D/g, "");
-        await sendToBackend({
-          sessionId,
-          step: "consulta_divida",
-          documento,
-        });
+        documento = sanitizeDoc(text);
+        await sendToBackend({ sessionId, step: "consulta_divida", documento });
         return;
       }
 
+      // padrão
       await sendToBackend({
         sessionId,
         step,
@@ -367,20 +706,18 @@
     }
 
     function handleOptionClick(op) {
-      addMessage(op.label, "user");
+      // Mostra escolha no chat
+      addChatMessage(op.label, "user");
 
+      // casos especiais existentes
       if (op.id === "gerar_boleto") {
-        addMessage(
-          "Informe a data em que pretende realizar o pagamento (formato DD/MM/AAAA).",
-          "bot"
-        );
-        step = "aguardando_data_pagamento";
+        addChatMessage("Informe a data em que pretende realizar o pagamento (formato DD/MM/AAAA).", "bot");
+        setStep("aguardando_data_pagamento");
         return;
       }
 
       if (op.id === "falar_atendente" || op.id === "duvidas") {
-        const motivo =
-          op.id === "duvidas" ? "dúvidas/contestação" : "negociação";
+        const motivo = op.id === "duvidas" ? "dúvidas/contestação" : "negociação";
         sendToBackend({
           sessionId,
           step: "falar_atendente",
@@ -389,14 +726,49 @@
         });
         return;
       }
+
+      // padrão para qualquer botão (identidade_sim / credor_0 / ira_informar_endereco etc.)
+      sendToBackend({
+        sessionId,
+        step,
+        optionId: op.id,
+        documento,
+      });
     }
 
     async function initChat() {
+      setStep("inicio");
+      showView("start");
+      clearStartFeed();
+
+      // Se quiser mostrar uma mensagem inicial na tela 1 (sem chat),
+      // chamamos o backend no inicio e renderizamos aqui
       await sendToBackend({
         sessionId,
         step: "inicio",
       });
     }
+
+    function resetAll() {
+      sessionId = Date.now().toString();
+      documento = null;
+      setStep("inicio");
+      docInput.value = "";
+      chatInput.value = "";
+      chatMessages.innerHTML = "";
+      clearStartFeed();
+      showView("start");
+      initChat();
+    }
+
+    // ================= EVENTS =================
+    btnContinuar.addEventListener("click", startWithDocumento);
+    docInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        startWithDocumento();
+      }
+    });
 
     chatSend.addEventListener("click", processUserMessage);
     chatInput.addEventListener("keypress", (e) => {
@@ -406,6 +778,9 @@
       }
     });
 
+    btnReiniciar.addEventListener("click", resetAll);
+
+    // Start
     initChat();
   </script>
 </body>
