@@ -2,259 +2,454 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Atendimento de Cobrança • QuatroC</title>
+  <title>Portal de Negociação • QuatroC</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
     :root{
-      --bg: #0b1220;
-      --card: rgba(255,255,255,.06);
-      --card2: rgba(255,255,255,.08);
-      --stroke: rgba(255,255,255,.12);
-      --text: #e5e7eb;
-      --muted: rgba(229,231,235,.72);
-      --muted2: rgba(229,231,235,.55);
-      --brand: #0ea5e9;
-      --brand2: #22c55e;
-      --danger: #ef4444;
-      --shadow: 0 18px 60px rgba(0,0,0,.45);
-      --radius: 18px;
+      --bg: #f3f5f8;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --stroke: #e5e7eb;
+
+      /* inspiração Acerto */
+      --brand: #22c55e;
+      --brandDark: #16a34a;
+      --brandSoft: rgba(34,197,94,.10);
+
+      --shadow: 0 16px 40px rgba(17,24,39,.10);
+      --radius: 16px;
+      --radius2: 12px;
     }
 
-    *{ box-sizing: border-box; }
+    * { box-sizing: border-box; }
     body{
-      margin:0; min-height:100vh;
+      margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background:
-        radial-gradient(1200px 700px at 20% 10%, rgba(14,165,233,.22), transparent 55%),
-        radial-gradient(900px 600px at 85% 20%, rgba(34,197,94,.18), transparent 55%),
-        radial-gradient(1200px 800px at 60% 100%, rgba(99,102,241,.12), transparent 55%),
-        var(--bg);
+      background: var(--bg);
       color: var(--text);
+      min-height: 100vh;
       display:flex;
-      align-items:center;
-      justify-content:center;
+      align-items: center;
+      justify-content: center;
       padding: 18px;
     }
 
-    /* App container */
+    /* container geral */
     .app{
-      width:100%;
-      max-width: 520px;
-      height: min(92vh, 760px);
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(255,255,255,.10);
-      overflow: hidden;
+      width: 100%;
+      max-width: 980px;
+      min-height: min(92vh, 760px);
+      background: transparent;
       display:flex;
       flex-direction: column;
-      backdrop-filter: blur(14px);
+      gap: 14px;
     }
 
-    /* Header */
+    /* Top */
     .topbar{
-      padding: 14px 16px;
       display:flex;
-      gap: 12px;
       align-items:center;
-      border-bottom: 1px solid rgba(255,255,255,.10);
-      background: linear-gradient(180deg, rgba(17,24,39,.65), rgba(17,24,39,.25));
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 18px;
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
     }
 
-    .logo{
-      width: 38px; height: 38px; border-radius: 999px;
-      display:flex; align-items:center; justify-content:center;
-      background: linear-gradient(135deg, var(--brand), var(--brand2));
-      font-weight: 800; color: white;
-      box-shadow: 0 10px 30px rgba(0,0,0,.28);
-      flex: 0 0 auto;
-    }
-    .topbar .title{
-      display:flex; flex-direction:column; gap: 2px;
+    .brand{
+      display:flex; align-items:center; gap: 12px;
       min-width: 0;
     }
-    .topbar .title .h1{
-      font-size: 14px; font-weight: 700; letter-spacing: .2px;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    .brand .logo{
+      font-weight: 900;
+      color: var(--brandDark);
+      letter-spacing: .4px;
+      font-size: 20px;
+      line-height: 1;
     }
-    .topbar .title .sub{
-      font-size: 12px; color: var(--muted);
-      display:flex; gap: 8px; align-items:center;
+    .brand .sub{
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .meta{
+      display:flex; align-items:center; gap: 10px; flex-wrap: wrap;
+      justify-content: flex-end;
     }
     .pill{
-      display:inline-flex; align-items:center; gap:6px;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.10);
+      font-size: 12px;
       color: var(--muted);
-      font-size: 11px;
+      background: #f9fafb;
+      border: 1px solid var(--stroke);
+      border-radius: 999px;
+      padding: 6px 10px;
     }
-    .dot{
-      width: 7px; height: 7px; border-radius: 99px;
-      background: var(--brand2);
-      box-shadow: 0 0 0 3px rgba(34,197,94,.12);
-    }
-
-    /* Content area */
-    .content{
-      flex:1;
-      position: relative;
-      overflow: hidden;
-      display:flex;
-      flex-direction: column;
+    .link{
+      color: var(--muted);
+      font-size: 12px;
+      text-decoration: none;
+      border-bottom: 1px dotted #cbd5e1;
+      cursor: pointer;
     }
 
-    /* Views */
+    /* VIEWs */
     .view{
-      position:absolute; inset:0;
-      padding: 16px;
-      overflow-y:auto;
       display:none;
+      flex:1;
     }
     .view.active{ display:block; }
 
-    /* Screen 1 (Entrada) */
-    .hero{
-      margin-top: 6px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 18px;
-      padding: 16px;
-    }
-    .hero h2{
-      margin:0 0 6px; font-size: 16px; letter-spacing:.2px;
-    }
-    .hero p{
-      margin:0; color: var(--muted); font-size: 13px; line-height: 1.5;
+    /* ======================
+       VIEW 1 (ENTRADA)
+       ====================== */
+    .gridStart{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
     }
 
-    .formCard{
-      margin-top: 14px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 18px;
-      padding: 14px;
+    .card{
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
     }
-    .label{
-      font-size: 12px; color: var(--muted); margin-bottom: 6px;
-      display:flex; justify-content: space-between; gap: 10px;
-    }
-    .hint{ color: var(--muted2); font-size: 11px; }
-    .field{
-      display:flex; gap: 10px;
+
+    .cardHeader{
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--stroke);
+      display:flex;
       align-items:center;
-      background: rgba(17,24,39,.35);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 14px;
-      padding: 10px 12px;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .cardHeader h2{
+      margin:0;
+      font-size: 16px;
+      letter-spacing: .2px;
+    }
+    .cardHeader p{
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .cardBody{ padding: 18px; }
+
+    .heroNote{
+      background: #f9fafb;
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius2);
+      padding: 12px 14px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .heroNote strong{ color: var(--text); }
+
+    .formRow{
+      margin-top: 14px;
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .labelRow{
+      display:flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .field{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #ffffff;
+      border: 1px solid #dbe3ee;
     }
     .field input{
       width: 100%;
       border: none;
-      outline: none;
-      background: transparent;
-      color: var(--text);
+      outline:none;
       font-size: 14px;
-      letter-spacing: .2px;
+      color: var(--text);
     }
-    .field input::placeholder{ color: rgba(229,231,235,.45); }
 
-    .btn{
+    .btnPrimary{
+      width: 100%;
       border: none;
       cursor: pointer;
-      border-radius: 14px;
-      padding: 10px 12px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #06111f;
-      background: linear-gradient(135deg, var(--brand), #60a5fa);
-      box-shadow: 0 12px 30px rgba(14,165,233,.18);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+      background: linear-gradient(180deg, var(--brand), var(--brandDark));
+      box-shadow: 0 10px 18px rgba(34,197,94,.20);
       transition: transform .08s ease, filter .15s ease, opacity .15s ease;
-      width: 100%;
-      margin-top: 12px;
     }
-    .btn:hover{ transform: translateY(-1px); filter: brightness(1.02); }
-    .btn:disabled{ opacity: .55; cursor: default; transform:none; }
+    .btnPrimary:hover{ transform: translateY(-1px); filter: brightness(1.02); }
+    .btnPrimary:disabled{ opacity: .55; cursor: default; transform:none; }
 
-    .infoRow{
-      margin-top: 12px;
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .badge{
-      display:inline-flex; align-items:center; gap:8px;
-      padding: 8px 10px;
-      border-radius: 14px;
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.10);
-      color: var(--muted);
-      font-size: 12px;
-    }
-    .badge strong{ color: var(--text); font-weight: 700; }
-
-    /* Inline messages for screen 1 */
-    .inlineFeed{
+    /* feed de mensagens na tela 1 */
+    .startFeed{
       margin-top: 14px;
       display:flex;
       flex-direction: column;
       gap: 10px;
     }
     .bubble{
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 16px;
-      padding: 12px;
+      border-radius: 12px;
+      padding: 12px 14px;
       font-size: 13px;
-      color: var(--text);
       line-height: 1.5;
+      border: 1px solid var(--stroke);
+      background: #ffffff;
       white-space: pre-line;
     }
-    .bubble.muted{ color: var(--muted); }
     .bubble.warn{
-      border-color: rgba(239,68,68,.35);
-      background: rgba(239,68,68,.10);
+      border-color: rgba(239,68,68,.25);
+      background: rgba(239,68,68,.06);
+    }
+    .bubble.muted{
+      color: var(--muted);
+      background: #f9fafb;
     }
 
-    /* Screen 2 (Chat) */
-    .chatWrap{
-      height: 100%;
+    /* ======================
+       VIEW 2 (PENDÊNCIAS)
+       ====================== */
+    .layoutDebts{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .statusBar{
+      padding: 14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .statusTitle{
+      display:flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+    .statusTitle .t1{
+      font-weight: 800;
+      font-size: 16px;
+    }
+    .statusTitle .t2{
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tabs{
+      display:flex;
+      gap: 8px;
+      padding: 0 18px 14px;
+    }
+    .tab{
+      border: 1px solid var(--stroke);
+      background: #f9fafb;
+      color: var(--muted);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      cursor: pointer;
+      user-select:none;
+    }
+    .tab.active{
+      background: var(--brandSoft);
+      border-color: rgba(34,197,94,.35);
+      color: var(--brandDark);
+      font-weight: 800;
+    }
+
+    .debtList{
+      padding: 0 18px 18px;
+      display:flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .debtCard{
+      border: 1px solid var(--stroke);
+      background: #ffffff;
+      border-radius: var(--radius);
+      box-shadow: 0 10px 24px rgba(17,24,39,.06);
+      overflow:hidden;
+    }
+
+    .debtCardTop{
+      padding: 14px 16px;
+      display:flex;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--stroke);
+      background: #ffffff;
+    }
+
+    .debtCredor{
+      display:flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width:0;
+    }
+    .debtCredor .c1{
+      font-weight: 800;
+      font-size: 13px;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .debtCredor .c2{
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .debtMeta{
+      text-align: right;
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .debtCardBody{
+      padding: 14px 16px;
+      background: rgba(34,197,94,.06);
+      border-top: 1px solid rgba(34,197,94,.14);
+    }
+
+    .priceRow{
+      display:flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .priceLabel{
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .priceValue{
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .debtDetails{
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      white-space: pre-line;
+      line-height: 1.5;
+    }
+
+    .actions{
+      padding: 12px 16px 16px;
       display:flex;
       flex-direction: column;
       gap: 10px;
+      background: #ffffff;
+    }
+
+    .btnGreen{
+      border:none;
+      cursor:pointer;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-weight: 900;
+      font-size: 13px;
+      color:#ffffff;
+      background: linear-gradient(180deg, var(--brand), var(--brandDark));
+      transition: transform .08s ease, filter .15s ease, opacity .15s ease;
+    }
+    .btnGreen:hover{ transform: translateY(-1px); filter: brightness(1.02); }
+
+    .btnOutline{
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      cursor:pointer;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-weight: 800;
+      font-size: 13px;
+      color: #111827;
+      transition: transform .08s ease, background .15s ease;
+    }
+    .btnOutline:hover{ transform: translateY(-1px); background: #f9fafb; }
+
+    /* fallback chat (sempre disponível) */
+    .chatBox{
+      margin-top: 8px;
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      background: #ffffff;
+      overflow:hidden;
+    }
+    .chatHeader{
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--stroke);
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+      background: #f9fafb;
+    }
+    .chatHeader strong{
+      font-size: 13px;
+    }
+    .chatHeader span{
+      font-size: 12px;
+      color: var(--muted);
     }
 
     .chatMessages{
-      flex: 1;
-      padding: 10px;
-      border-radius: 18px;
-      background: rgba(17,24,39,.30);
-      border: 1px solid rgba(255,255,255,.10);
+      max-height: 280px;
       overflow-y:auto;
-      scroll-behavior:smooth;
+      padding: 12px 12px 6px;
+      background: #ffffff;
+      scroll-behavior: smooth;
     }
     .msg{
       max-width: 86%;
       padding: 10px 12px;
-      border-radius: 16px;
+      border-radius: 12px;
       font-size: 13px;
       line-height: 1.45;
       margin-bottom: 8px;
       white-space: pre-line;
-      word-wrap: break-word;
-      border: 1px solid rgba(255,255,255,.10);
+      border: 1px solid var(--stroke);
     }
     .msg-bot{
-      background: rgba(255,255,255,.07);
+      background: #ffffff;
       color: var(--text);
       border-bottom-left-radius: 6px;
     }
     .msg-user{
-      background: linear-gradient(135deg, rgba(14,165,233,.95), rgba(59,130,246,.92));
-      color: white;
-      border-color: rgba(255,255,255,.10);
+      background: #111827;
+      color: #ffffff;
+      border-color: rgba(17,24,39,.22);
       border-bottom-right-radius: 6px;
       margin-left: auto;
     }
@@ -264,83 +459,73 @@
       flex-direction: column;
       gap: 8px;
       margin: 6px 0 12px;
+      padding: 0 12px 12px;
     }
     .option-btn{
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 14px;
+      border: 1px solid var(--stroke);
+      border-radius: 10px;
       padding: 10px 12px;
       font-size: 13px;
       cursor: pointer;
-      background: rgba(255,255,255,.06);
+      background: #f9fafb;
       color: var(--text);
       text-align: left;
-      transition: transform .08s ease, background .15s ease, border-color .15s ease;
+      transition: transform .08s ease, background .15s ease;
     }
     .option-btn:hover{
       transform: translateY(-1px);
-      background: rgba(255,255,255,.08);
-      border-color: rgba(255,255,255,.18);
-    }
-
-    .typing{
-      font-size: 12px;
-      color: var(--muted);
-      padding: 6px 2px 10px;
+      background: #f3f4f6;
     }
 
     .chatInputArea{
       display:flex;
       gap: 10px;
-      padding: 10px;
-      border-radius: 18px;
-      background: rgba(17,24,39,.30);
-      border: 1px solid rgba(255,255,255,.10);
+      padding: 12px;
+      border-top: 1px solid var(--stroke);
+      background: #ffffff;
     }
     .chatInputArea input{
       flex:1;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.04);
+      border-radius: 10px;
+      border: 1px solid #dbe3ee;
+      background: #ffffff;
       padding: 10px 12px;
       font-size: 13px;
       outline: none;
       color: var(--text);
     }
     .chatInputArea input:focus{
-      border-color: rgba(14,165,233,.55);
-      box-shadow: 0 0 0 3px rgba(14,165,233,.12);
+      border-color: rgba(34,197,94,.55);
+      box-shadow: 0 0 0 3px rgba(34,197,94,.12);
     }
     .chatInputArea button{
-      border-radius: 14px;
-      border: none;
+      border:none;
+      border-radius: 10px;
       padding: 10px 14px;
+      font-weight: 900;
       font-size: 13px;
       cursor: pointer;
-      background: linear-gradient(135deg, var(--brand), #60a5fa);
-      color: #06111f;
-      font-weight: 800;
+      background: linear-gradient(180deg, var(--brand), var(--brandDark));
+      color: #ffffff;
+      min-width: 96px;
       transition: transform .08s ease, opacity .15s ease;
-      min-width: 98px;
     }
     .chatInputArea button:hover{ transform: translateY(-1px); }
     .chatInputArea button:disabled{ opacity: .55; cursor: default; transform:none; }
 
-    /* Footer micro */
-    .footer{
-      padding: 10px 14px;
-      border-top: 1px solid rgba(255,255,255,.10);
-      background: rgba(17,24,39,.25);
-      font-size: 11px;
-      color: var(--muted2);
-      display:flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items:center;
+    .typing{
+      font-size: 12px;
+      color: var(--muted);
+      padding: 0 16px 10px;
     }
-    .link{
-      color: rgba(229,231,235,.8);
-      text-decoration: none;
-      border-bottom: 1px dotted rgba(229,231,235,.35);
+
+    @media (min-width: 900px){
+      .layoutDebts{
+        grid-template-columns: 1.25fr .75fr;
+        align-items: start;
+      }
+      .chatBox{ margin-top: 0; }
+      .chatMessages{ max-height: 520px; }
     }
   </style>
 </head>
@@ -348,75 +533,96 @@
 <body>
   <div class="app">
     <div class="topbar">
-      <div class="logo">C</div>
-      <div class="title">
-        <div class="h1">Atendimento de Cobrança</div>
-        <div class="sub">
-          <span class="pill"><span class="dot"></span> Autoatendimento • Canal seguro</span>
-          <span class="pill" id="pillStep">step: inicio</span>
+      <div class="brand">
+        <div>
+          <div class="logo">acerto.</div>
+          <div class="sub">Portal de negociação • canal seguro</div>
         </div>
+      </div>
+      <div class="meta">
+        <div class="pill" id="pillStep">step: inicio</div>
+        <a class="link" href="javascript:void(0)" id="btnReiniciar">Reiniciar</a>
       </div>
     </div>
 
-    <div class="content">
-      <!-- VIEW 1: Entrada -->
-      <div class="view active" id="viewStart">
-        <div class="hero">
-          <h2>Identificação do titular</h2>
-          <p>
-            Para iniciar o atendimento, informe seu <strong>CPF ou CNPJ</strong>.
-            Usaremos o documento apenas para localizar os dados do contrato e as pendências.
-          </p>
-        </div>
-
-        <div class="formCard">
-          <div class="label">
-            <span>CPF / CNPJ</span>
-            <span class="hint">somente números (aceita colar com pontuação)</span>
-          </div>
-
-          <div class="field">
-            <input id="docInput" type="text" inputmode="numeric" autocomplete="off" placeholder="Digite o CPF ou CNPJ" />
-          </div>
-
-          <button id="btnContinuar" class="btn">Continuar</button>
-
-          <div class="infoRow">
-            <div class="badge">
-              <span>🔒</span>
-              <span>Atendimento seguro</span>
-            </div>
-            <div class="badge">
-              <span>⚡</span>
-              <span>Resposta em segundos</span>
-            </div>
-            <div class="badge">
-              <span>📌</span>
-              <span><strong>Importante:</strong> confirme o titular</span>
+    <!-- VIEW 1 -->
+    <div class="view active" id="viewStart">
+      <div class="gridStart">
+        <div class="card">
+          <div class="cardHeader">
+            <div>
+              <h2>Bem-vindo(a)!</h2>
+              <p>Vamos localizar suas informações para seguir com o atendimento.</p>
             </div>
           </div>
 
-          <!-- respostas de "sem pendência" / "não localizado" ficam aqui -->
-          <div class="inlineFeed" id="startFeed"></div>
-        </div>
-      </div>
+          <div class="cardBody">
+            <div class="heroNote">
+              Para começar, informe seu <strong>CPF ou CNPJ</strong> (somente números).
+              Se houver pendência, você verá as opções de negociação na próxima tela.
+            </div>
 
-      <!-- VIEW 2: Pendências / Chat -->
-      <div class="view" id="viewChat">
-        <div class="chatWrap">
-          <div id="chatMessages" class="chatMessages"></div>
+            <div class="formRow">
+              <div class="labelRow">
+                <span>CPF / CNPJ</span>
+                <span>aceita colar com pontuação</span>
+              </div>
 
-          <div class="chatInputArea">
-            <input id="chatInput" type="text" placeholder="Digite aqui..." autocomplete="off" />
-            <button id="chatSend">Enviar</button>
+              <div class="field">
+                <input id="docInput" type="text" inputmode="numeric" autocomplete="off" placeholder="Digite seu CPF ou CNPJ" />
+              </div>
+
+              <button id="btnContinuar" class="btnPrimary">Continuar</button>
+            </div>
+
+            <!-- Aqui entram respostas quando NÃO tem pendência ou não localiza -->
+            <div class="startFeed" id="startFeed"></div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="footer">
-      <span>QuatroC • Atendimento automatizado</span>
-      <a class="link" href="javascript:void(0)" id="btnReiniciar">Reiniciar</a>
+    <!-- VIEW 2 -->
+    <div class="view" id="viewDebts">
+      <div class="card">
+        <div class="statusBar">
+          <div class="statusTitle">
+            <div class="t1" id="debtTitle">Pronto!</div>
+            <div class="t2" id="debtSubtitle">Aqui estão as informações encontradas para você.</div>
+          </div>
+          <div class="pill" id="pillDoc">doc: —</div>
+        </div>
+
+        <div class="tabs">
+          <div class="tab active" id="tabDividas">Minhas dívidas</div>
+          <div class="tab" id="tabAcordos">Meus acordos</div>
+        </div>
+
+        <div class="layoutDebts">
+          <!-- Lista de propostas/cards -->
+          <div>
+            <div class="debtList" id="debtList">
+              <!-- preenchido via JS -->
+            </div>
+          </div>
+
+          <!-- fallback do chat (mantém toda a sua lógica atual viva) -->
+          <div class="chatBox">
+            <div class="chatHeader">
+              <strong>Atendimento</strong>
+              <span>Use os botões ou envie uma mensagem</span>
+            </div>
+
+            <div id="chatMessages" class="chatMessages"></div>
+            <div class="chatInputArea">
+              <input id="chatInput" type="text" placeholder="Digite aqui..." autocomplete="off" />
+              <button id="chatSend">Enviar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="typing" id="typingIndicator" style="display:none;">Digitando...</div>
+      </div>
     </div>
   </div>
 
@@ -426,18 +632,28 @@
 
     // ================= ELEMENTOS =================
     const viewStart = document.getElementById("viewStart");
-    const viewChat  = document.getElementById("viewChat");
+    const viewDebts  = document.getElementById("viewDebts");
+
     const pillStep  = document.getElementById("pillStep");
+    const pillDoc   = document.getElementById("pillDoc");
 
     const docInput = document.getElementById("docInput");
     const btnContinuar = document.getElementById("btnContinuar");
     const startFeed = document.getElementById("startFeed");
 
+    const debtList = document.getElementById("debtList");
+    const debtTitle = document.getElementById("debtTitle");
+    const debtSubtitle = document.getElementById("debtSubtitle");
+
     const chatMessages = document.getElementById("chatMessages");
     const chatInput = document.getElementById("chatInput");
     const chatSend = document.getElementById("chatSend");
+    const typingEl = document.getElementById("typingIndicator");
 
     const btnReiniciar = document.getElementById("btnReiniciar");
+
+    const tabDividas = document.getElementById("tabDividas");
+    const tabAcordos = document.getElementById("tabAcordos");
 
     // ================= ESTADO =================
     let sessionId = Date.now().toString();
@@ -449,102 +665,194 @@
       pillStep.textContent = "step: " + (step ?? "null");
     }
 
-    function showView(which) {
-      if (which === "start") {
+    function sanitizeDoc(text) {
+      return String(text || "").replace(/\D/g, "");
+    }
+
+    function showView(which){
+      if (which === "start"){
         viewStart.classList.add("active");
-        viewChat.classList.remove("active");
+        viewDebts.classList.remove("active");
       } else {
-        viewChat.classList.add("active");
+        viewDebts.classList.add("active");
         viewStart.classList.remove("active");
       }
     }
 
-    // ================= UI HELPERS (CHAT) =================
-    function scrollToBottom() {
+    function clearStartFeed() { startFeed.innerHTML = ""; }
+    function addStartBubble(text, variant="normal"){
+      const div = document.createElement("div");
+      div.className = "bubble" + (variant==="warn" ? " warn" : (variant==="muted" ? " muted" : ""));
+      div.textContent = text || "";
+      startFeed.appendChild(div);
+      startFeed.scrollIntoView({behavior:"smooth", block:"end"});
+    }
+
+    function scrollChatBottom(){
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    function addChatMessage(text, type = "bot") {
+    function addChatMessage(text, type="bot"){
       const div = document.createElement("div");
-      div.className = "msg " + (type === "bot" ? "msg-bot" : "msg-user");
+      div.className = "msg " + (type==="bot" ? "msg-bot" : "msg-user");
       div.textContent = text || "";
       chatMessages.appendChild(div);
-      scrollToBottom();
+      scrollChatBottom();
     }
 
-    function addOptions(opcoes) {
+    function addOptions(opcoes){
       const wrapper = document.createElement("div");
       wrapper.className = "options";
-
-      opcoes.forEach((op) => {
+      opcoes.forEach(op => {
         const btn = document.createElement("button");
         btn.className = "option-btn";
         btn.textContent = op.label;
         btn.onclick = () => handleOptionClick(op);
         wrapper.appendChild(btn);
       });
-
       chatMessages.appendChild(wrapper);
-      scrollToBottom();
+      scrollChatBottom();
     }
 
-    function showTyping() {
-      const div = document.createElement("div");
-      div.className = "typing";
-      div.textContent = "Digitando...";
-      div.id = "typingIndicator";
-      chatMessages.appendChild(div);
-      scrollToBottom();
-    }
-
-    function hideTyping() {
-      const el = document.getElementById("typingIndicator");
-      if (el) el.remove();
-    }
-
-    // ================= UI HELPERS (START) =================
-    function clearStartFeed() {
-      startFeed.innerHTML = "";
-    }
-
-    function addStartBubble(text, variant="normal") {
-      const div = document.createElement("div");
-      div.className = "bubble " + (variant === "warn" ? "warn" : (variant === "muted" ? "muted" : ""));
-      div.textContent = text || "";
-      startFeed.appendChild(div);
-      startFeed.scrollIntoView({behavior:"smooth", block:"end"});
-    }
-
-    function setInputEnabled(enabled) {
+    function setInputEnabled(enabled){
       btnContinuar.disabled = !enabled;
       docInput.disabled = !enabled;
-
       chatInput.disabled = !enabled;
       chatSend.disabled = !enabled;
     }
 
+    function showTyping(show){
+      typingEl.style.display = show ? "block" : "none";
+    }
+
+    // ================= PROPOSTAS / CARDS =================
+    function formatCurrency(v){
+      const n = Number(String(v ?? "0").replace(/[^0-9,.-]/g,"").replace(".","").replace(",", ".")) || 0;
+      return n.toLocaleString("pt-BR", { style:"currency", currency:"BRL" });
+    }
+
+    function formatDate(iso){
+      if (!iso) return "—";
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return String(iso);
+      return d.toLocaleDateString("pt-BR");
+    }
+
+    /**
+     * Monta cards se existir response.parcelas (no seu fluxo, você já manda parcelas em alguns pontos)
+     * Se não existir, mostramos um card "Informações disponíveis no atendimento" e deixamos o chat como principal.
+     */
+    function renderDebtCards(response){
+      debtList.innerHTML = "";
+
+      const credor = response?.credor || response?.Credor || response?.dadosCliente?.credor || "Pendência encontrada";
+      const contrato = response?.dadosCliente?.contrato || response?.dadosCliente?.NumeroContrato || response?.contrato || "—";
+
+      // Se tiver parcelas numéricas, criamos um card com total + detalhes
+      const parcelas = Array.isArray(response?.parcelas) ? response.parcelas : null;
+
+      if (parcelas && parcelas.length){
+        let total = 0;
+        const linhas = parcelas.map((p, idx) => {
+          const valor = p.Valor ?? p.ValorOriginal ?? p._ValorEmAberto ?? p.valor ?? 0;
+          total += Number(valor) || 0;
+          const venc = formatDate(p.Vencimento);
+          return `Parcela ${idx+1}: vencimento ${venc} - valor ${formatCurrency(valor)}`;
+        });
+
+        const card = document.createElement("div");
+        card.className = "debtCard";
+        card.innerHTML = `
+          <div class="debtCardTop">
+            <div class="debtCredor">
+              <div class="c1">${credor}</div>
+              <div class="c2">Contrato: ${contrato}</div>
+            </div>
+            <div class="debtMeta">Atualizado em ${new Date().toLocaleDateString("pt-BR")}</div>
+          </div>
+          <div class="debtCardBody">
+            <div class="priceRow">
+              <div>
+                <div class="priceLabel">Valor total em aberto</div>
+              </div>
+              <div class="priceValue">${formatCurrency(total)}</div>
+            </div>
+            <div class="debtDetails">${linhas.join("\n")}</div>
+          </div>
+          <div class="actions">
+            <button class="btnGreen" data-action="cta1">Quero seguir com essa pendência</button>
+            <button class="btnOutline" data-action="cta2">Ver opções no atendimento</button>
+          </div>
+        `;
+        debtList.appendChild(card);
+
+        // Os botões aqui NÃO quebram seu fluxo: apenas “puxam” o usuário pro chat e mostram opções atuais
+        card.querySelector('[data-action="cta1"]').onclick = () => {
+          // Não envia nada extra. Só guia o usuário para os botões do chat (mantendo o backend intocado).
+          addChatMessage("Quero seguir com essa pendência", "user");
+          addChatMessage("Perfeito. Use os botões disponíveis abaixo para prosseguir.", "bot");
+          scrollChatBottom();
+        };
+        card.querySelector('[data-action="cta2"]').onclick = () => {
+          addChatMessage("Ver opções no atendimento", "user");
+          addChatMessage("Certo. Abaixo estão as opções disponíveis.", "bot");
+          scrollChatBottom();
+        };
+
+        return;
+      }
+
+      // Sem parcelas no payload: mostramos um card neutro e deixamos chat guiar
+      const fallback = document.createElement("div");
+      fallback.className = "debtCard";
+      fallback.innerHTML = `
+        <div class="debtCardTop">
+          <div class="debtCredor">
+            <div class="c1">Informações disponíveis</div>
+            <div class="c2">Use o atendimento ao lado para ver detalhes e opções</div>
+          </div>
+          <div class="debtMeta">—</div>
+        </div>
+        <div class="debtCardBody">
+          <div class="priceRow">
+            <div class="priceLabel">Encontramos registros vinculados ao documento informado.</div>
+          </div>
+          <div class="debtDetails">As opções e direcionamentos serão exibidos no atendimento (botões e mensagens).</div>
+        </div>
+        <div class="actions">
+          <button class="btnGreen" data-action="focusChat">Abrir opções no atendimento</button>
+        </div>
+      `;
+      debtList.appendChild(fallback);
+      fallback.querySelector('[data-action="focusChat"]').onclick = () => {
+        chatInput.focus();
+        addChatMessage("Ok, vamos continuar.", "user");
+        addChatMessage("Use os botões disponíveis para seguir com o atendimento.", "bot");
+      };
+    }
+
     // ================= BACKEND =================
-    async function sendToBackend(payload) {
-      try {
+    async function sendToBackend(payload){
+      try{
         console.log("API_URL:", API_URL, "payload:", payload);
         setInputEnabled(false);
-
-        // typing só faz sentido no chat
-        if (viewChat.classList.contains("active")) showTyping();
+        showTyping(true);
 
         const resp = await fetch(API_URL, {
           method: "POST",
           body: JSON.stringify(payload),
         });
 
-        if (viewChat.classList.contains("active")) hideTyping();
+        showTyping(false);
         setInputEnabled(true);
 
-        if (!resp.ok) {
-          console.error("Erro HTTP", resp.status, await resp.text());
-          if (viewChat.classList.contains("active")) {
+        if (!resp.ok){
+          const t = await resp.text();
+          console.error("Erro HTTP", resp.status, t);
+          if (viewDebts.classList.contains("active")){
             addChatMessage("Desculpe, ocorreu um erro ao processar sua solicitação.", "bot");
           } else {
+            clearStartFeed();
             addStartBubble("Desculpe, ocorreu um erro ao processar sua solicitação.", "warn");
           }
           return;
@@ -558,31 +866,25 @@
         console.log("Resposta backend:", data);
         handleBackendResponse(data);
 
-      } catch (err) {
-        if (viewChat.classList.contains("active")) hideTyping();
+      } catch(err){
+        showTyping(false);
         setInputEnabled(true);
-
         console.error("Erro ao chamar backend", err);
-        if (viewChat.classList.contains("active")) {
+        if (viewDebts.classList.contains("active")){
           addChatMessage("Não foi possível se conectar. Verifique sua conexão e tente novamente.", "bot");
         } else {
+          clearStartFeed();
           addStartBubble("Não foi possível se conectar. Verifique sua conexão e tente novamente.", "warn");
         }
       }
     }
 
-    /**
-     * Regra de navegação:
-     * - Se tem dívida (temDivida === true) OU proximoStep típico de fluxo de pendências, abre Tela 2.
-     * - Se não tem dívida / não localizado / encerrado, mantém Tela 1 e mostra ali.
-     */
-    function shouldGoToSecondScreen(response) {
+    function shouldGoToSecondScreen(response){
       const ps = response?.proximoStep;
 
-      // seu backend já manda temDivida em alguns pontos
       if (response?.temDivida === true) return true;
 
-      // proximoStep que indica que entrou no fluxo de pendências
+      // passos típicos do seu fluxo atual (expande conforme você for criando)
       const stepsQueIndicamPendencia = new Set([
         "confirmar_identidade",
         "selecionar_credor",
@@ -595,62 +897,68 @@
 
       if (ps && stepsQueIndicamPendencia.has(ps)) return true;
 
+      // se vier opções, geralmente é etapa de ação -> mantém tela 2
+      if (response?.mensagens?.some(m => Array.isArray(m?.opcoes) && m.opcoes.length)) return true;
+
       return false;
     }
 
-    function renderMensagensNaTela1(response) {
+    function renderMensagensTela1(response){
       clearStartFeed();
-
-      if (response?.mensagens && Array.isArray(response.mensagens)) {
-        response.mensagens.forEach((m) => {
-          addStartBubble(m.texto || "", "normal");
-        });
+      if (response?.mensagens && Array.isArray(response.mensagens)){
+        response.mensagens.forEach(m => addStartBubble(m.texto || "", "normal"));
       } else {
         addStartBubble("Não foi possível interpretar a resposta do sistema.", "warn");
       }
     }
 
-    function renderMensagensNoChat(response) {
-      if (response?.mensagens && Array.isArray(response.mensagens)) {
-        response.mensagens.forEach((m) => {
+    function renderMensagensChat(response){
+      if (response?.mensagens && Array.isArray(response.mensagens)){
+        response.mensagens.forEach(m => {
           addChatMessage(m.texto || "", "bot");
-          if (m.opcoes && Array.isArray(m.opcoes) && m.opcoes.length) {
+          if (m.opcoes && Array.isArray(m.opcoes) && m.opcoes.length){
             addOptions(m.opcoes);
           }
         });
       }
     }
 
-    function handleBackendResponse(response) {
+    function handleBackendResponse(response){
       if (!response) return;
 
-      // atualizar step se vier
-      if (response.proximoStep !== undefined && response.proximoStep !== null) {
+      if (response.proximoStep !== undefined && response.proximoStep !== null){
         setStep(response.proximoStep);
       }
 
-      // Decide qual tela mostrar
-      if (shouldGoToSecondScreen(response)) {
-        // abre tela 2 e renderiza em chat
-        showView("chat");
-        renderMensagensNoChat(response);
+      // set doc pill
+      const docShown = response?.documento || response?.dadosCliente?.documento || documento;
+      pillDoc.textContent = "doc: " + (docShown || "—");
+
+      if (shouldGoToSecondScreen(response)){
+        showView("debts");
+
+        // Título dinâmico se tiver nome
+        const nome = response?.dadosCliente?.nome || response?.nome || null;
+        debtTitle.textContent = nome ? `Pronto, ${String(nome).split(" ")[0]}!` : "Pronto!";
+        debtSubtitle.textContent = "Aqui estão as informações encontradas para você.";
+
+        // cards (se possível)
+        renderDebtCards(response);
+
+        // sempre renderiza chat (para não quebrar nenhuma etapa)
+        renderMensagensChat(response);
       } else {
-        // mantém tela 1 e renderiza no feed
         showView("start");
-        renderMensagensNaTela1(response);
+        renderMensagensTela1(response);
       }
     }
 
     // ================= AÇÕES =================
-    function sanitizeDoc(text) {
-      return String(text || "").replace(/\D/g, "");
-    }
-
-    async function startWithDocumento() {
+    async function startWithDocumento(){
       const raw = docInput.value.trim();
       const doc = sanitizeDoc(raw);
 
-      if (!doc) {
+      if (!doc){
         clearStartFeed();
         addStartBubble("Por favor, informe um CPF ou CNPJ para continuar.", "warn");
         return;
@@ -660,128 +968,103 @@
       clearStartFeed();
       addStartBubble("Consultando…", "muted");
 
-      await sendToBackend({
-        sessionId,
-        step: "consulta_divida",
-        documento
-      });
+      await sendToBackend({ sessionId, step: "consulta_divida", documento });
     }
 
-    async function processUserMessage() {
+    async function processUserMessage(){
       const text = chatInput.value.trim();
       if (!text) return;
 
       addChatMessage(text, "user");
       chatInput.value = "";
 
-      if (step === "consulta_divida") {
+      if (step === "consulta_divida"){
         documento = sanitizeDoc(text);
         await sendToBackend({ sessionId, step: "consulta_divida", documento });
         return;
       }
 
-      if (step === "aguardando_data_pagamento") {
-        await sendToBackend({
-          sessionId,
-          step: "gerar_boleto",
-          documento,
-          dataPagamento: text,
-        });
+      if (step === "aguardando_data_pagamento"){
+        await sendToBackend({ sessionId, step: "gerar_boleto", documento, dataPagamento: text });
         return;
       }
 
-      if (step === "inicio") {
+      if (step === "inicio"){
         documento = sanitizeDoc(text);
         await sendToBackend({ sessionId, step: "consulta_divida", documento });
         return;
       }
 
-      // padrão
-      await sendToBackend({
-        sessionId,
-        step,
-        documento,
-        message: text,
-      });
+      await sendToBackend({ sessionId, step, documento, message: text });
     }
 
-    function handleOptionClick(op) {
-      // Mostra escolha no chat
+    function handleOptionClick(op){
       addChatMessage(op.label, "user");
 
-      // casos especiais existentes
-      if (op.id === "gerar_boleto") {
+      if (op.id === "gerar_boleto"){
         addChatMessage("Informe a data em que pretende realizar o pagamento (formato DD/MM/AAAA).", "bot");
         setStep("aguardando_data_pagamento");
         return;
       }
 
-      if (op.id === "falar_atendente" || op.id === "duvidas") {
+      if (op.id === "falar_atendente" || op.id === "duvidas"){
         const motivo = op.id === "duvidas" ? "dúvidas/contestação" : "negociação";
-        sendToBackend({
-          sessionId,
-          step: "falar_atendente",
-          documento,
-          motivo,
-        });
+        sendToBackend({ sessionId, step: "falar_atendente", documento, motivo });
         return;
       }
 
-      // padrão para qualquer botão (identidade_sim / credor_0 / ira_informar_endereco etc.)
-      sendToBackend({
-        sessionId,
-        step,
-        optionId: op.id,
-        documento,
-      });
+      sendToBackend({ sessionId, step, optionId: op.id, documento });
     }
 
-    async function initChat() {
+    async function init(){
       setStep("inicio");
       showView("start");
       clearStartFeed();
 
-      // Se quiser mostrar uma mensagem inicial na tela 1 (sem chat),
-      // chamamos o backend no inicio e renderizamos aqui
-      await sendToBackend({
-        sessionId,
-        step: "inicio",
-      });
+      await sendToBackend({ sessionId, step: "inicio" });
     }
 
-    function resetAll() {
+    function resetAll(){
       sessionId = Date.now().toString();
       documento = null;
       setStep("inicio");
       docInput.value = "";
       chatInput.value = "";
       chatMessages.innerHTML = "";
+      debtList.innerHTML = "";
       clearStartFeed();
       showView("start");
-      initChat();
+      init();
     }
+
+    // ================= tabs (visual only) =================
+    tabDividas.onclick = () => {
+      tabDividas.classList.add("active");
+      tabAcordos.classList.remove("active");
+      // visual — sem efeito no backend por enquanto
+    };
+    tabAcordos.onclick = () => {
+      tabAcordos.classList.add("active");
+      tabDividas.classList.remove("active");
+      // visual — sem efeito no backend por enquanto
+      // se quiser, posso deixar essa aba mostrar "nenhum acordo" por padrão.
+    };
 
     // ================= EVENTS =================
     btnContinuar.addEventListener("click", startWithDocumento);
     docInput.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        startWithDocumento();
-      }
+      if (e.key === "Enter"){ e.preventDefault(); startWithDocumento(); }
     });
 
     chatSend.addEventListener("click", processUserMessage);
     chatInput.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        processUserMessage();
-      }
+      if (e.key === "Enter"){ e.preventDefault(); processUserMessage(); }
     });
 
     btnReiniciar.addEventListener("click", resetAll);
 
-    // Start
-    initChat();
+    // start
+    init();
   </script>
 </body>
 </html>
