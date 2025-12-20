@@ -2,206 +2,559 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Quatro C • Portal de Negociação</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portal de Negociação • Quatro C</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
     :root{
-      --qc-red:#d71920;
-      --qc-red-dark:#b51218;
-      --bg:#f4f6f8;
+      --q4c-red:#d4141d;
+      --q4c-red-dark:#b30f17;
+      --bg:#f3f4f6;
       --card:#ffffff;
-      --text:#111827;
-      --muted:#6b7280;
-      --border:#e5e7eb;
-      --radius:16px;
-      --shadow:0 18px 40px rgba(0,0,0,.08);
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e2e8f0;
+      --shadow: 0 20px 60px rgba(2,6,23,.12);
+      --radius: 20px;
     }
-
-    *{ box-sizing:border-box; }
-
+    *{box-sizing:border-box}
     body{
       margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+      background: radial-gradient(1200px 600px at 20% 10%, rgba(212,20,29,.08), transparent 60%),
+                  radial-gradient(900px 520px at 80% 0%, rgba(212,20,29,.06), transparent 55%),
+                  var(--bg);
+      color:var(--text);
       min-height:100vh;
       display:flex;
       align-items:center;
       justify-content:center;
-      background:var(--bg);
-      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-      color:var(--text);
+      padding:24px;
     }
 
-    .container{
+    .wrap{
       width:100%;
-      max-width:460px;
-      padding:16px;
+      max-width: 980px;
+      display:flex;
+      justify-content:center;
     }
 
     .card{
+      width:100%;
+      max-width: 740px;
       background:var(--card);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:28px 26px 26px;
+      border:1px solid rgba(226,232,240,.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
     }
 
-    /* ===== HEADER ===== */
-    .brand{
+    /* header */
+    .card-header{
+      padding:26px 22px 10px;
       display:flex;
       flex-direction:column;
       align-items:center;
       gap:10px;
-      margin-bottom:22px;
+    }
+    .logo{
+      width:86px;
+      height:auto;
+      display:block;
+      user-select:none;
+      -webkit-user-drag:none;
     }
 
-    .brand img{
-      height:54px;
-      width:auto;
+    /* body */
+    .card-body{
+      padding: 10px 28px 8px;
     }
-
-    .brand-name{
-      font-size:16px;
-      font-weight:800;
-      letter-spacing:.3px;
-    }
-
-    /* ===== TEXTOS ===== */
     .title{
+      margin:10px 0 6px;
+      font-size: 34px;
+      line-height: 1.15;
+      letter-spacing:-.02em;
       text-align:center;
-      font-size:20px;
-      font-weight:800;
-      margin-bottom:6px;
     }
-
     .subtitle{
-      text-align:center;
-      font-size:14px;
+      margin:0 0 18px;
       color:var(--muted);
-      margin-bottom:26px;
+      text-align:center;
+      font-size:16px;
     }
 
-    /* ===== FORM ===== */
+    .form{
+      margin-top: 14px;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+
     .label-row{
       display:flex;
+      align-items:flex-end;
       justify-content:space-between;
-      align-items:center;
-      margin-bottom:6px;
-      font-size:13px;
+      gap:12px;
+      margin-bottom:8px;
+    }
+    .label{
       font-weight:600;
+      font-size:14px;
+      color:#111827;
     }
 
-    .hint{
-      font-size:12px;
+    .toggle{
+      font-size:13px;
       color:var(--muted);
-      font-weight:500;
+      display:flex;
+      gap:6px;
+      align-items:center;
+      flex-wrap:wrap;
     }
+    .toggle a{
+      color: var(--q4c-red);
+      font-weight:700;
+      text-decoration:none;
+      cursor:pointer;
+    }
+    .toggle a:hover{ text-decoration:underline; }
 
-    input{
+    .input{
       width:100%;
-      height:48px;
-      border-radius:12px;
+      height:56px;
       border:1px solid var(--border);
-      padding:0 14px;
-      font-size:15px;
+      border-radius: 14px;
+      padding: 0 16px;
+      font-size:18px;
       outline:none;
-      margin-bottom:18px;
+      transition: box-shadow .15s ease, border-color .15s ease;
+      background:#fff;
+      color:#0b1220;
+      caret-color: var(--q4c-red); /* cursor só no input */
     }
-
-    input:focus{
-      border-color:var(--qc-red);
-      box-shadow:0 0 0 1px rgba(215,25,32,.25);
+    .input:focus{
+      border-color: rgba(212,20,29,.55);
+      box-shadow: 0 0 0 4px rgba(212,20,29,.12);
     }
 
     .btn{
       width:100%;
-      height:50px;
-      border-radius:14px;
+      height:58px;
       border:none;
-      background:linear-gradient(180deg,var(--qc-red),var(--qc-red-dark));
-      color:#fff;
-      font-size:16px;
-      font-weight:800;
-      cursor:pointer;
-      transition:transform .05s ease, opacity .15s ease;
-    }
-
-    .btn:hover{ opacity:.95; }
-    .btn:active{ transform:translateY(1px); }
-
-    .switch-doc{
-      text-align:center;
+      border-radius: 16px;
       margin-top:14px;
-      font-size:13px;
-      color:var(--muted);
-    }
-
-    .switch-doc span{
-      color:var(--qc-red);
-      font-weight:700;
+      background: linear-gradient(180deg, var(--q4c-red), var(--q4c-red-dark));
+      color:#fff;
+      font-size:18px;
+      font-weight:800;
+      letter-spacing:.01em;
       cursor:pointer;
+      transition: transform .06s ease, filter .15s ease, opacity .15s ease;
+    }
+    .btn:hover{ filter: brightness(1.02); transform: translateY(-1px); }
+    .btn:active{ transform: translateY(0px); }
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      transform:none;
     }
 
-    /* ===== FOOTER ===== */
-    .footer{
-      margin-top:16px;
+    /* footer */
+    .card-footer{
+      padding: 16px 22px 22px;
       text-align:center;
-      font-size:12px;
       color:var(--muted);
+      font-size:14px;
     }
-
-    .footer a{
-      color:var(--qc-red);
+    .card-footer a{
+      color:var(--q4c-red);
       font-weight:700;
       text-decoration:none;
     }
+    .card-footer a:hover{ text-decoration:underline; }
 
-    .footer a:hover{ text-decoration:underline; }
+    /* Página 2 (pendências) - escondida inicialmente */
+    .page{
+      display:none;
+    }
+    .page.active{
+      display:block;
+    }
 
+    /* pequenas melhorias mobile */
+    @media (max-width:520px){
+      .title{ font-size: 28px; }
+      .card-body{ padding: 10px 18px 8px; }
+      .form{ padding:14px; }
+      .logo{ width:78px; }
+    }
   </style>
 </head>
-<body>
 
-  <div class="container">
+<body>
+  <div class="wrap">
     <div class="card">
 
-      <!-- LOGO CENTRALIZADO -->
-      <div class="brand">
-        <!-- URL do logo -->
-        <img src="https://raw.githubusercontent.com/asilvino19-beep/Logo/main/Logo.png" />
-        <div class="brand-name">Quatro C</div>
+      <!-- ======= PÁGINA 1: Entrada de Documento ======= -->
+      <div id="page1" class="page active">
+        <div class="card-header">
+          <!-- Troque o src pela sua URL CDN/RAW -->
+          <img
+            class="logo"
+            src="https://cdn.jsdelivr.net/gh/asilvino19-beep/Logo@main/Logo.png"
+            alt="Quatro C"
+          />
+        </div>
+
+        <div class="card-body">
+          <h1 class="title">Acesse ao portal de negociação</h1>
+          <p class="subtitle">Preencha o campo abaixo</p>
+
+          <div class="form">
+            <div class="label-row">
+              <div class="label" id="docLabel">Digite seu CPF:</div>
+
+              <!-- Link dinâmico CPF/CNPJ -->
+              <div class="toggle" aria-live="polite">
+                <span id="togglePrefix">É pessoa jurídica?</span>
+                <a id="toggleDocType" href="#" role="button">Entrar com CNPJ</a>
+              </div>
+            </div>
+
+            <input
+              id="docInput"
+              class="input"
+              inputmode="numeric"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="000.000.000-00"
+              aria-label="Documento"
+            />
+
+            <button id="btnConfirmar" class="btn">Confirmar</button>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          Conosco, seus dados são tratados de forma segura e sigilosa. Caso tenha dúvidas ou queira saber mais sobre, acesse nossos
+          <a id="linkTermos" href="./termos-e-politica.html" target="_blank" rel="noopener">Termos e Política</a>.
+        </div>
       </div>
 
-      <!-- TEXTOS AJUSTADOS -->
-      <div class="title">Acesse ao portal de negociação</div>
-      <div class="subtitle">Preencha o campo abaixo</div>
+      <!-- ======= PÁGINA 2: Pendências (se houver) ======= -->
+      <div id="page2" class="page">
+        <!-- Mantive a estrutura para você usar depois com o backend, sem quebrar nada -->
+        <div class="card-header">
+          <img
+            class="logo"
+            src="https://cdn.jsdelivr.net/gh/asilvino19-beep/Logo@main/Logo.png"
+            alt="Quatro C"
+          />
+        </div>
 
-      <!-- FORM -->
-      <div class="label-row">
-        <label>Digite seu CPF:</label>
-        <div class="hint">Aceita colar com pontuação</div>
+        <div class="card-body">
+          <h1 class="title" style="font-size:30px;">Pendências encontradas</h1>
+          <p class="subtitle">Aguarde, carregando informações…</p>
+
+          <!-- Você vai preencher este bloco via JS usando response.mensagens -->
+          <div id="pendenciasContainer" class="form"></div>
+
+          <button id="btnVoltar" class="btn" style="margin-top:18px;background:#0f172a;">
+            Voltar
+          </button>
+        </div>
+
+        <div class="card-footer">
+          Atendimento seguro • Quatro C
+        </div>
       </div>
 
-      <input
-        type="text"
-        placeholder="000.000.000-00"
-        autocomplete="off"
-        id="documentInput"
-      />
-
-      <button class="btn">Confirmar</button>
-
-      <div class="switch-doc">
-        É pessoa jurídica? <span>Entrar com CNPJ</span>
-      </div>
-
-    </div>
-
-    <!-- RODAPÉ DE CONFIANÇA -->
-    <div class="footer">
-      Conosco, seus dados são tratados de forma segura e sigilosa.
-      Caso tenha dúvidas ou queira saber mais sobre, acesso nossos
-      <a href="TERMO_E_POLITICA_URL" target="_blank">Termos e Política</a>.
     </div>
   </div>
 
+  <script>
+    // ================= CONFIGURAÇÃO =================
+    const API_URL = "https://billowing-voice-6efd.asilvino19.workers.dev/";
+
+    // ======= Estado =======
+    let sessionId = Date.now().toString();
+    let step = "inicio";
+    let documento = null;
+
+    // Tipo do documento na UI
+    let docType = "cpf"; // "cpf" | "cnpj"
+
+    // ======= Elementos =======
+    const page1 = document.getElementById("page1");
+    const page2 = document.getElementById("page2");
+
+    const docInput = document.getElementById("docInput");
+    const docLabel = document.getElementById("docLabel");
+    const toggleDocType = document.getElementById("toggleDocType");
+    const togglePrefix = document.getElementById("togglePrefix");
+    const btnConfirmar = document.getElementById("btnConfirmar");
+
+    const pendenciasContainer = document.getElementById("pendenciasContainer");
+    const btnVoltar = document.getElementById("btnVoltar");
+
+    // ======= Helpers (máscaras + limites) =======
+    function onlyDigits(s){ return (s || "").replace(/\D/g, ""); }
+
+    function maskCPF(d){
+      // 000.000.000-00
+      d = d.slice(0,11);
+      d = d.replace(/^(\d{3})(\d)/, "$1.$2");
+      d = d.replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
+      d = d.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
+      return d;
+    }
+
+    function maskCNPJ(d){
+      // 00.000.000/0000-00
+      d = d.slice(0,14);
+      d = d.replace(/^(\d{2})(\d)/, "$1.$2");
+      d = d.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+      d = d.replace(/^(\d{2})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3/$4");
+      d = d.replace(/^(\d{2})\.(\d{3})\.(\d{3})\/(\d{4})(\d)/, "$1.$2.$3/$4-$5");
+      return d;
+    }
+
+    function applyMask(){
+      const d = onlyDigits(docInput.value);
+      if(docType === "cpf"){
+        docInput.value = maskCPF(d);
+      } else {
+        docInput.value = maskCNPJ(d);
+      }
+      updateButtonState();
+    }
+
+    function updateButtonState(){
+      const d = onlyDigits(docInput.value);
+      const ok = (docType === "cpf") ? (d.length === 11) : (d.length === 14);
+      btnConfirmar.disabled = !ok;
+    }
+
+    function setDocType(type){
+      docType = type;
+
+      if(docType === "cpf"){
+        docLabel.textContent = "Digite seu CPF:";
+        docInput.placeholder = "000.000.000-00";
+        togglePrefix.textContent = "É pessoa jurídica?";
+        toggleDocType.textContent = "Entrar com CNPJ";
+      } else {
+        docLabel.textContent = "Digite seu CNPJ:";
+        docInput.placeholder = "00.000.000/0000-00";
+        togglePrefix.textContent = "É pessoa física?";
+        toggleDocType.textContent = "Entrar com CPF";
+      }
+
+      // Reaplica máscara e limites já com o novo tipo
+      applyMask();
+      docInput.focus();
+    }
+
+    // Evita “cursor” em qualquer lugar: isso já acontece naturalmente,
+    // mas garantimos que nada além do input seja editável.
+    // (Não usamos contenteditable em lugar nenhum.)
+
+    // ======= Navegação de páginas =======
+    function showPage(n){
+      if(n === 1){
+        page1.classList.add("active");
+        page2.classList.remove("active");
+      } else {
+        page1.classList.remove("active");
+        page2.classList.add("active");
+      }
+    }
+
+    // ======= Backend =======
+    function setInputEnabled(enabled) {
+      docInput.disabled = !enabled;
+      btnConfirmar.disabled = !enabled || btnConfirmar.disabled; // mantém validação
+    }
+
+    async function sendToBackend(payload) {
+      try {
+        setInputEnabled(false);
+
+        const resp = await fetch(API_URL, {
+          method: "POST",
+          body: JSON.stringify(payload),
+        });
+
+        setInputEnabled(true);
+
+        if (!resp.ok) {
+          console.error("Erro HTTP", resp.status, await resp.text());
+          return { error: true };
+        }
+
+        const data = await resp.json().catch(async () => {
+          const txt = await resp.text();
+          try { return JSON.parse(txt); } catch { return null; }
+        });
+
+        return data || { error: true };
+      } catch (err) {
+        console.error("Erro ao chamar backend", err);
+        setInputEnabled(true);
+        return { error: true };
+      }
+    }
+
+    // Você pode manter seu handler do chat. Aqui, como seu objetivo é “portal”,
+    // nós só vamos: enviar documento -> se tem dívida, abre página 2.
+    function renderPendenciasFromMensagens(response){
+      // Render simples: pega textos e cria blocos.
+      // (Você pode evoluir depois para cards)
+      pendenciasContainer.innerHTML = "";
+
+      if(!response || !Array.isArray(response.mensagens)){
+        pendenciasContainer.innerHTML = "<div style='color:#64748b;'>Não foi possível carregar as informações.</div>";
+        return;
+      }
+
+      response.mensagens.forEach(m => {
+        const p = document.createElement("div");
+        p.style.padding = "10px 12px";
+        p.style.border = "1px solid #e2e8f0";
+        p.style.borderRadius = "12px";
+        p.style.marginBottom = "10px";
+        p.style.whiteSpace = "pre-line";
+        p.textContent = (m && m.texto) ? m.texto : "";
+        pendenciasContainer.appendChild(p);
+
+        // Se vier opções, renderiza botões
+        if(m && Array.isArray(m.opcoes) && m.opcoes.length){
+          const wrap = document.createElement("div");
+          wrap.style.display = "flex";
+          wrap.style.flexDirection = "column";
+          wrap.style.gap = "8px";
+          wrap.style.margin = "8px 0 12px";
+
+          m.opcoes.forEach(op => {
+            const b = document.createElement("button");
+            b.type = "button";
+            b.style.border = "1px solid #e2e8f0";
+            b.style.borderRadius = "14px";
+            b.style.padding = "10px 12px";
+            b.style.fontWeight = "700";
+            b.style.cursor = "pointer";
+            b.style.background = "#f8fafc";
+            b.textContent = op.label;
+
+            b.onclick = async () => {
+              // Aqui você mantém sua lógica de optionId/step
+              const res = await sendToBackend({
+                sessionId,
+                step,
+                optionId: op.id,
+                documento,
+              });
+
+              // Atualiza step se veio
+              if(res && res.proximoStep !== undefined && res.proximoStep !== null){
+                step = res.proximoStep;
+              }
+
+              // Re-renderiza o que voltar
+              renderPendenciasFromMensagens(res);
+            };
+
+            wrap.appendChild(b);
+          });
+
+          pendenciasContainer.appendChild(wrap);
+        }
+      });
+    }
+
+    // ======= Eventos =======
+
+    // Troca CPF/CNPJ (agora é clicável e troca máscara + limite)
+    toggleDocType.addEventListener("click", (e) => {
+      e.preventDefault();
+      setDocType(docType === "cpf" ? "cnpj" : "cpf");
+    });
+
+    // Limita e mascara enquanto digita (CPF 11, CNPJ 14)
+    docInput.addEventListener("input", () => {
+      applyMask();
+    });
+
+    // Também controla colar (paste) para manter apenas dígitos e máscara
+    docInput.addEventListener("paste", (e) => {
+      // Deixa colar, mas logo após o input mascara e corta
+      setTimeout(applyMask, 0);
+    });
+
+    btnConfirmar.addEventListener("click", async () => {
+      const d = onlyDigits(docInput.value);
+      documento = d;
+
+      // Seu backend espera step "consulta_divida"
+      const resp = await sendToBackend({
+        sessionId,
+        step: "consulta_divida",
+        documento,
+      });
+
+      if(resp && resp.proximoStep !== undefined && resp.proximoStep !== null){
+        step = resp.proximoStep;
+      }
+
+      // Regra: se não houver pendência ou não localizar, responde na página 1.
+      // Se houver dívida, abre página 2.
+      // (Usamos temDivida quando existir, e fallback por presença de opções/step.)
+      const temDivida = !!(resp && resp.temDivida);
+
+      if(temDivida){
+        showPage(2);
+        renderPendenciasFromMensagens(resp);
+      } else {
+        // Exibe resposta na própria página 1, abaixo do formulário (minimalista)
+        let box = document.getElementById("page1Feedback");
+        if(!box){
+          box = document.createElement("div");
+          box.id = "page1Feedback";
+          box.style.marginTop = "14px";
+          box.style.padding = "12px 14px";
+          box.style.border = "1px solid #e2e8f0";
+          box.style.borderRadius = "14px";
+          box.style.background = "#ffffff";
+          box.style.color = "#0f172a";
+          box.style.whiteSpace = "pre-line";
+          // insere logo após o form
+          const form = page1.querySelector(".form");
+          form.parentNode.appendChild(box);
+        }
+
+        if(resp && Array.isArray(resp.mensagens) && resp.mensagens.length){
+          box.textContent = resp.mensagens.map(m => m.texto || "").filter(Boolean).join("\n\n");
+        } else if(resp && resp.error){
+          box.textContent = "Não foi possível processar sua solicitação. Tente novamente.";
+        } else {
+          box.textContent = "Não foi possível localizar informações para o documento informado.";
+        }
+      }
+    });
+
+    btnVoltar.addEventListener("click", () => {
+      showPage(1);
+      docInput.focus();
+    });
+
+    // Inicialização
+    (function init(){
+      // trava o botão até documento válido
+      updateButtonState();
+      // foco no input (cursor apenas nele)
+      docInput.focus();
+    })();
+  </script>
 </body>
 </html>
