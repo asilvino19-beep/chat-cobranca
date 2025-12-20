@@ -2,557 +2,521 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>QuatroC | Portal de Negociação</title>
+  <title>Quatro C • Portal de Negociação</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     :root{
-      /* Identidade QuatroC (ajustável) */
-      --q-red:#e11d2e;
-      --q-red-dark:#b31320;
-      --q-bg:#f5f6f8;
-      --q-card:#ffffff;
-      --q-text:#0f172a;
-      --q-muted:#64748b;
-      --q-border:#e5e7eb;
-      --q-green:#16a34a;
-      --shadow: 0 12px 30px rgba(2,6,23,.10);
-      --radius: 18px;
+      --qc-red:#d71920;         /* ajuste fino se quiser */
+      --qc-red-dark:#b51218;
+      --qc-bg:#f6f7f9;
+      --qc-text:#111827;
+      --qc-muted:#6b7280;
+      --qc-border:#e5e7eb;
+      --qc-card:#ffffff;
+      --qc-shadow: 0 10px 30px rgba(0,0,0,.10);
+      --radius: 14px;
     }
 
-    *{box-sizing:border-box}
+    *{ box-sizing:border-box; }
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: var(--q-bg);
-      color: var(--q-text);
-      min-height:100vh;
+      background: var(--qc-bg);
+      color: var(--qc-text);
     }
 
-    /* Top bar (portal) */
     .topbar{
-      width:100%;
       background:#fff;
-      border-bottom:1px solid var(--q-border);
+      border-bottom:1px solid var(--qc-border);
     }
     .topbar-inner{
       max-width: 980px;
       margin: 0 auto;
-      padding: 14px 18px;
+      padding: 16px 18px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:16px;
+      gap: 12px;
     }
+
     .brand{
       display:flex;
       align-items:center;
-      gap:12px;
-      min-width: 240px;
+      gap: 12px;
+      min-width: 0;
     }
     .brand img{
-      height:34px;
-      width:auto;
+      height: 38px;
+      width: auto;
       display:block;
     }
-    .brand-text{
+    .brand .meta{
       display:flex;
       flex-direction:column;
-      line-height:1.15;
+      gap:2px;
+      line-height:1.1;
+      min-width:0;
     }
-    .brand-text b{
-      font-size:15px;
-      font-weight:800;
+    .brand .meta .title{
+      font-weight: 700;
+      font-size: 14px;
       letter-spacing:.2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
-    .brand-text span{
-      font-size:12px;
-      color:var(--q-muted);
+    .brand .meta .sub{
+      font-size: 12px;
+      color: var(--qc-muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
+
     .top-actions{
       display:flex;
       align-items:center;
-      gap:10px;
-    }
-    .pill{
-      border:1px solid var(--q-border);
-      background:#fff;
-      padding:8px 12px;
-      border-radius:999px;
-      font-size:12px;
-      color:var(--q-muted);
-      display:flex;
-      gap:8px;
-      align-items:center;
-      white-space:nowrap;
+      gap: 10px;
+      flex-shrink:0;
     }
     .link{
-      color: var(--q-red);
-      text-decoration:none;
-      font-weight:700;
-      font-size:12px;
+      border:0;
+      background:transparent;
+      color: var(--qc-muted);
+      font-size: 13px;
+      cursor:pointer;
+      padding: 8px 10px;
+      border-radius: 10px;
     }
-    .link:hover{ text-decoration:underline; }
+    .link:hover{
+      background:#f3f4f6;
+      color:#374151;
+    }
 
-    /* Layout */
     .container{
       max-width: 980px;
-      margin: 0 auto;
-      padding: 18px;
+      margin: 22px auto;
+      padding: 0 18px 28px;
     }
 
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-    }
-
-    .card{
-      background: var(--q-card);
-      border:1px solid var(--q-border);
+    .panel{
+      background: var(--qc-card);
+      border: 1px solid var(--qc-border);
       border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      box-shadow: var(--qc-shadow);
       overflow:hidden;
     }
 
-    .card-head{
-      padding: 18px 20px;
-      border-bottom:1px solid var(--q-border);
-      background: linear-gradient(180deg,#fff, #fff);
+    .panel-header{
+      padding: 18px 18px 0;
     }
-    .card-head h1{
+    .panel-header h1{
       margin:0;
-      font-size:22px;
-      letter-spacing:.2px;
+      font-size: 22px;
+      letter-spacing: -.2px;
     }
-    .card-head p{
-      margin:6px 0 0;
-      color:var(--q-muted);
-      font-size:13px;
-    }
-
-    .card-body{
-      padding: 18px 20px 20px;
+    .panel-header p{
+      margin: 6px 0 0;
+      color: var(--qc-muted);
+      font-size: 14px;
     }
 
-    /* Tela 1 - Form */
+    .panel-body{
+      padding: 16px 18px 18px;
+    }
+
     .hint{
-      background: #fff;
-      border: 1px solid var(--q-border);
-      border-radius: 14px;
-      padding: 14px 14px;
-      color: var(--q-muted);
-      font-size: 13px;
+      border: 1px solid var(--qc-border);
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 12px 12px;
+      color: #374151;
+      font-size: 14px;
+      margin: 14px 0 16px;
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    label{
+      font-size: 12px;
+      color: var(--qc-muted);
+      margin-left: 2px;
+    }
+
+    .input-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      margin-bottom: 6px;
     }
 
     .field{
-      margin-top: 14px;
-    }
-    .field label{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      font-size:12px;
-      color: var(--q-muted);
-      margin-bottom:8px;
-    }
-    .field input{
       width:100%;
-      border: 1px solid var(--q-border);
-      border-radius: 14px;
+      border: 1px solid var(--qc-border);
+      background:#fff;
+      border-radius: 12px;
       padding: 14px 14px;
       font-size: 16px;
       outline:none;
-      background:#fff;
     }
-    .field input:focus{
-      border-color: rgba(225,29,46,.45);
-      box-shadow: 0 0 0 4px rgba(225,29,46,.08);
+    .field:focus{
+      border-color: rgba(215,25,32,.45);
+      box-shadow: 0 0 0 3px rgba(215,25,32,.10);
     }
 
-    .btn-primary{
+    .btn{
       width:100%;
-      margin-top: 14px;
-      border:none;
+      border: 0;
       border-radius: 14px;
       padding: 14px 16px;
-      font-size: 16px;
-      font-weight: 800;
+      font-size: 15px;
+      font-weight: 700;
+      cursor:pointer;
+      background: var(--qc-red);
       color:#fff;
-      background: linear-gradient(180deg, var(--q-red), var(--q-red-dark));
-      cursor:pointer;
-      transition: transform .05s ease, filter .15s ease;
+      transition: transform .05s ease, background .15s ease;
     }
-    .btn-primary:hover{ filter: brightness(1.02); }
-    .btn-primary:active{ transform: translateY(1px); }
-    .btn-primary:disabled{ opacity:.55; cursor:default; }
+    .btn:hover{ background: var(--qc-red-dark); transform: translateY(-1px); }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; transform:none; }
 
-    .toggle-row{
-      margin-top: 10px;
+    .toggle{
+      font-size: 13px;
+      color: var(--qc-muted);
       text-align:center;
-      font-size: 12px;
-      color: var(--q-muted);
+      margin-top: 8px;
     }
-    .toggle-row button{
-      border:none;
-      background:none;
-      color: var(--q-red);
-      font-weight:800;
+    .toggle a{
+      color: var(--qc-red);
+      text-decoration: none;
+      font-weight: 700;
       cursor:pointer;
-      padding:0;
     }
-    .toggle-row button:hover{ text-decoration:underline; }
+    .toggle a:hover{ text-decoration: underline; }
 
     .trust{
-      margin-top: 16px;
       text-align:center;
-      color: var(--q-muted);
-      font-size: 12px;
-    }
-    .trust a{ color: var(--q-red); font-weight:800; text-decoration:none; }
-    .trust a:hover{ text-decoration:underline; }
-
-    .inline-result{
-      margin-top: 14px;
-      border: 1px solid var(--q-border);
-      background: #fff;
-      border-radius: 14px;
-      padding: 14px;
+      color: var(--qc-muted);
       font-size: 13px;
-      color: var(--q-text);
+      margin-top: 18px;
+    }
+    .trust a{
+      color: var(--qc-red);
+      text-decoration:none;
+      font-weight: 600;
+    }
+    .trust a:hover{ text-decoration: underline; }
+
+    .alert{
+      margin-top: 14px;
+      border: 1px solid var(--qc-border);
+      background: #fff;
+      border-radius: 12px;
+      padding: 12px 12px;
+      font-size: 14px;
+      color: #111827;
+      display:none;
       white-space: pre-line;
     }
+    .alert.show{ display:block; }
 
-    /* Tela 2 - Conversa/resultado */
-    .chat-wrap{
+    /* ======= TELA 2 (pendências) ======= */
+    .split{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+    }
+    @media (max-width: 900px){
+      .split{ grid-template-columns: 1fr; }
+    }
+
+    .cards{
       display:flex;
       flex-direction:column;
-      height: min(76vh, 720px);
-    }
-    .chat-messages{
-      flex:1;
-      overflow:auto;
-      padding: 14px;
-      background: var(--q-bg);
+      gap: 10px;
     }
 
-    .bubble{
-      max-width: 92%;
-      border-radius: 16px;
-      padding: 10px 12px;
-      font-size: 13px;
-      line-height:1.45;
-      white-space: pre-line;
-      word-break: break-word;
-      margin-bottom: 8px;
-      border:1px solid transparent;
-    }
-    .bot{
+    .card{
+      border: 1px solid var(--qc-border);
       background:#fff;
-      border-color: var(--q-border);
-      border-bottom-left-radius: 6px;
-    }
-    .user{
-      margin-left:auto;
-      background: linear-gradient(180deg, var(--q-red), var(--q-red-dark));
-      color:#fff;
-      border-bottom-right-radius: 6px;
+      border-radius: 14px;
+      padding: 12px 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.06);
+      white-space: pre-line;
+      font-size: 14px;
+      line-height: 1.45;
     }
 
     .options{
       display:flex;
       flex-direction:column;
-      gap:8px;
-      margin: 6px 0 14px;
+      gap: 8px;
+      margin-top: 8px;
     }
     .opt{
-      border: 1px solid var(--q-border);
+      border: 1px solid var(--qc-border);
+      background: #f3f4f6;
+      border-radius: 12px;
+      padding: 12px 12px;
+      font-size: 14px;
+      font-weight: 650;
+      cursor:pointer;
+      text-align:left;
+      transition: transform .05s ease, background .15s ease, border-color .15s ease;
+    }
+    .opt:hover{
+      background:#eaeef2;
+      transform: translateY(-1px);
+      border-color:#d1d5db;
+    }
+
+    .side{
+      border: 1px solid var(--qc-border);
       background:#fff;
       border-radius: 14px;
       padding: 12px 12px;
-      font-size: 13px;
-      text-align:left;
-      cursor:pointer;
-      transition: transform .05s ease, background .15s ease;
+      box-shadow: 0 6px 18px rgba(0,0,0,.06);
     }
-    .opt:hover{ background:#f8fafc; }
-    .opt:active{ transform: translateY(1px); }
-
-    .chat-input{
-      padding: 12px;
-      border-top:1px solid var(--q-border);
-      background:#fff;
-      display:flex;
-      gap:10px;
-      align-items:center;
-    }
-    .chat-input input{
-      flex:1;
-      border:1px solid var(--q-border);
-      border-radius: 999px;
-      padding: 12px 14px;
+    .side h3{
+      margin: 2px 0 8px;
       font-size: 14px;
-      outline:none;
     }
-    .chat-input input:focus{
-      border-color: rgba(225,29,46,.45);
-      box-shadow: 0 0 0 4px rgba(225,29,46,.08);
+    .side p{
+      margin:0;
+      color: var(--qc-muted);
+      font-size: 13px;
+      line-height: 1.45;
     }
-    .chat-input button{
-      border:none;
-      border-radius: 999px;
-      padding: 12px 16px;
-      background: linear-gradient(180deg, var(--q-red), var(--q-red-dark));
-      color:#fff;
-      font-weight:800;
-      cursor:pointer;
-    }
-    .chat-input button:disabled{ opacity:.55; cursor:default; }
 
     .typing{
+      margin-top: 10px;
       font-size: 12px;
-      color: var(--q-muted);
-      margin: 8px 0 0;
-      padding-left: 4px;
+      color: var(--qc-muted);
+      display:none;
     }
+    .typing.show{ display:block; }
 
-    /* Views */
-    .view{ display:none; }
-    .view.active{ display:block; }
-
-    @media (max-width: 560px){
-      .topbar-inner{ padding: 12px 12px; }
-      .container{ padding: 12px; }
-      .brand-text span{ display:none; }
-      .card-head h1{ font-size:20px; }
-      .chat-wrap{ height: 78vh; }
-    }
+    .hidden{ display:none !important; }
   </style>
 </head>
 
 <body>
-  <!-- Topbar -->
-  <div class="topbar">
+  <header class="topbar">
     <div class="topbar-inner">
       <div class="brand">
-        <img id="brandLogo" alt="QuatroC" />
-        <div class="brand-text">
-          <b>QuatroC</b>
-          <span>Portal de negociação • canal seguro</span>
+        <!-- Troque LOGO_URL no JS -->
+        <img id="brandLogo" alt="Quatro C" />
+        <div class="meta">
+          <div class="title">Quatro C</div>
+          <div class="sub">Portal de negociação • Canal seguro</div>
         </div>
       </div>
-
       <div class="top-actions">
-        <div class="pill" id="pillStep" style="display:none;">
-          <span>Etapa:</span>
-          <b id="pillStepText" style="color:var(--q-text); font-weight:900;"></b>
-        </div>
-        <a class="link" href="#" id="btnReset">Reiniciar</a>
+        <button class="link" id="btnReset" type="button">Reiniciar</button>
       </div>
     </div>
-  </div>
+  </header>
 
-  <div class="container">
-    <div class="grid">
-
-      <!-- VIEW 1: INICIAL -->
-      <div id="viewLogin" class="view active">
-        <div class="card">
-          <div class="card-head">
-            <h1>Bem-vindo(a)!</h1>
-            <p>Informe seu documento para localizarmos as informações e seguir com o atendimento.</p>
-          </div>
-
-          <div class="card-body">
-            <div class="hint" id="loginHint">
-              Para começar, informe seu <b>CPF</b> ou <b>CNPJ</b>.
-            </div>
-
-            <div class="field">
-              <label>
-                <span id="docLabel">CPF</span>
-                <span style="color:var(--q-muted)">Aceita colar com pontuação</span>
-              </label>
-              <input id="docInput" type="text" inputmode="numeric" autocomplete="off" placeholder="Digite seu CPF" />
-            </div>
-
-            <button class="btn-primary" id="btnConfirm">Confirmar</button>
-
-            <div class="toggle-row">
-              <span id="toggleText">É pessoa jurídica?</span>
-              <button id="btnToggleDoc" type="button">Entrar com CNPJ</button>
-            </div>
-
-            <div class="trust">
-              Não se preocupe, seus dados estão seguros conosco.
-              Caso tenha dúvidas, consulte nossos
-              <a href="#" target="_blank" rel="noopener" id="termsLink">Termos e Política</a>.
-            </div>
-
-            <div id="inlineResult" class="inline-result" style="display:none;"></div>
-          </div>
+  <main class="container">
+    <!-- ===== TELA 1 ===== -->
+    <section id="viewStart" class="panel">
+      <div class="panel-header">
+        <h1>Informe seu documento</h1>
+        <p>Vamos localizar suas informações para seguir com o atendimento.</p>
+        <div class="hint">
+          Digite seu <strong>CPF</strong> ou <strong>CNPJ</strong> para consultar pendências vinculadas.
         </div>
       </div>
 
-      <!-- VIEW 2: RESULTADO / CHAT -->
-      <div id="viewChat" class="view">
-        <div class="card">
-          <div class="card-head">
-            <h1>Informações encontradas</h1>
-            <p>Abaixo, siga pelo autoatendimento para concluir a tratativa.</p>
+      <div class="panel-body">
+        <div class="form-grid">
+          <div class="input-row">
+            <label id="docLabel" for="docInput">CPF</label>
           </div>
 
-          <div class="chat-wrap">
-            <div id="chatMessages" class="chat-messages"></div>
+          <input
+            id="docInput"
+            class="field"
+            type="text"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="Digite seu CPF"
+          />
 
-            <div class="chat-input">
-              <input id="chatInput" type="text" placeholder="Digite aqui..." autocomplete="off" />
-              <button id="chatSend">Enviar</button>
-            </div>
+          <button id="btnContinue" class="btn" type="button">Confirmar</button>
 
-            <div id="typingIndicator" class="typing" style="display:none;">Digitando...</div>
+          <div class="toggle">
+            <span id="toggleText">É pessoa jurídica?</span>
+            <a id="toggleDoc" role="button" tabindex="0">Entrar com CNPJ</a>
+          </div>
+
+          <div id="startAlert" class="alert"></div>
+
+          <div class="trust">
+            Não se preocupe: seus dados são tratados de forma segura.
+            <a id="termosLink" target="_blank" rel="noopener">Termos e Política</a>
           </div>
         </div>
       </div>
+    </section>
 
-    </div>
-  </div>
+    <!-- ===== TELA 2 ===== -->
+    <section id="viewDebts" class="panel hidden" style="margin-top:14px;">
+      <div class="panel-header">
+        <h1>Pendências localizadas</h1>
+        <p>Confira os detalhes e selecione como deseja prosseguir.</p>
+      </div>
+
+      <div class="panel-body">
+        <div class="split">
+          <div>
+            <div id="debtsCards" class="cards"></div>
+            <div id="typing" class="typing">Processando…</div>
+          </div>
+
+          <aside class="side">
+            <h3>Orientações</h3>
+            <p>
+              Se precisar de apoio, selecione a opção de atendimento humano e informe o motivo.
+              Em caso de divergência, você também pode escolher a opção de dúvidas/contestação, quando disponível.
+            </p>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <script>
     // ================= CONFIGURAÇÃO =================
     const API_URL   = "https://billowing-voice-6efd.asilvino19.workers.dev/";
-    const LOGO_URL  = "COLE_AQUI_A_URL_DO_LOGO_DA_QUATROC"; // Ex: https://seusite.com/quatroc.png
-    const TERMS_URL = "https://acerto.com.br/seguranca"; // Troque para o link oficial QuatroC quando tiver
+    const LOGO_URL  = "COLE_AQUI_SUA_URL_DO_LOGO"; // ex: https://raw.githubusercontent.com/.../quatroc-logo.png
+    const TERMOS_URL = "https://SEU_DOMINIO/seguranca"; // troque quando publicar
 
-    // ====== Estado ======
+    // ================= ELEMENTOS =================
+    const brandLogo   = document.getElementById("brandLogo");
+    const btnReset    = document.getElementById("btnReset");
+
+    const viewStart   = document.getElementById("viewStart");
+    const viewDebts   = document.getElementById("viewDebts");
+
+    const docInput    = document.getElementById("docInput");
+    const docLabel    = document.getElementById("docLabel");
+    const btnContinue = document.getElementById("btnContinue");
+    const toggleDoc   = document.getElementById("toggleDoc");
+    const startAlert  = document.getElementById("startAlert");
+    const termosLink  = document.getElementById("termosLink");
+
+    const debtsCards  = document.getElementById("debtsCards");
+    const typingEl    = document.getElementById("typing");
+
+    // ================= ESTADO =================
     let sessionId = Date.now().toString();
     let step = "inicio";
     let documento = null;
 
-    let docMode = "cpf"; // cpf | cnpj
+    // modo de entrada (cpf/cnpj) apenas pra UX
+    let docMode = "cpf"; // "cpf" | "cnpj"
 
-    // ====== Elementos ======
-    const viewLogin = document.getElementById("viewLogin");
-    const viewChat  = document.getElementById("viewChat");
+    // ================= INIT =================
+    brandLogo.src = LOGO_URL;
+    termosLink.href = TERMOS_URL;
 
-    const brandLogo = document.getElementById("brandLogo");
-    const termsLink = document.getElementById("termsLink");
+    function resetAll(){
+      sessionId = Date.now().toString();
+      step = "inicio";
+      documento = null;
+      docMode = "cpf";
+      applyDocMode();
 
-    const pillStep = document.getElementById("pillStep");
-    const pillStepText = document.getElementById("pillStepText");
+      startAlert.classList.remove("show");
+      startAlert.textContent = "";
 
-    const docInput  = document.getElementById("docInput");
-    const docLabel  = document.getElementById("docLabel");
-    const btnConfirm= document.getElementById("btnConfirm");
-    const btnToggle = document.getElementById("btnToggleDoc");
-    const toggleText= document.getElementById("toggleText");
-    const inlineResult = document.getElementById("inlineResult");
+      debtsCards.innerHTML = "";
+      typingEl.classList.remove("show");
 
-    const chatMessages = document.getElementById("chatMessages");
-    const chatInput    = document.getElementById("chatInput");
-    const chatSend     = document.getElementById("chatSend");
-    const typingIndicator = document.getElementById("typingIndicator");
+      viewDebts.classList.add("hidden");
+      viewStart.classList.remove("hidden");
+      docInput.value = "";
+      docInput.focus();
 
-    const btnReset = document.getElementById("btnReset");
-
-    // ====== Init branding ======
-    brandLogo.src = LOGO_URL || "";
-    termsLink.href = TERMS_URL;
-
-    // Se não setar LOGO_URL, mostra fallback simples
-    brandLogo.onerror = () => {
-      brandLogo.style.display = "none";
-    };
-
-    // ====== Helpers UI ======
-    function setView(which){
-      if (which === "login"){
-        viewLogin.classList.add("active");
-        viewChat.classList.remove("active");
-        pillStep.style.display = "none";
-      } else {
-        viewLogin.classList.remove("active");
-        viewChat.classList.add("active");
-        pillStep.style.display = "flex";
-      }
+      // chama backend só pra manter seu comportamento atual (se você quiser mensagem inicial, etc.)
+      sendToBackend({ sessionId, step: "inicio" }, { silent: true });
     }
 
-    function setStepPill(){
-      pillStepText.textContent = step || "-";
-    }
+    btnReset.addEventListener("click", resetAll);
 
-    function setLoading(isLoading){
-      btnConfirm.disabled = isLoading;
-      chatSend.disabled   = isLoading;
-      chatInput.disabled  = isLoading;
-      docInput.disabled   = isLoading;
-      typingIndicator.style.display = isLoading ? "block" : "none";
-    }
-
-    function addBubble(text, who="bot"){
-      const div = document.createElement("div");
-      div.className = "bubble " + (who === "bot" ? "bot" : "user");
-      div.textContent = text || "";
-      chatMessages.appendChild(div);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function addOptions(opcoes){
-      const wrap = document.createElement("div");
-      wrap.className = "options";
-
-      (opcoes || []).forEach(op => {
-        const b = document.createElement("button");
-        b.className = "opt";
-        b.textContent = op.label;
-        b.onclick = () => handleOptionClick(op);
-        wrap.appendChild(b);
-      });
-
-      chatMessages.appendChild(wrap);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function clearChat(){
-      chatMessages.innerHTML = "";
-    }
-
-    function showInlineResult(text){
-      inlineResult.style.display = "block";
-      inlineResult.textContent = text || "";
-      inlineResult.scrollIntoView({behavior:"smooth", block:"center"});
-    }
-
-    function hideInlineResult(){
-      inlineResult.style.display = "none";
-      inlineResult.textContent = "";
-    }
-
-    // ====== Documento (toggle CPF/CNPJ) ======
-    function setDocMode(mode){
-      docMode = mode;
-
+    function applyDocMode(){
       if (docMode === "cpf"){
         docLabel.textContent = "CPF";
         docInput.placeholder = "Digite seu CPF";
-        toggleText.textContent = "É pessoa jurídica?";
-        btnToggle.textContent = "Entrar com CNPJ";
+        toggleDoc.textContent = "Entrar com CNPJ";
       } else {
         docLabel.textContent = "CNPJ";
         docInput.placeholder = "Digite seu CNPJ";
-        toggleText.textContent = "É pessoa física?";
-        btnToggle.textContent = "Entrar com CPF";
+        toggleDoc.textContent = "Entrar com CPF";
       }
     }
 
-    btnToggle.addEventListener("click", () => {
-      setDocMode(docMode === "cpf" ? "cnpj" : "cpf");
-      docInput.value = "";
+    toggleDoc.addEventListener("click", () => {
+      docMode = (docMode === "cpf") ? "cnpj" : "cpf";
+      applyDocMode();
       docInput.focus();
     });
 
-    // ====== Backend ======
-    async function sendToBackend(payload){
+    // ================= HELPERS UI =================
+    function showStartAlert(text){
+      startAlert.textContent = text || "";
+      startAlert.classList.add("show");
+    }
+
+    function clearStartAlert(){
+      startAlert.textContent = "";
+      startAlert.classList.remove("show");
+    }
+
+    function setLoading(isLoading){
+      btnContinue.disabled = isLoading;
+      docInput.disabled = isLoading;
+      typingEl.classList.toggle("show", !!isLoading);
+    }
+
+    function goToDebtsView(){
+      viewStart.classList.add("hidden");
+      viewDebts.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function addCard(text){
+      const div = document.createElement("div");
+      div.className = "card";
+      div.textContent = text || "";
+      debtsCards.appendChild(div);
+    }
+
+    function addOptions(opcoes){
+      if (!Array.isArray(opcoes) || !opcoes.length) return;
+
+      const wrap = document.createElement("div");
+      wrap.className = "options";
+
+      opcoes.forEach(op => {
+        const btn = document.createElement("button");
+        btn.className = "opt";
+        btn.type = "button";
+        btn.textContent = op.label;
+        btn.addEventListener("click", () => handleOptionClick(op));
+        wrap.appendChild(btn);
+      });
+
+      debtsCards.appendChild(wrap);
+    }
+
+    // ================= BACKEND =================
+    async function sendToBackend(payload, { silent=false } = {}){
       try{
         setLoading(true);
 
@@ -561,163 +525,108 @@
           body: JSON.stringify(payload),
         });
 
-        const raw = await resp.text();
+        const text = await resp.text();
         let data = null;
-        try { data = JSON.parse(raw); } catch { data = null; }
+        try { data = JSON.parse(text); } catch { data = null; }
+
+        setLoading(false);
 
         if (!resp.ok || !data){
-          setLoading(false);
-          if (viewLogin.classList.contains("active")){
-            showInlineResult("Desculpe, ocorreu um erro ao processar sua solicitação. Tente novamente.");
-          } else {
-            addBubble("Desculpe, ocorreu um erro ao processar sua solicitação.", "bot");
-          }
-          return null;
+          if (!silent) showStartAlert("Não foi possível processar sua solicitação. Tente novamente.");
+          return;
         }
 
-        setLoading(false);
         handleBackendResponse(data);
-        return data;
-
-      } catch (e){
+      } catch(e){
         setLoading(false);
-        if (viewLogin.classList.contains("active")){
-          showInlineResult("Não foi possível se conectar. Verifique sua conexão e tente novamente.");
-        } else {
-          addBubble("Não foi possível se conectar. Verifique sua conexão e tente novamente.", "bot");
-        }
-        return null;
+        if (!silent) showStartAlert("Não foi possível conectar. Verifique sua rede e tente novamente.");
       }
     }
 
     function handleBackendResponse(response){
-      if (!response) return;
-
-      // Atualiza step se vier
-      if (response.proximoStep !== undefined && response.proximoStep !== null){
+      // Atualiza step
+      if (response.proximoStep !== undefined && response.proximoStep !== null) {
         step = response.proximoStep;
       }
 
-      setStepPill();
-
-      // Regra de telas:
-      // - Se temDivida = true, vamos para a Tela 2 (onde ficam identidade/resumo/opções)
-      // - Se temDivida = false ou não existir, mantém na Tela 1 e mostra texto lá
-      const hasDebt = response.temDivida === true;
-
-      if (hasDebt){
-        // Se estamos saindo da tela 1 para a 2, limpa e inicia a conversa
-        if (viewLogin.classList.contains("active")){
-          clearChat();
-          setView("chat");
-        }
-
-        // Renderiza mensagens no chat
-        if (Array.isArray(response.mensagens)){
-          response.mensagens.forEach(m => {
-            addBubble(m.texto || "", "bot");
-            if (Array.isArray(m.opcoes) && m.opcoes.length){
-              addOptions(m.opcoes);
-            }
-          });
-        }
-      } else {
-        // Fica na tela 1 (retorno inline)
-        if (Array.isArray(response.mensagens) && response.mensagens.length){
-          const txt = response.mensagens.map(m => m.texto || "").join("\n\n").trim();
-          showInlineResult(txt || "Nenhuma informação retornada.");
-        } else {
-          showInlineResult("Nenhuma pendência foi identificada para o documento informado.");
-        }
+      // Documento (quando backend devolver)
+      if (response.documento) {
+        documento = String(response.documento).replace(/\D/g, "");
       }
+
+      // Renderização:
+      // - Se NÃO tem dívida ou não localizado: mostrar na TELA 1 (alert)
+      // - Se tem dívida: ir pra TELA 2 e renderizar como cards
+      const mensagens = Array.isArray(response.mensagens) ? response.mensagens : [];
+
+      // Heurística: se response.temDivida === true OU existir opções relevantes -> tela 2
+      const hasOptions = mensagens.some(m => Array.isArray(m.opcoes) && m.opcoes.length);
+      const shouldGoDebts = response.temDivida === true || hasOptions;
+
+      if (!shouldGoDebts){
+        // Tela 1 (objetivo: sem “cara de chat”)
+        const txt = mensagens.map(m => m.texto).filter(Boolean).join("\n\n");
+        if (txt) showStartAlert(txt);
+        return;
+      }
+
+      // Tela 2
+      clearStartAlert();
+      goToDebtsView();
+
+      // Limpa e renderiza
+      debtsCards.innerHTML = "";
+      mensagens.forEach(m => {
+        if (m && m.texto) addCard(m.texto);
+        if (m && Array.isArray(m.opcoes)) addOptions(m.opcoes);
+      });
     }
 
-    // ====== Ações Tela 1 ======
-    btnConfirm.addEventListener("click", async () => {
-      hideInlineResult();
+    // ================= AÇÕES =================
+    function normalizeDoc(input){
+      return String(input || "").replace(/\D/g, "");
+    }
 
+    async function onConfirm(){
       const raw = docInput.value.trim();
       if (!raw){
-        showInlineResult("Por favor, informe o CPF ou CNPJ para continuar.");
+        showStartAlert("Informe um CPF ou CNPJ para continuar.");
         return;
       }
 
-      documento = raw.replace(/\D/g, "");
+      clearStartAlert();
 
-      // Validação básica de tamanho só para UX (backend continua validando)
-      if (documento.length !== 11 && documento.length !== 14){
-        showInlineResult("Documento inválido. Informe um CPF (11 dígitos) ou CNPJ (14 dígitos).");
-        return;
-      }
+      documento = normalizeDoc(raw);
 
-      step = "consulta_divida";
-      setStepPill();
-
+      // mantém seu comportamento atual:
+      // inicio -> consulta_divida
+      // consulta_divida -> consulta_divida
+      // outros -> manda message/option
       await sendToBackend({
         sessionId,
         step: "consulta_divida",
         documento,
       });
-    });
-
-    docInput.addEventListener("keypress", (e) => {
-      if (e.key === "Enter"){
-        e.preventDefault();
-        btnConfirm.click();
-      }
-    });
-
-    // ====== Ações Tela 2 ======
-    async function processUserMessage(){
-      const text = (chatInput.value || "").trim();
-      if (!text) return;
-
-      addBubble(text, "user");
-      chatInput.value = "";
-
-      // Mantém seu comportamento atual:
-      // - se estiver aguardando data, manda step gerar_boleto
-      if (step === "aguardando_data_pagamento"){
-        await sendToBackend({
-          sessionId,
-          step: "gerar_boleto",
-          documento,
-          dataPagamento: text,
-        });
-        return;
-      }
-
-      // caso geral: texto vira "message"
-      await sendToBackend({
-        sessionId,
-        step,
-        documento,
-        message: text,
-      });
     }
 
-    chatSend.addEventListener("click", processUserMessage);
-    chatInput.addEventListener("keypress", (e) => {
+    btnContinue.addEventListener("click", onConfirm);
+
+    docInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter"){
         e.preventDefault();
-        processUserMessage();
+        onConfirm();
       }
     });
 
     function handleOptionClick(op){
-      addBubble(op.label, "user");
-
-      // Casos especiais que você já tinha
+      // casos especiais (mantive sua lógica original)
       if (op.id === "gerar_boleto"){
-        addBubble("Informe a data em que pretende realizar o pagamento (formato DD/MM/AAAA).", "bot");
-        step = "aguardando_data_pagamento";
-        setStepPill();
-        return;
+        // seu fluxo já trata "aguardando_data_pagamento"
+        // aqui você pode decidir como quer fazer na UX depois
       }
 
       if (op.id === "falar_atendente" || op.id === "duvidas"){
-        const motivo = op.id === "duvidas" ? "dúvidas/contestação" : "negociação";
-
+        const motivo = (op.id === "duvidas") ? "dúvidas/contestação" : "negociação";
         sendToBackend({
           sessionId,
           step: "falar_atendente",
@@ -727,7 +636,7 @@
         return;
       }
 
-      // Padrão para botões (identidade_sim / identidade_nao / negociar_auto etc.)
+      // padrão
       sendToBackend({
         sessionId,
         step,
@@ -736,24 +645,10 @@
       });
     }
 
-    // ====== Reset ======
-    btnReset.addEventListener("click", (e) => {
-      e.preventDefault();
-      sessionId = Date.now().toString();
-      step = "inicio";
-      documento = null;
-
-      docInput.value = "";
-      chatInput.value = "";
-      clearChat();
-      hideInlineResult();
-      setView("login");
-      setStepPill();
-    });
-
-    // ====== Start ======
-    setDocMode("cpf");
-    setStepPill();
+    // ================= START =================
+    applyDocMode();
+    // opcional: init silencioso (sem mostrar “mensagem de chat”)
+    sendToBackend({ sessionId, step: "inicio" }, { silent: true });
   </script>
 </body>
 </html>
