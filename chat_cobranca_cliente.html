@@ -3,652 +3,205 @@
 <head>
   <meta charset="UTF-8" />
   <title>Quatro C • Portal de Negociação</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <style>
     :root{
-      --qc-red:#d71920;         /* ajuste fino se quiser */
+      --qc-red:#d71920;
       --qc-red-dark:#b51218;
-      --qc-bg:#f6f7f9;
-      --qc-text:#111827;
-      --qc-muted:#6b7280;
-      --qc-border:#e5e7eb;
-      --qc-card:#ffffff;
-      --qc-shadow: 0 10px 30px rgba(0,0,0,.10);
-      --radius: 14px;
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --radius:16px;
+      --shadow:0 18px 40px rgba(0,0,0,.08);
     }
 
     *{ box-sizing:border-box; }
+
     body{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: var(--qc-bg);
-      color: var(--qc-text);
-    }
-
-    .topbar{
-      background:#fff;
-      border-bottom:1px solid var(--qc-border);
-    }
-    .topbar-inner{
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 16px 18px;
+      min-height:100vh;
       display:flex;
       align-items:center;
-      justify-content:space-between;
-      gap: 12px;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      min-width: 0;
-    }
-    .brand img{
-      height: 38px;
-      width: auto;
-      display:block;
-    }
-    .brand .meta{
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-      line-height:1.1;
-      min-width:0;
-    }
-    .brand .meta .title{
-      font-weight: 700;
-      font-size: 14px;
-      letter-spacing:.2px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .brand .meta .sub{
-      font-size: 12px;
-      color: var(--qc-muted);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .top-actions{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      flex-shrink:0;
-    }
-    .link{
-      border:0;
-      background:transparent;
-      color: var(--qc-muted);
-      font-size: 13px;
-      cursor:pointer;
-      padding: 8px 10px;
-      border-radius: 10px;
-    }
-    .link:hover{
-      background:#f3f4f6;
-      color:#374151;
+      justify-content:center;
+      background:var(--bg);
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      color:var(--text);
     }
 
     .container{
-      max-width: 980px;
-      margin: 22px auto;
-      padding: 0 18px 28px;
+      width:100%;
+      max-width:460px;
+      padding:16px;
     }
 
-    .panel{
-      background: var(--qc-card);
-      border: 1px solid var(--qc-border);
-      border-radius: var(--radius);
-      box-shadow: var(--qc-shadow);
-      overflow:hidden;
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:28px 26px 26px;
     }
 
-    .panel-header{
-      padding: 18px 18px 0;
-    }
-    .panel-header h1{
-      margin:0;
-      font-size: 22px;
-      letter-spacing: -.2px;
-    }
-    .panel-header p{
-      margin: 6px 0 0;
-      color: var(--qc-muted);
-      font-size: 14px;
+    /* ===== HEADER ===== */
+    .brand{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      margin-bottom:22px;
     }
 
-    .panel-body{
-      padding: 16px 18px 18px;
+    .brand img{
+      height:54px;
+      width:auto;
+    }
+
+    .brand-name{
+      font-size:16px;
+      font-weight:800;
+      letter-spacing:.3px;
+    }
+
+    /* ===== TEXTOS ===== */
+    .title{
+      text-align:center;
+      font-size:20px;
+      font-weight:800;
+      margin-bottom:6px;
+    }
+
+    .subtitle{
+      text-align:center;
+      font-size:14px;
+      color:var(--muted);
+      margin-bottom:26px;
+    }
+
+    /* ===== FORM ===== */
+    .label-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:6px;
+      font-size:13px;
+      font-weight:600;
     }
 
     .hint{
-      border: 1px solid var(--qc-border);
-      background: #fafafa;
-      border-radius: 12px;
-      padding: 12px 12px;
-      color: #374151;
-      font-size: 14px;
-      margin: 14px 0 16px;
+      font-size:12px;
+      color:var(--muted);
+      font-weight:500;
     }
 
-    .form-grid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    label{
-      font-size: 12px;
-      color: var(--qc-muted);
-      margin-left: 2px;
-    }
-
-    .input-row{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 12px;
-      margin-bottom: 6px;
-    }
-
-    .field{
+    input{
       width:100%;
-      border: 1px solid var(--qc-border);
-      background:#fff;
-      border-radius: 12px;
-      padding: 14px 14px;
-      font-size: 16px;
+      height:48px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      padding:0 14px;
+      font-size:15px;
       outline:none;
+      margin-bottom:18px;
     }
-    .field:focus{
-      border-color: rgba(215,25,32,.45);
-      box-shadow: 0 0 0 3px rgba(215,25,32,.10);
+
+    input:focus{
+      border-color:var(--qc-red);
+      box-shadow:0 0 0 1px rgba(215,25,32,.25);
     }
 
     .btn{
       width:100%;
-      border: 0;
-      border-radius: 14px;
-      padding: 14px 16px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor:pointer;
-      background: var(--qc-red);
+      height:50px;
+      border-radius:14px;
+      border:none;
+      background:linear-gradient(180deg,var(--qc-red),var(--qc-red-dark));
       color:#fff;
-      transition: transform .05s ease, background .15s ease;
+      font-size:16px;
+      font-weight:800;
+      cursor:pointer;
+      transition:transform .05s ease, opacity .15s ease;
     }
-    .btn:hover{ background: var(--qc-red-dark); transform: translateY(-1px); }
-    .btn:disabled{ opacity:.55; cursor:not-allowed; transform:none; }
 
-    .toggle{
-      font-size: 13px;
-      color: var(--qc-muted);
+    .btn:hover{ opacity:.95; }
+    .btn:active{ transform:translateY(1px); }
+
+    .switch-doc{
       text-align:center;
-      margin-top: 8px;
+      margin-top:14px;
+      font-size:13px;
+      color:var(--muted);
     }
-    .toggle a{
-      color: var(--qc-red);
-      text-decoration: none;
-      font-weight: 700;
+
+    .switch-doc span{
+      color:var(--qc-red);
+      font-weight:700;
       cursor:pointer;
     }
-    .toggle a:hover{ text-decoration: underline; }
 
-    .trust{
+    /* ===== FOOTER ===== */
+    .footer{
+      margin-top:16px;
       text-align:center;
-      color: var(--qc-muted);
-      font-size: 13px;
-      margin-top: 18px;
+      font-size:12px;
+      color:var(--muted);
     }
-    .trust a{
-      color: var(--qc-red);
+
+    .footer a{
+      color:var(--qc-red);
+      font-weight:700;
       text-decoration:none;
-      font-weight: 600;
-    }
-    .trust a:hover{ text-decoration: underline; }
-
-    .alert{
-      margin-top: 14px;
-      border: 1px solid var(--qc-border);
-      background: #fff;
-      border-radius: 12px;
-      padding: 12px 12px;
-      font-size: 14px;
-      color: #111827;
-      display:none;
-      white-space: pre-line;
-    }
-    .alert.show{ display:block; }
-
-    /* ======= TELA 2 (pendências) ======= */
-    .split{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 14px;
-    }
-    @media (max-width: 900px){
-      .split{ grid-template-columns: 1fr; }
     }
 
-    .cards{
-      display:flex;
-      flex-direction:column;
-      gap: 10px;
-    }
+    .footer a:hover{ text-decoration:underline; }
 
-    .card{
-      border: 1px solid var(--qc-border);
-      background:#fff;
-      border-radius: 14px;
-      padding: 12px 12px;
-      box-shadow: 0 6px 18px rgba(0,0,0,.06);
-      white-space: pre-line;
-      font-size: 14px;
-      line-height: 1.45;
-    }
-
-    .options{
-      display:flex;
-      flex-direction:column;
-      gap: 8px;
-      margin-top: 8px;
-    }
-    .opt{
-      border: 1px solid var(--qc-border);
-      background: #f3f4f6;
-      border-radius: 12px;
-      padding: 12px 12px;
-      font-size: 14px;
-      font-weight: 650;
-      cursor:pointer;
-      text-align:left;
-      transition: transform .05s ease, background .15s ease, border-color .15s ease;
-    }
-    .opt:hover{
-      background:#eaeef2;
-      transform: translateY(-1px);
-      border-color:#d1d5db;
-    }
-
-    .side{
-      border: 1px solid var(--qc-border);
-      background:#fff;
-      border-radius: 14px;
-      padding: 12px 12px;
-      box-shadow: 0 6px 18px rgba(0,0,0,.06);
-    }
-    .side h3{
-      margin: 2px 0 8px;
-      font-size: 14px;
-    }
-    .side p{
-      margin:0;
-      color: var(--qc-muted);
-      font-size: 13px;
-      line-height: 1.45;
-    }
-
-    .typing{
-      margin-top: 10px;
-      font-size: 12px;
-      color: var(--qc-muted);
-      display:none;
-    }
-    .typing.show{ display:block; }
-
-    .hidden{ display:none !important; }
   </style>
 </head>
-
 <body>
-  <header class="topbar">
-    <div class="topbar-inner">
+
+  <div class="container">
+    <div class="card">
+
+      <!-- LOGO CENTRALIZADO -->
       <div class="brand">
-        <!-- Troque LOGO_URL no JS -->
-        <img id="brandLogo" alt="Quatro C" />
-        <div class="meta">
-          <div class="title">Quatro C</div>
-          <div class="sub">Portal de negociação • Canal seguro</div>
-        </div>
+        <!-- URL do logo -->
+        <img src="https://raw.githubusercontent.com/asilvino19-beep/Logo/main/Logo.png" />
+        <div class="brand-name">Quatro C</div>
       </div>
-      <div class="top-actions">
-        <button class="link" id="btnReset" type="button">Reiniciar</button>
+
+      <!-- TEXTOS AJUSTADOS -->
+      <div class="title">Acesse ao portal de negociação</div>
+      <div class="subtitle">Preencha o campo abaixo</div>
+
+      <!-- FORM -->
+      <div class="label-row">
+        <label>Digite seu CPF:</label>
+        <div class="hint">Aceita colar com pontuação</div>
       </div>
+
+      <input
+        type="text"
+        placeholder="000.000.000-00"
+        autocomplete="off"
+        id="documentInput"
+      />
+
+      <button class="btn">Confirmar</button>
+
+      <div class="switch-doc">
+        É pessoa jurídica? <span>Entrar com CNPJ</span>
+      </div>
+
     </div>
-  </header>
 
-  <main class="container">
-    <!-- ===== TELA 1 ===== -->
-    <section id="viewStart" class="panel">
-      <div class="panel-header">
-        <h1>Informe seu documento</h1>
-        <p>Vamos localizar suas informações para seguir com o atendimento.</p>
-        <div class="hint">
-          Digite seu <strong>CPF</strong> ou <strong>CNPJ</strong> para consultar pendências vinculadas.
-        </div>
-      </div>
+    <!-- RODAPÉ DE CONFIANÇA -->
+    <div class="footer">
+      Conosco, seus dados são tratados de forma segura e sigilosa.
+      Caso tenha dúvidas ou queira saber mais sobre, acesso nossos
+      <a href="TERMO_E_POLITICA_URL" target="_blank">Termos e Política</a>.
+    </div>
+  </div>
 
-      <div class="panel-body">
-        <div class="form-grid">
-          <div class="input-row">
-            <label id="docLabel" for="docInput">CPF</label>
-          </div>
-
-          <input
-            id="docInput"
-            class="field"
-            type="text"
-            inputmode="numeric"
-            autocomplete="off"
-            placeholder="Digite seu CPF"
-          />
-
-          <button id="btnContinue" class="btn" type="button">Confirmar</button>
-
-          <div class="toggle">
-            <span id="toggleText">É pessoa jurídica?</span>
-            <a id="toggleDoc" role="button" tabindex="0">Entrar com CNPJ</a>
-          </div>
-
-          <div id="startAlert" class="alert"></div>
-
-          <div class="trust">
-            Não se preocupe: seus dados são tratados de forma segura.
-            <a id="termosLink" target="_blank" rel="noopener">Termos e Política</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== TELA 2 ===== -->
-    <section id="viewDebts" class="panel hidden" style="margin-top:14px;">
-      <div class="panel-header">
-        <h1>Pendências localizadas</h1>
-        <p>Confira os detalhes e selecione como deseja prosseguir.</p>
-      </div>
-
-      <div class="panel-body">
-        <div class="split">
-          <div>
-            <div id="debtsCards" class="cards"></div>
-            <div id="typing" class="typing">Processando…</div>
-          </div>
-
-          <aside class="side">
-            <h3>Orientações</h3>
-            <p>
-              Se precisar de apoio, selecione a opção de atendimento humano e informe o motivo.
-              Em caso de divergência, você também pode escolher a opção de dúvidas/contestação, quando disponível.
-            </p>
-          </aside>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <script>
-    // ================= CONFIGURAÇÃO =================
-    const API_URL   = "https://billowing-voice-6efd.asilvino19.workers.dev/";
-    const LOGO_URL  = "COLE_AQUI_SUA_URL_DO_LOGO"; // ex: https://raw.githubusercontent.com/.../quatroc-logo.png
-    const TERMOS_URL = "https://SEU_DOMINIO/seguranca"; // troque quando publicar
-
-    // ================= ELEMENTOS =================
-    const brandLogo   = document.getElementById("brandLogo");
-    const btnReset    = document.getElementById("btnReset");
-
-    const viewStart   = document.getElementById("viewStart");
-    const viewDebts   = document.getElementById("viewDebts");
-
-    const docInput    = document.getElementById("docInput");
-    const docLabel    = document.getElementById("docLabel");
-    const btnContinue = document.getElementById("btnContinue");
-    const toggleDoc   = document.getElementById("toggleDoc");
-    const startAlert  = document.getElementById("startAlert");
-    const termosLink  = document.getElementById("termosLink");
-
-    const debtsCards  = document.getElementById("debtsCards");
-    const typingEl    = document.getElementById("typing");
-
-    // ================= ESTADO =================
-    let sessionId = Date.now().toString();
-    let step = "inicio";
-    let documento = null;
-
-    // modo de entrada (cpf/cnpj) apenas pra UX
-    let docMode = "cpf"; // "cpf" | "cnpj"
-
-    // ================= INIT =================
-    brandLogo.src = LOGO_URL;
-    termosLink.href = TERMOS_URL;
-
-    function resetAll(){
-      sessionId = Date.now().toString();
-      step = "inicio";
-      documento = null;
-      docMode = "cpf";
-      applyDocMode();
-
-      startAlert.classList.remove("show");
-      startAlert.textContent = "";
-
-      debtsCards.innerHTML = "";
-      typingEl.classList.remove("show");
-
-      viewDebts.classList.add("hidden");
-      viewStart.classList.remove("hidden");
-      docInput.value = "";
-      docInput.focus();
-
-      // chama backend só pra manter seu comportamento atual (se você quiser mensagem inicial, etc.)
-      sendToBackend({ sessionId, step: "inicio" }, { silent: true });
-    }
-
-    btnReset.addEventListener("click", resetAll);
-
-    function applyDocMode(){
-      if (docMode === "cpf"){
-        docLabel.textContent = "CPF";
-        docInput.placeholder = "Digite seu CPF";
-        toggleDoc.textContent = "Entrar com CNPJ";
-      } else {
-        docLabel.textContent = "CNPJ";
-        docInput.placeholder = "Digite seu CNPJ";
-        toggleDoc.textContent = "Entrar com CPF";
-      }
-    }
-
-    toggleDoc.addEventListener("click", () => {
-      docMode = (docMode === "cpf") ? "cnpj" : "cpf";
-      applyDocMode();
-      docInput.focus();
-    });
-
-    // ================= HELPERS UI =================
-    function showStartAlert(text){
-      startAlert.textContent = text || "";
-      startAlert.classList.add("show");
-    }
-
-    function clearStartAlert(){
-      startAlert.textContent = "";
-      startAlert.classList.remove("show");
-    }
-
-    function setLoading(isLoading){
-      btnContinue.disabled = isLoading;
-      docInput.disabled = isLoading;
-      typingEl.classList.toggle("show", !!isLoading);
-    }
-
-    function goToDebtsView(){
-      viewStart.classList.add("hidden");
-      viewDebts.classList.remove("hidden");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function addCard(text){
-      const div = document.createElement("div");
-      div.className = "card";
-      div.textContent = text || "";
-      debtsCards.appendChild(div);
-    }
-
-    function addOptions(opcoes){
-      if (!Array.isArray(opcoes) || !opcoes.length) return;
-
-      const wrap = document.createElement("div");
-      wrap.className = "options";
-
-      opcoes.forEach(op => {
-        const btn = document.createElement("button");
-        btn.className = "opt";
-        btn.type = "button";
-        btn.textContent = op.label;
-        btn.addEventListener("click", () => handleOptionClick(op));
-        wrap.appendChild(btn);
-      });
-
-      debtsCards.appendChild(wrap);
-    }
-
-    // ================= BACKEND =================
-    async function sendToBackend(payload, { silent=false } = {}){
-      try{
-        setLoading(true);
-
-        const resp = await fetch(API_URL, {
-          method: "POST",
-          body: JSON.stringify(payload),
-        });
-
-        const text = await resp.text();
-        let data = null;
-        try { data = JSON.parse(text); } catch { data = null; }
-
-        setLoading(false);
-
-        if (!resp.ok || !data){
-          if (!silent) showStartAlert("Não foi possível processar sua solicitação. Tente novamente.");
-          return;
-        }
-
-        handleBackendResponse(data);
-      } catch(e){
-        setLoading(false);
-        if (!silent) showStartAlert("Não foi possível conectar. Verifique sua rede e tente novamente.");
-      }
-    }
-
-    function handleBackendResponse(response){
-      // Atualiza step
-      if (response.proximoStep !== undefined && response.proximoStep !== null) {
-        step = response.proximoStep;
-      }
-
-      // Documento (quando backend devolver)
-      if (response.documento) {
-        documento = String(response.documento).replace(/\D/g, "");
-      }
-
-      // Renderização:
-      // - Se NÃO tem dívida ou não localizado: mostrar na TELA 1 (alert)
-      // - Se tem dívida: ir pra TELA 2 e renderizar como cards
-      const mensagens = Array.isArray(response.mensagens) ? response.mensagens : [];
-
-      // Heurística: se response.temDivida === true OU existir opções relevantes -> tela 2
-      const hasOptions = mensagens.some(m => Array.isArray(m.opcoes) && m.opcoes.length);
-      const shouldGoDebts = response.temDivida === true || hasOptions;
-
-      if (!shouldGoDebts){
-        // Tela 1 (objetivo: sem “cara de chat”)
-        const txt = mensagens.map(m => m.texto).filter(Boolean).join("\n\n");
-        if (txt) showStartAlert(txt);
-        return;
-      }
-
-      // Tela 2
-      clearStartAlert();
-      goToDebtsView();
-
-      // Limpa e renderiza
-      debtsCards.innerHTML = "";
-      mensagens.forEach(m => {
-        if (m && m.texto) addCard(m.texto);
-        if (m && Array.isArray(m.opcoes)) addOptions(m.opcoes);
-      });
-    }
-
-    // ================= AÇÕES =================
-    function normalizeDoc(input){
-      return String(input || "").replace(/\D/g, "");
-    }
-
-    async function onConfirm(){
-      const raw = docInput.value.trim();
-      if (!raw){
-        showStartAlert("Informe um CPF ou CNPJ para continuar.");
-        return;
-      }
-
-      clearStartAlert();
-
-      documento = normalizeDoc(raw);
-
-      // mantém seu comportamento atual:
-      // inicio -> consulta_divida
-      // consulta_divida -> consulta_divida
-      // outros -> manda message/option
-      await sendToBackend({
-        sessionId,
-        step: "consulta_divida",
-        documento,
-      });
-    }
-
-    btnContinue.addEventListener("click", onConfirm);
-
-    docInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter"){
-        e.preventDefault();
-        onConfirm();
-      }
-    });
-
-    function handleOptionClick(op){
-      // casos especiais (mantive sua lógica original)
-      if (op.id === "gerar_boleto"){
-        // seu fluxo já trata "aguardando_data_pagamento"
-        // aqui você pode decidir como quer fazer na UX depois
-      }
-
-      if (op.id === "falar_atendente" || op.id === "duvidas"){
-        const motivo = (op.id === "duvidas") ? "dúvidas/contestação" : "negociação";
-        sendToBackend({
-          sessionId,
-          step: "falar_atendente",
-          documento,
-          motivo,
-        });
-        return;
-      }
-
-      // padrão
-      sendToBackend({
-        sessionId,
-        step,
-        optionId: op.id,
-        documento,
-      });
-    }
-
-    // ================= START =================
-    applyDocMode();
-    // opcional: init silencioso (sem mostrar “mensagem de chat”)
-    sendToBackend({ sessionId, step: "inicio" }, { silent: true });
-  </script>
 </body>
 </html>
