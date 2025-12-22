@@ -2,854 +2,728 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>QuatroC • Portal de Negociação</title>
+  <title>Portal de Negociação • QuatroC</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
     :root{
       --bg:#f3f4f6;
       --card:#ffffff;
-      --text:#111827;
-      --muted:#6b7280;
-      --line:#e5e7eb;
-      --brand:#d71920;
-      --brandDark:#b31218;
-      --shadow: 0 10px 30px rgba(0,0,0,.08);
-      --radius:18px;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e5e7eb;
+      --red:#d20f17;
+      --red-700:#b90b12;
+      --shadow: 0 18px 40px rgba(2,6,23,.08);
+      --radius: 22px;
+      --radius2: 16px;
+      --maxw: 740px;
+      --btnh: 56px;
+      --font: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
+    *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      font-family:var(--font);
+      background: radial-gradient(1200px 700px at 50% 10%, #ffffff, var(--bg));
+      color:var(--text);
+      min-height:100vh;
       display:flex;
       align-items:center;
       justify-content:center;
-      padding: 24px;
+      padding:20px;
     }
 
-    .app{ width: 100%; max-width: 520px; }
-
+    /* Shell */
     .shell{
-      background: var(--card);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
+      width:100%;
+      max-width:var(--maxw);
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
       overflow:hidden;
-      border: 1px solid rgba(17,24,39,.04);
     }
 
-    .topbar{
-      padding: 22px 22px 8px;
+    /* Top */
+    .top{
+      padding:26px 26px 12px;
       display:flex;
-      align-items:center;
       justify-content:center;
+      align-items:center;
+      gap:14px;
     }
-
     .logo{
       display:flex;
       align-items:center;
       justify-content:center;
-      flex-direction: column;
+      user-select:none;
     }
-
     .logo img{
-      width: 92px; /* um pouco maior */
-      height: auto;
+      height:72px; /* (ajuste solicitado: um pouco maior, sem exagero) */
+      width:auto;
       display:block;
     }
 
-    .screen{
-      padding: 10px 26px 24px;
+    /* Body */
+    .body{
+      padding:0 26px 18px;
     }
 
-    .title{
-      margin: 6px 0 4px;
-      font-size: 21px; /* um pouco menor */
-      line-height: 1.2;
-      font-weight: 780;
-      text-align:center;
-      letter-spacing: -0.02em;
-    }
-    .subtitle{
-      margin: 0 0 16px; /* centralizado mais “junto” do campo */
-      color: var(--muted);
-      font-size: 13px;
+    .hero{
+      padding:14px 0 12px;
       text-align:center;
     }
+    .hero h1{
+      margin:0;
+      font-size:32px;
+      letter-spacing:-.4px;
+    }
+    .hero p{
+      margin:8px auto 0;
+      max-width:520px;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.55;
+    }
 
-    .divider{ height:1px; background: var(--line); margin: 14px 0 18px; }
+    .divider{
+      height:1px;
+      background:var(--border);
+      margin:16px 0;
+    }
 
-    .fieldrow{
+    /* Card inside */
+    .panel{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:var(--radius2);
+      padding:18px;
+    }
+
+    .fieldLabelRow{
       display:flex;
       align-items:center;
-      justify-content:space-between;
-      gap: 12px;
-      margin-bottom: 6px;
-    }
-    .label{
-      font-size: 13px;
-      font-weight: 650;
-      color: #111827;
+      justify-content:flex-start;
+      gap:10px;
+      margin:6px 0 8px;
     }
 
-    .input{
+    label{
+      font-size:14px;
+      color:#0f172a;
+      font-weight:600;
+    }
+
+    .inputWrap{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-top:6px;
+    }
+
+    input{
       width:100%;
-      margin-top: 8px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 16px 14px;
-      font-size: 18px;
-      outline: none;
-      background: #fff;
-      transition: box-shadow .15s ease, border-color .15s ease;
+      height:56px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      outline:none;
+      padding:0 16px;
+      font-size:18px;
+      letter-spacing:.6px;
+      background:#fff;
+      color:#0f172a;
     }
-    .input:focus{
-      border-color: rgba(215,25,32,.45);
-      box-shadow: 0 0 0 4px rgba(215,25,32,.10);
+    input:focus{
+      border-color:#cbd5e1;
+      box-shadow:0 0 0 4px rgba(148,163,184,.22);
     }
 
+    .primaryBtn{
+      width:100%;
+      height:var(--btnh);
+      border:none;
+      border-radius:16px;
+      background:linear-gradient(180deg, var(--red), var(--red-700));
+      color:#fff;
+      font-size:18px;
+      font-weight:700;
+      cursor:pointer;
+      transition:transform .06s ease, filter .12s ease;
+      margin-top:16px;
+    }
+    .primaryBtn:hover{ filter:brightness(1.02); transform:translateY(-1px); }
+    .primaryBtn:disabled{ opacity:.55; cursor:not-allowed; transform:none; }
+
+    .linkRow{
+      margin-top:10px;
+      font-size:14px;
+      color:var(--muted);
+      text-align:center;
+    }
+    .linkRow a{
+      color:var(--red);
+      text-decoration:none;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .linkRow a:hover{ text-decoration:underline; }
+
+    /* Result screen */
+    .backRow{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      color:var(--muted);
+      font-size:14px;
+      padding:6px 0 0;
+    }
+    .backRow button{
+      border:none;
+      background:transparent;
+      color:var(--muted);
+      font-size:14px;
+      cursor:pointer;
+      padding:6px 8px;
+      border-radius:10px;
+    }
+    .backRow button:hover{
+      background:#f8fafc;
+      color:#0f172a;
+    }
+
+    .resultTitle{
+      text-align:center;
+      margin:16px 0 0;
+    }
+    .resultTitle h2{
+      margin:0;
+      font-size:32px;
+      letter-spacing:-.4px;
+    }
+
+    .resultSub{
+      margin:8px auto 0;
+      max-width:520px;
+      text-align:center;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.55;
+    }
+
+    .messageBox{
+      margin-top:16px;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:16px;
+      font-size:16px;
+      line-height:1.55;
+      white-space:pre-line;
+    }
+    .messageBox strong{ font-weight:800; }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:center; /* ✅ centraliza botões */
+      margin-top:14px;
+    }
     .btn{
-      width:100%;
-      border: none;
-      border-radius: 16px;
-      padding: 16px 16px;
-      font-size: 15px;
-      font-weight: 780;
-      cursor:pointer;
-      margin-top: 14px;
-      background: var(--brand);
-      color:#fff;
-      transition: transform .05s ease, background .15s ease, opacity .15s ease;
-    }
-    .btn:hover{ background: var(--brandDark); }
-    .btn:active{ transform: translateY(1px); }
-    .btn:disabled{ opacity:.55; cursor:not-allowed; }
-
-    .toggle{
-      margin-top: 12px;
-      text-align:center;
-      font-size: 13px;
-      color: var(--muted);
-      user-select:none;
-    }
-    .toggle a{
-      color: var(--brand);
-      font-weight: 780;
-      text-decoration:none;
-      cursor:pointer;
-    }
-    .toggle a:hover{ text-decoration: underline; }
-
-    .footer{
-      padding: 16px 22px 20px;
-      color: var(--muted);
-      font-size: 12.5px;
-      text-align:center;
-      background: linear-gradient(to bottom, rgba(243,244,246,.0), rgba(243,244,246,.65));
-      border-top: 1px solid rgba(229,231,235,.6);
-    }
-    .footer a{
-      color: var(--brand);
-      font-weight: 750;
-      text-decoration:none;
-    }
-    .footer a:hover{ text-decoration: underline; }
-
-    .cards{
-      display:flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 10px;
-    }
-    .card{
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px 14px;
+      min-width:160px;
+      height:52px;
+      padding:0 16px;
+      border-radius:16px;
+      border:1px solid var(--border);
       background:#fff;
-      text-align:left;
-    }
-
-    .pill{
-      font-size: 11px;
-      font-weight: 780;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(17,24,39,.06);
-      color: #111827;
-      white-space: nowrap;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-    }
-
-    .card-title{
-      font-size: 14px;
-      font-weight: 780;
-      margin: 0;
-      line-height: 1.25;
-    }
-    .card-meta{
-      margin: 8px 0 0;
-      color: #111827;
-      font-size: 13.5px;
-      line-height: 1.5;
-      white-space: pre-line;
-    }
-
-    .row-actions{
-      display:flex;
-      gap: 10px;
-      margin-top: 12px;
-      flex-wrap: wrap;
-    }
-    .btn2{
-      border-radius: 14px;
-      padding: 11px 12px;
-      font-size: 13px;
-      font-weight: 780;
-      border: 1px solid var(--line);
+      color:#0f172a;
+      font-weight:800;
+      font-size:16px;
       cursor:pointer;
-      background:#fff;
+      transition:transform .06s ease, background .12s ease, border-color .12s ease;
     }
-    .btn2.primary{
-      background: var(--brand);
+    .btn:hover{ background:#f8fafc; transform:translateY(-1px); }
+    .btn.primary{
+      border:none;
+      background:linear-gradient(180deg, var(--red), var(--red-700));
       color:#fff;
-      border-color: transparent;
     }
-    .btn2.primary:hover{ background: var(--brandDark); }
-    .btn2:hover{ border-color: rgba(17,24,39,.18); }
+    .btn.primary:hover{ filter:brightness(1.02); }
 
-    .backlink{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      font-size: 13px;
-      color: var(--muted);
-      cursor:pointer;
-      user-select:none;
-      margin-bottom: 10px;
-    }
-    .backlink:hover{ color:#374151; }
-
-    /* Modal Termos */
-    .modal-overlay{
-      position:fixed;
-      inset:0;
-      background: rgba(17,24,39,.55);
-      display:none;
+    /* Loader */
+    .loaderWrap{
+      margin-top:16px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
       align-items:center;
       justify-content:center;
-      padding: 18px;
-      z-index: 50;
+      text-align:center;
+      padding:18px 12px;
+      border:1px dashed #cbd5e1;
+      border-radius:18px;
+      color:var(--muted);
     }
-    .modal{
-      width:100%;
-      max-width: 720px;
-      background:#fff;
-      border-radius: 18px;
-      box-shadow: 0 18px 50px rgba(0,0,0,.25);
-      overflow:hidden;
-      border: 1px solid rgba(17,24,39,.08);
-    }
-    .modal-top{
-      padding: 14px 16px;
-      display:flex;
-      justify-content:space-between;
+    .pill{
+      display:inline-flex;
       align-items:center;
-      border-bottom: 1px solid var(--line);
-      background: #fff;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:#f1f5f9;
+      border:1px solid #e2e8f0;
+      color:#0f172a;
+      font-weight:800;
     }
-    .modal-top strong{ font-size: 14px; }
-    .modal-close{
-      border:none;
-      background: transparent;
-      font-size: 18px;
-      cursor:pointer;
-      padding: 6px 10px;
-      border-radius: 10px;
+    .dot{
+      width:8px;height:8px;border-radius:999px;background:var(--red);
+      animation:pulse 1s infinite ease-in-out;
     }
-    .modal-close:hover{ background: rgba(17,24,39,.06); }
-    .modal-body{
-      padding: 16px;
-      color:#111827;
-      font-size: 13.5px;
-      line-height: 1.65;
-      max-height: 70vh;
-      overflow:auto;
+    @keyframes pulse{
+      0%,100%{ transform:scale(.9); opacity:.65; }
+      50%{ transform:scale(1.15); opacity:1; }
     }
 
-    @media (max-width: 420px){
-      .screen{ padding: 10px 18px 22px; }
-      .title{ font-size: 19px; }
-      .logo img{ width: 86px; }
+    /* Footer */
+    .footer{
+      border-top:1px solid var(--border);
+      padding:16px 22px;
+      text-align:center;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.5;
+      background:#fff;
+    }
+    .footer a{
+      color:var(--red);
+      text-decoration:none;
+      font-weight:800;
+    }
+    .footer a:hover{ text-decoration:underline; }
+
+    /* Views */
+    .view{ display:none; }
+    .view.active{ display:block; }
+
+    @media (max-width:520px){
+      .logo img{ height:64px; }
+      .hero h1, .resultTitle h2{ font-size:26px; }
+      input{ font-size:17px; }
+      .btn{ min-width:140px; }
+      .body{ padding:0 16px 16px; }
+      .top{ padding:22px 16px 10px; }
     }
   </style>
 </head>
 
 <body>
-  <div class="app">
-    <div class="shell">
-
-      <div class="topbar">
-        <div class="logo">
-          <img id="logoImg" alt="QuatroC" />
-        </div>
-      </div>
-
-      <!-- SCREEN 1 -->
-      <div id="screen1" class="screen">
-        <div class="title">Acesse ao portal de negociação</div>
-        <div class="subtitle">Preencha o campo abaixo</div>
-
-        <div class="divider"></div>
-
-        <div class="fieldrow">
-          <div class="label" id="docLabel">Digite seu CPF:</div>
-        </div>
-
-        <input
-          id="docInput"
-          class="input"
-          inputmode="numeric"
-          autocomplete="off"
-          placeholder="000.000.000-00"
-        />
-
-        <button id="btnConfirm" class="btn">Confirmar</button>
-
-        <div class="toggle">
-          <span>É pessoa jurídica?</span>
-          <a id="toggleLink">Entrar com CNPJ</a>
-        </div>
-      </div>
-
-      <!-- SCREEN 2 -->
-      <div id="screen2" class="screen" style="display:none;">
-        <div class="backlink" id="btnBack">← Voltar</div>
-
-        <div class="title" id="resultTitle">Resultado da consulta</div>
-        <div class="subtitle" id="resultSubtitle">
-          Estamos localizando as informações vinculadas ao documento informado.
-        </div>
-
-        <div id="resultArea"></div>
-      </div>
-
-      <div class="footer">
-        Conosco, seus dados são tratados de forma segura e sigilosa.
-        Caso tenha dúvidas ou queira saber mais, acesse nossos
-        <a id="openTerms">Termos e Política</a>.
+  <div class="shell">
+    <!-- TOPO -->
+    <div class="top">
+      <div class="logo" aria-label="QuatroC">
+        <!-- Troque para a URL final do seu logo (GitHub Raw / Pages / CDN) -->
+        <img id="brandLogo" src="https://cdn.jsdelivr.net/gh/asilvino19-beep/Logo@main/Logo.png" alt="QuatroC" />
       </div>
     </div>
-  </div>
 
-  <!-- Modal Termos -->
-  <div id="termsOverlay" class="modal-overlay" role="dialog" aria-modal="true">
-    <div class="modal">
-      <div class="modal-top">
-        <strong>Termos e Política • QuatroC</strong>
-        <button class="modal-close" id="closeTerms" aria-label="Fechar">✕</button>
+    <div class="body">
+
+      <!-- ===== VIEW 1: INÍCIO ===== -->
+      <section id="viewStart" class="view active">
+        <div class="hero">
+          <h1 style="font-size:28px;">Acesse ao portal de negociação</h1>
+          <p style="font-size:14px;">Preencha o campo abaixo</p>
+        </div>
+
+        <div class="panel">
+          <div class="fieldLabelRow">
+            <label id="docLabel" for="docInput">Digite seu CPF:</label>
+          </div>
+
+          <div class="inputWrap">
+            <input
+              id="docInput"
+              type="text"
+              inputmode="numeric"
+              autocomplete="off"
+              placeholder="000.000.000-00"
+              aria-label="Documento"
+            />
+          </div>
+
+          <button id="btnConfirm" class="primaryBtn">Confirmar</button>
+
+          <div class="linkRow">
+            É pessoa jurídica? <a id="toggleDocType" href="javascript:void(0)">Entrar com CNPJ</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== VIEW 2: RESULTADO / FLUXO POR BOTÕES ===== -->
+      <section id="viewResult" class="view">
+        <div class="backRow">
+          <button id="btnBack" type="button">← Voltar</button>
+        </div>
+
+        <div class="resultTitle">
+          <h2 id="resultH2">Resultado da consulta</h2>
+        </div>
+
+        <p id="resultSub" class="resultSub">
+          <!-- texto dinâmico -->
+        </p>
+
+        <!-- Loading -->
+        <div id="loadingBox" class="loaderWrap" style="display:none;">
+          <div class="pill"><span class="dot"></span> Carregando…</div>
+          <div>Aguarde um momento.</div>
+        </div>
+
+        <!-- Mensagem principal -->
+        <div id="messageBox" class="messageBox" style="display:none;"></div>
+
+        <!-- Ações (botões) -->
+        <div id="actions" class="actions" style="display:none;"></div>
+
+        <!-- Nova consulta (somente quando "Não") -->
+        <div id="restartWrap" style="display:none; margin-top:14px; text-align:center;">
+          <button id="btnRestart" class="btn" type="button">Nova consulta</button>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <div class="footer">
+        Conosco, seus dados são tratados de forma segura e sigilosa. Caso tenha dúvidas ou queira saber mais sobre, acesse nossos
+        <a href="https://asilvino19-beep.github.io/TermoePolitica-Chat/" target="_blank" rel="noopener noreferrer">Termos e Política</a>.
       </div>
-      <div class="modal-body" id="termsBody"></div>
     </div>
   </div>
 
   <script>
-    // =================== CONFIG ===================
+    // ================= CONFIGURAÇÃO =================
     const API_URL = "https://billowing-voice-6efd.asilvino19.workers.dev/";
-    const LOGO_URL = "https://cdn.jsdelivr.net/gh/asilvino19-beep/Logo@main/Logo.png";
 
-    const TERMOS_HTML = `
-      <p><strong>1) Confidencialidade e uso de dados</strong><br/>
-      A QuatroC trata as informações fornecidas neste portal de forma segura e sigilosa, com o objetivo de viabilizar o atendimento de negociação, regularização ou orientação relacionada a pendências vinculadas ao documento informado.</p>
+    // Views
+    const viewStart  = document.getElementById("viewStart");
+    const viewResult = document.getElementById("viewResult");
 
-      <p><strong>2) Finalidade do portal</strong><br/>
-      Este portal disponibiliza informações e direcionamentos de autoatendimento quando aplicável. Em alguns cenários, o atendimento poderá ser concluído com suporte humano.</p>
-
-      <p><strong>3) Segurança</strong><br/>
-      Recomendamos que você não compartilhe informações sensíveis com terceiros. Caso identifique qualquer comportamento incomum, interrompa o atendimento e solicite suporte.</p>
-
-      <p><strong>4) Atualização</strong><br/>
-      As informações exibidas podem sofrer atualização conforme registros e validações internas. Se houver divergência, você poderá solicitar revisão com um atendente.</p>
-
-      <p style="color:#6b7280;font-size:12.5px;margin-top:18px;">
-      Última atualização: ${new Date().toLocaleDateString('pt-BR')}
-      </p>
-    `;
-
-    // =================== STATE ===================
-    let sessionId = Date.now().toString();
-    let isCnpjMode = false;
-    let documentoDigits = "";
-    let lastBackendResponse = null;
-
-    // Para o passo de sigilo:
-    let pendingIdentityOption = null; // guarda opção que seria enviada, após validação do nome
-    let extractedFullName = "";       // nome completo vindo do backend
-
-    // =================== DOM ===================
-    const screen1 = document.getElementById("screen1");
-    const screen2 = document.getElementById("screen2");
-
-    const logoImg = document.getElementById("logoImg");
+    // Start elements
     const docInput = document.getElementById("docInput");
     const docLabel = document.getElementById("docLabel");
+    const toggleDocType = document.getElementById("toggleDocType");
     const btnConfirm = document.getElementById("btnConfirm");
-    const toggleLink = document.getElementById("toggleLink");
 
+    // Result elements
     const btnBack = document.getElementById("btnBack");
-    const resultArea = document.getElementById("resultArea");
-    const resultTitle = document.getElementById("resultTitle");
-    const resultSubtitle = document.getElementById("resultSubtitle");
+    const resultSub = document.getElementById("resultSub");
+    const loadingBox = document.getElementById("loadingBox");
+    const messageBox = document.getElementById("messageBox");
+    const actions = document.getElementById("actions");
+    const restartWrap = document.getElementById("restartWrap");
+    const btnRestart = document.getElementById("btnRestart");
 
-    const termsOverlay = document.getElementById("termsOverlay");
-    const openTerms = document.getElementById("openTerms");
-    const closeTerms = document.getElementById("closeTerms");
-    const termsBody = document.getElementById("termsBody");
+    // Estado
+    let sessionId = Date.now().toString();
+    let step = "inicio";
+    let documento = null;
 
-    // =================== INIT ===================
-    logoImg.src = LOGO_URL;
-    termsBody.innerHTML = TERMOS_HTML;
+    // Controle CPF/CNPJ
+    let docMode = "CPF"; // ou "CNPJ"
+    const onlyDigits = (s) => (s || "").replace(/\D/g, "");
 
-    function showScreen(n){
-      if(n === 1){
-        screen1.style.display = "";
-        screen2.style.display = "none";
-        setTimeout(()=> docInput.focus(), 50);
-      }else{
-        screen1.style.display = "none";
-        screen2.style.display = "";
-      }
-    }
-
-    // =================== MASKS ===================
-    function onlyDigits(s){ return (s || "").replace(/\D/g, ""); }
-
-    function maskCpf(d){
-      const p1 = d.slice(0,3);
-      const p2 = d.slice(3,6);
-      const p3 = d.slice(6,9);
-      const p4 = d.slice(9,11);
-      let out = p1;
-      if(p2) out += "." + p2;
-      if(p3) out += "." + p3;
-      if(p4) out += "-" + p4;
-      return out;
-    }
-
-    function maskCnpj(d){
-      const p1 = d.slice(0,2);
-      const p2 = d.slice(2,5);
-      const p3 = d.slice(5,8);
-      const p4 = d.slice(8,12);
-      const p5 = d.slice(12,14);
-      let out = p1;
-      if(p2) out += "." + p2;
-      if(p3) out += "." + p3;
-      if(p4) out += "/" + p4;
-      if(p5) out += "-" + p5;
-      return out;
-    }
-
-    function applyMask(){
-      const max = isCnpjMode ? 14 : 11;
-      documentoDigits = documentoDigits.slice(0, max);
-
-      docInput.value = isCnpjMode ? maskCnpj(documentoDigits) : maskCpf(documentoDigits);
-
-      if(isCnpjMode){
-        docLabel.textContent = "Digite seu CNPJ:";
-        docInput.placeholder = "00.000.000/0000-00";
-        toggleLink.textContent = "Entrar com CPF";
-      }else{
+    function setDocMode(mode){
+      docMode = mode;
+      if (docMode === "CPF"){
         docLabel.textContent = "Digite seu CPF:";
         docInput.placeholder = "000.000.000-00";
-        toggleLink.textContent = "Entrar com CNPJ";
+        toggleDocType.textContent = "Entrar com CNPJ";
+      } else {
+        docLabel.textContent = "Digite seu CNPJ:";
+        docInput.placeholder = "00.000.000/0000-00";
+        toggleDocType.textContent = "Entrar com CPF";
       }
-
-      btnConfirm.disabled = documentoDigits.length !== max;
+      // reformat
+      docInput.value = formatDoc(onlyDigits(docInput.value));
     }
 
-    docInput.addEventListener("input", (e)=>{
-      documentoDigits = onlyDigits(e.target.value);
-      applyMask();
-    });
-
-    toggleLink.addEventListener("click", ()=>{
-      isCnpjMode = !isCnpjMode;
-      documentoDigits = onlyDigits(docInput.value);
-      applyMask();
+    toggleDocType.addEventListener("click", () => {
+      setDocMode(docMode === "CPF" ? "CNPJ" : "CPF");
       docInput.focus();
     });
 
-    // =================== MODAL TERMOS ===================
-    function openTermsModal(){ termsOverlay.style.display = "flex"; }
-    function closeTermsModal(){ termsOverlay.style.display = "none"; }
+    function formatDoc(digits){
+      if (docMode === "CPF"){
+        digits = digits.slice(0, 11);
+        // 000.000.000-00
+        return digits
+          .replace(/^(\d{3})(\d)/, "$1.$2")
+          .replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
+          .replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
+      } else {
+        digits = digits.slice(0, 14);
+        // 00.000.000/0000-00
+        return digits
+          .replace(/^(\d{2})(\d)/, "$1.$2")
+          .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+          .replace(/^(\d{2})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3/$4")
+          .replace(/^(\d{2})\.(\d{3})\.(\d{3})\/(\d{4})(\d)/, "$1.$2.$3/$4-$5");
+      }
+    }
 
-    openTerms.addEventListener("click", openTermsModal);
-    closeTerms.addEventListener("click", closeTermsModal);
-    termsOverlay.addEventListener("click", (e)=>{
-      if(e.target === termsOverlay) closeTermsModal();
+    docInput.addEventListener("input", () => {
+      const digits = onlyDigits(docInput.value);
+      docInput.value = formatDoc(digits);
     });
 
-    // =================== BACKEND ===================
-    async function sendToBackend(payload){
-      try{
+    // ✅ evita cursor “vazando”: só existe input na tela 1
+    function switchView(to){
+      if (to === "start"){
+        viewStart.classList.add("active");
+        viewResult.classList.remove("active");
+        setTimeout(() => docInput.focus(), 50);
+      } else {
+        viewStart.classList.remove("active");
+        viewResult.classList.add("active");
+      }
+    }
+
+    function setLoading(isLoading){
+      loadingBox.style.display = isLoading ? "flex" : "none";
+      messageBox.style.display = isLoading ? "none" : (messageBox.textContent ? "block" : "none");
+      actions.style.display = isLoading ? "none" : (actions.children.length ? "flex" : "none");
+    }
+
+    function clearResultUI(){
+      messageBox.textContent = "";
+      actions.innerHTML = "";
+      restartWrap.style.display = "none";
+      resultSub.textContent = "";
+      messageBox.style.display = "none";
+      actions.style.display = "none";
+    }
+
+    function showMessage(text){
+      messageBox.textContent = text || "";
+      messageBox.style.display = "block";
+    }
+
+    function showButtons(opcoes){
+      actions.innerHTML = "";
+      (opcoes || []).forEach(op => {
+        const b = document.createElement("button");
+        b.className = "btn" + (op.id === "identidade_sim" ? " primary" : "");
+        b.type = "button";
+        b.textContent = op.label || "Selecionar";
+        b.onclick = () => handleOptionClick(op);
+        actions.appendChild(b);
+      });
+      actions.style.display = opcoes?.length ? "flex" : "none";
+    }
+
+    function normalizeBackendMessages(response){
+      // O backend pode devolver várias mensagens; aqui vamos consolidar
+      // Em UX “portal”, vamos priorizar a última mensagem que tenha opcoes.
+      const msgs = Array.isArray(response?.mensagens) ? response.mensagens : [];
+      if (!msgs.length) return { texto:"", opcoes:[] };
+
+      // Preferir a última mensagem com opcoes, senão a última mensagem
+      let chosen = null;
+      for (let i = msgs.length - 1; i >= 0; i--){
+        if (Array.isArray(msgs[i].opcoes) && msgs[i].opcoes.length){
+          chosen = msgs[i];
+          break;
+        }
+      }
+      if (!chosen) chosen = msgs[msgs.length - 1];
+
+      // Se houver mensagens anteriores relevantes, podemos anexar como texto (sem poluir)
+      // Aqui, concatenamos as mensagens que não são só "Como deseja prosseguir?"
+      const textParts = [];
+      msgs.forEach(m => {
+        const t = (m?.texto || "").trim();
+        if (!t) return;
+        // evita repetir cabeçalhos muito genéricos
+        if (t.toLowerCase() === "como deseja prosseguir?") return;
+        if (t.toLowerCase() === "abaixo seguem informações sobre seu(s) débito(s):") return;
+        textParts.push(t);
+      });
+
+      // Se ficou grande, mantém só as últimas 2
+      const finalText = (textParts.length > 2)
+        ? textParts.slice(-2).join("\n\n")
+        : textParts.join("\n\n");
+
+      return {
+        texto: finalText || (chosen.texto || ""),
+        opcoes: Array.isArray(chosen.opcoes) ? chosen.opcoes : []
+      };
+    }
+
+    async function sendToBackend(payload) {
+      try {
+        btnConfirm.disabled = true;
+        setLoading(true);
+
         const resp = await fetch(API_URL, {
           method: "POST",
           body: JSON.stringify(payload),
         });
 
-        const txt = await resp.text();
-        let data = null;
-        try { data = JSON.parse(txt); } catch { data = null; }
-
-        if(!resp.ok || !data){
-          return { error: true, raw: txt };
+        if (!resp.ok) {
+          const t = await resp.text().catch(() => "");
+          console.error("Erro HTTP", resp.status, t);
+          setLoading(false);
+          showMessage("Desculpe, ocorreu um erro ao processar sua solicitação.");
+          return null;
         }
-        return data;
-      }catch(err){
-        return { error: true, raw: String(err) };
-      }
-    }
 
-    // =================== UTIL ===================
-    function escapeHtml(str){
-      return String(str ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
-
-    function normalizeSpaces(s){
-      return String(s || "").replace(/\s+/g, " ").trim();
-    }
-
-    function extractNameFromText(text){
-      // Ex: "Localizamos o cadastro em nome de ALEXANDRE VALENTE LEAL.\nEstamos falando com essa pessoa?"
-      const t = normalizeSpaces(text);
-      const m = t.match(/nome de\s+(.+?)(?:\.\s|\.|,|\sEstamos|Estamos)/i);
-      if(m && m[1]) return normalizeSpaces(m[1]).toUpperCase();
-      return "";
-    }
-
-    function displayShortName(fullName){
-      const parts = normalizeSpaces(fullName).split(" ").filter(Boolean);
-      if(parts.length >= 3){
-        return (parts[0] + " " + parts[1]).toUpperCase(); // primeiro + segundo nome
-      }
-      if(parts.length === 2){
-        return parts[0].toUpperCase(); // somente 1 sobrenome -> exibe só primeiro nome
-      }
-      return (parts[0] || "").toUpperCase();
-    }
-
-    function buildNameOptions(fullName){
-      const base = normalizeSpaces(fullName).toUpperCase();
-      const parts = base.split(" ").filter(Boolean);
-
-      // Fallback se vier nome estranho
-      if(parts.length < 1){
-        return [base || "CONFIRMAR", "CONFIRMAR", "CONFIRMAR"].slice(0,3);
-      }
-
-      const first = parts[0];
-      const second = parts[1] || ""; // pode não existir
-      const lastReal = parts[parts.length - 1] || "";
-
-      const commonLast = ["SILVA","SANTOS","OLIVEIRA","SOUSA","PEREIRA","COSTA","ROCHA","ALMEIDA"];
-      const pickDifferent = (avoid) => {
-        const pool = commonLast.filter(x => x !== avoid);
-        return pool[Math.floor(Math.random() * pool.length)];
-      };
-
-      // Se tiver 1 sobrenome (2 partes), ainda assim mostramos 3 opções com 2 “iscas”
-      // Mantendo "primeiro + (segundo se existir)" + sobrenome
-      const prefix = (second ? `${first} ${second}` : `${first}`).trim();
-
-      const opt1 = base; // correto
-      const opt2 = `${prefix} ${pickDifferent(lastReal)}`.trim();
-      const opt3 = `${prefix} ${pickDifferent(lastReal)}`.trim();
-
-      // embaralha e garante 3 distintos
-      const set = Array.from(new Set([opt1,opt2,opt3]));
-      while(set.length < 3){
-        set.push(`${prefix} ${pickDifferent(lastReal)}`.trim());
-      }
-      return shuffle(set).slice(0,3);
-    }
-
-    function shuffle(arr){
-      const a = [...arr];
-      for(let i=a.length-1;i>0;i--){
-        const j = Math.floor(Math.random()*(i+1));
-        [a[i],a[j]] = [a[j],a[i]];
-      }
-      return a;
-    }
-
-    // =================== RENDERERS ===================
-    function renderLoading(){
-      resultTitle.textContent = "Resultado da consulta";
-      resultSubtitle.textContent = "Estamos localizando as informações vinculadas ao documento informado.";
-      resultArea.innerHTML = `
-        <div class="card" style="text-align:center;">
-          <span class="pill">Carregando...</span>
-          <p class="card-meta" style="margin-top:10px;">Aguarde um momento.</p>
-        </div>
-      `;
-    }
-
-    function renderEmptyState(title, desc){
-      resultArea.innerHTML = `
-        <div class="card" style="text-align:center;">
-          <span class="pill">Consulta finalizada</span>
-          <p class="card-title" style="margin-top:10px;">${escapeHtml(title)}</p>
-          <p class="card-meta" style="margin-top:8px;color:var(--muted);">${escapeHtml(desc)}</p>
-          <div class="row-actions" style="justify-content:center;margin-top:14px;">
-            <button class="btn2 primary" id="btnNew">Nova consulta</button>
-          </div>
-        </div>
-      `;
-      document.getElementById("btnNew").onclick = ()=>{
-        documentoDigits = "";
-        applyMask();
-        showScreen(1);
-      };
-    }
-
-    function renderMensagemComOpcoes(texto, opcoes){
-      // Renderiza a “mensagem” como card + botões de opção
-      const buttons = (opcoes || []).map((op, idx) => {
-        const id = escapeHtml(op.id || `op_${idx}`);
-        const label = escapeHtml(op.label || "Selecionar");
-        const primary = idx === 0 ? "primary" : "";
-        return `<button class="btn2 ${primary}" data-option-id="${id}" data-option-label="${label}">${label}</button>`;
-      }).join("");
-
-      resultArea.innerHTML = `
-        <div class="cards">
-          <div class="card">
-            <p class="card-meta">${escapeHtml(texto || "")}</p>
-            <div class="row-actions">
-              ${buttons}
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="row-actions">
-              <button class="btn2" id="btnNew2">Nova consulta</button>
-            </div>
-          </div>
-        </div>
-      `;
-
-      document.getElementById("btnNew2").onclick = ()=>{
-        documentoDigits = "";
-        applyMask();
-        showScreen(1);
-      };
-
-      [...resultArea.querySelectorAll("button[data-option-id]")].forEach(btn=>{
-        btn.onclick = async ()=>{
-          const optionId = btn.getAttribute("data-option-id");
-          const optionLabel = btn.getAttribute("data-option-label") || "";
-
-          await handleOptionSelection({ id: optionId, label: optionLabel });
-        };
-      });
-    }
-
-    function renderNameChallenge(fullName){
-      const short = displayShortName(fullName);
-      const opts = buildNameOptions(fullName);
-
-      resultArea.innerHTML = `
-        <div class="cards">
-          <div class="card">
-            <p class="card-meta">Localizamos o cadastro em nome de <strong>${escapeHtml(short)}</strong>.<br/>Estamos falando com essa pessoa?</p>
-            <div class="row-actions">
-              <button class="btn2 primary" id="btnYes">Sim</button>
-              <button class="btn2" id="btnNo">Não</button>
-            </div>
-          </div>
-
-          <div class="card" id="challengeCard" style="display:none;">
-            <p class="card-title">Para darmos sequência, confirme o nome completo</p>
-            <div class="row-actions" style="margin-top:12px;flex-direction:column;">
-              ${opts.map(n => `<button class="btn2" data-fullname="${escapeHtml(n)}">${escapeHtml(n)}</button>`).join("")}
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="row-actions">
-              <button class="btn2" id="btnNew3">Nova consulta</button>
-            </div>
-          </div>
-        </div>
-      `;
-
-      document.getElementById("btnNew3").onclick = ()=>{
-        documentoDigits = "";
-        applyMask();
-        showScreen(1);
-      };
-
-      document.getElementById("btnNo").onclick = async ()=>{
-        // Se não é a pessoa, manda pro backend como identidade_nao (mantém lógica)
-        const data = await sendToBackend({
-          sessionId,
-          step: "confirmar_identidade",
-          optionId: "identidade_nao",
-          documento: documentoDigits
+        const data = await resp.json().catch(async () => {
+          const txt = await resp.text();
+          try { return JSON.parse(txt); } catch { return null; }
         });
-        handleBackendResponse(data);
-      };
 
-      document.getElementById("btnYes").onclick = ()=>{
-        // Mostra validação (sigilo) antes de mandar identidade_sim
-        document.getElementById("challengeCard").style.display = "";
-      };
-
-      [...resultArea.querySelectorAll("button[data-fullname]")].forEach(btn=>{
-        btn.onclick = async ()=>{
-          const chosen = normalizeSpaces(btn.getAttribute("data-fullname")).toUpperCase();
-          const correct = normalizeSpaces(fullName).toUpperCase();
-
-          if(chosen === correct){
-            // Só agora envia o "identidade_sim"
-            const data = await sendToBackend({
-              sessionId,
-              step: "confirmar_identidade",
-              optionId: "identidade_sim",
-              documento: documentoDigits
-            });
-            handleBackendResponse(data);
-          } else {
-            // Resposta errada -> por sigilo, encerra e direciona
-            renderEmptyState(
-              "Não foi possível validar a identificação",
-              "Para sua segurança, recomendamos iniciar uma nova consulta ou falar com um atendente."
-            );
-          }
-        };
-      });
+        return data;
+      } catch (err) {
+        console.error("Erro ao chamar backend", err);
+        setLoading(false);
+        showMessage("Não foi possível se conectar. Verifique sua conexão e tente novamente.");
+        return null;
+      } finally {
+        btnConfirm.disabled = false;
+      }
     }
 
-    function renderFallbackMensagens(mensagens){
-      // agora renderiza mensagens + opções se existirem
-      const firstWithOptions = (mensagens || []).find(m => Array.isArray(m.opcoes) && m.opcoes.length);
-      const firstText = (firstWithOptions && firstWithOptions.texto) ? String(firstWithOptions.texto) : "";
+    // ✅ REGRAS DE “Nova consulta”
+    // Só pode aparecer quando o usuário clicar em "Não" na confirmação de identidade.
+    let lastIdentityWasNo = false;
 
-      // Se detectarmos que é a pergunta de identidade, usamos o passo de sigilo
-      const full = extractNameFromText(firstText);
-      if(full && /estamos falando com essa pessoa/i.test(firstText)){
-        extractedFullName = full;
-        renderNameChallenge(full);
+    function setRestartVisible(visible){
+      restartWrap.style.display = visible ? "block" : "none";
+    }
+
+    btnRestart.addEventListener("click", () => {
+      // reinicia sessão/estado
+      sessionId = Date.now().toString();
+      step = "inicio";
+      documento = null;
+      lastIdentityWasNo = false;
+      clearResultUI();
+      switchView("start");
+      docInput.value = "";
+      setDocMode("CPF");
+    });
+
+    btnBack.addEventListener("click", () => {
+      // voltar para início sem “reset” total (mantém doc digitado, se quiser)
+      switchView("start");
+    });
+
+    // ====== SUBMIT DOCUMENTO ======
+    btnConfirm.addEventListener("click", async () => {
+      const digits = onlyDigits(docInput.value);
+      const required = (docMode === "CPF") ? 11 : 14;
+
+      if (digits.length !== required){
+        alert(docMode === "CPF"
+          ? "Informe um CPF válido (11 dígitos)."
+          : "Informe um CNPJ válido (14 dígitos)."
+        );
+        docInput.focus();
         return;
       }
 
-      // Caso padrão: lista tudo em cards, e se houver opções em alguma mensagem, prioriza a primeira com opções
-      if(firstWithOptions){
-        renderMensagemComOpcoes(firstWithOptions.texto || "", firstWithOptions.opcoes || []);
-        return;
-      }
+      documento = digits;
+      step = "consulta_divida";
+      lastIdentityWasNo = false;
 
-      const blocks = (mensagens || []).map(m=>{
-        const text = (m.texto || "").trim();
-        if(!text) return "";
-        return `<div class="card"><p class="card-meta" style="margin:0;">${escapeHtml(text)}</p></div>`;
-      }).join("");
+      clearResultUI();
+      switchView("result");
 
-      resultArea.innerHTML = `
-        <div class="cards">
-          ${blocks || ""}
-          <div class="card">
-            <div class="row-actions">
-              <button class="btn2 primary" id="btnBackToStart">Nova consulta</button>
-            </div>
-          </div>
-        </div>
-      `;
+      // ✅ durante consulta no CRM
+      resultSub.textContent = "Estamos localizando as informações vinculadas ao documento informado.";
+      setLoading(true);
 
-      document.getElementById("btnBackToStart").onclick = ()=>{
-        documentoDigits = "";
-        applyMask();
-        showScreen(1);
-      };
-    }
+      const response = await sendToBackend({ sessionId, step: "consulta_divida", documento });
+      if (!response) return;
+
+      handleBackendResponse(response);
+    });
 
     function handleBackendResponse(response){
-      lastBackendResponse = response;
+      clearResultUI();
 
-      if(response && response.error){
-        renderEmptyState("Falha ao consultar", "Não foi possível concluir a consulta agora. Tente novamente.");
-        return;
+      // Atualiza step (se vier)
+      if (response.proximoStep !== undefined && response.proximoStep !== null){
+        step = response.proximoStep;
       }
 
-      // Fallback do modelo atual do backend
-      const msgs = response && Array.isArray(response.mensagens) ? response.mensagens : null;
-      if(msgs){
-        renderFallbackMensagens(msgs);
-        return;
+      // Texto do topo
+      // - Enquanto pesquisando: já setamos antes de chamar
+      // - Ao localizar: mostra “Resultado da consulta” (título fixo), e o texto vem do backend
+      resultSub.textContent = "Resultado da consulta";
+
+      // Monta texto e opções
+      const { texto, opcoes } = normalizeBackendMessages(response);
+
+      setLoading(false);
+
+      if (texto){
+        showMessage(texto);
       }
 
-      renderEmptyState("Consulta concluída", "Não foi possível interpretar a resposta. Faça uma nova consulta.");
+      // Se houver opções, mostrar botões centralizados
+      if (opcoes && opcoes.length){
+        showButtons(opcoes);
+      }
+
+      // ✅ “Nova consulta” só quando o usuário clicou “Não” na identidade
+      setRestartVisible(lastIdentityWasNo === true);
+
+      // Se o backend mandou “volta para consulta_divida” por “cliente não localizado”
+      // não mostramos “Nova consulta” aqui, porque a regra é: só aparece quando respondeu “Não”
+      // (mantemos conforme sua instrução).
     }
 
-    async function handleOptionSelection(op){
-      // Se vier do backend a opção identidade_sim/nao, a gente aplica o passo de sigilo (quando sim)
-      if(op.id === "identidade_sim"){
-        // se já temos o nome completo extraído, segue o fluxo de validação
-        if(extractedFullName){
-          renderNameChallenge(extractedFullName);
-          return;
-        }
-        // se por algum motivo não temos, manda normal
+    // ====== CLIQUES (fluxo sem digitação) ======
+    async function handleOptionClick(op){
+      if (!op || !op.id) return;
+
+      // Regra: se clicou "Não" na identidade -> habilita “Nova consulta”
+      // (ajuste ao seu pedido)
+      if (op.id === "identidade_nao"){
+        lastIdentityWasNo = true;
+      } else {
+        // Se clicou em qualquer outra coisa depois, não exibe
+        // (inclusive nome correto, prosseguir, etc.)
+        lastIdentityWasNo = false;
       }
 
-      const data = await sendToBackend({
+      // Mostra loading e chama backend sempre via optionId
+      setLoading(true);
+
+      // ✅ IMPORTANTÍSSIMO:
+      // Para evitar cair em “Não consegui entender…”
+      // nós NUNCA enviamos "message" digitado nesta UI.
+      // Sempre enviamos: step + optionId + documento
+      const payload = {
         sessionId,
-        step: "confirmar_identidade",
+        step,
         optionId: op.id,
-        documento: documentoDigits
-      });
-      handleBackendResponse(data);
+        documento
+      };
+
+      const response = await sendToBackend(payload);
+      if (!response) return;
+
+      handleBackendResponse(response);
     }
 
-    // =================== ACTIONS ===================
-    btnConfirm.addEventListener("click", async ()=>{
-      const max = isCnpjMode ? 14 : 11;
-      if(documentoDigits.length !== max) return;
-
-      showScreen(2);
-      renderLoading();
-
-      // limpa estado de sigilo antes de nova consulta
-      extractedFullName = "";
-      pendingIdentityOption = null;
-
-      const data = await sendToBackend({
-        sessionId,
-        step: "consulta_divida",
-        documento: documentoDigits
-      });
-
-      handleBackendResponse(data);
-    });
-
-    btnBack.addEventListener("click", ()=>{
-      showScreen(1);
-    });
-
-    // Estado inicial
-    documentoDigits = "";
-    applyMask();
-    showScreen(1);
+    // init: foco no campo documento
+    setDocMode("CPF");
+    setTimeout(() => docInput.focus(), 80);
   </script>
 </body>
 </html>
