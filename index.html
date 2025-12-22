@@ -2,560 +2,908 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Portal de Negociação • Quatro C</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QuatroC • Portal de Negociação</title>
   <style>
     :root{
-      --q4c-red:#d4141d;
-      --q4c-red-dark:#b30f17;
       --bg:#f3f4f6;
       --card:#ffffff;
-      --text:#0f172a;
-      --muted:#64748b;
-      --border:#e2e8f0;
-      --shadow: 0 20px 60px rgba(2,6,23,.12);
-      --radius: 20px;
+      --text:#111827;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --brand:#d71920;       /* Vermelho QuatroC */
+      --brandDark:#b31218;
+      --shadow: 0 10px 30px rgba(0,0,0,.08);
+      --radius:18px;
     }
-    *{box-sizing:border-box}
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
-      background: radial-gradient(1200px 600px at 20% 10%, rgba(212,20,29,.08), transparent 60%),
-                  radial-gradient(900px 520px at 80% 0%, rgba(212,20,29,.06), transparent 55%),
-                  var(--bg);
-      color:var(--text);
-      min-height:100vh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:24px;
+      padding: 24px;
     }
 
-    .wrap{
-      width:100%;
-      max-width: 980px;
-      display:flex;
-      justify-content:center;
+    .app{
+      width: 100%;
+      max-width: 520px;
     }
 
-    .card{
-      width:100%;
-      max-width: 740px;
-      background:var(--card);
-      border:1px solid rgba(226,232,240,.9);
-      border-radius: var(--radius);
+    .shell{
+      background: var(--card);
+      border-radius: 22px;
       box-shadow: var(--shadow);
       overflow:hidden;
+      border: 1px solid rgba(17,24,39,.04);
     }
 
-    /* header */
-    .card-header{
-      padding:32px 22px 6px;
+    /* Header (minimalista) */
+    .topbar{
+      padding: 22px 22px 8px;
       display:flex;
-      flex-direction:column;
       align-items:center;
-      gap:10px;
+      justify-content:center;
     }
     .logo{
-      width:100px;
-      height:auto;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      flex-direction: column;
+    }
+    .logo img{
+      width: 88px;   /* ajuste pedido: um pouco maior, sem exageros */
+      height: auto;
       display:block;
-      user-select:none;
-      -webkit-user-drag:none;
     }
 
-    /* body */
-    .card-body{
-      padding: 6px;
+    /* Tela */
+    .screen{
+      padding: 10px 26px 24px;
     }
+
     .title{
-      margin:10px 0 6px;
-      font-size: 28px;
-      line-height: 1.15;
-      letter-spacing:-.02em;
+      margin: 6px 0 4px;
+      font-size: 22px;
+      line-height: 1.2;
+      font-weight: 750;
       text-align:center;
+      letter-spacing: -0.02em;
     }
     .subtitle{
-      margin: 14px;
-      color:var(--muted);
-      text-align:center;
-      font-size:15px;
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 13.5px;  /* ajuste pedido: um pouco menor */
+      text-align:center;  /* centralizado */
     }
 
-    .form{
-      margin-top: 10px;
-      padding: 18px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      background: #fff;
-    }
+    .divider{ height:1px; background: var(--line); margin: 14px 0 18px; }
 
-    .label-row{
+    /* Form */
+    .fieldrow{
       display:flex;
-      align-items:flex-end;
+      align-items:center;
       justify-content:space-between;
-      gap:12px;
-      margin-bottom:8px;
+      gap: 12px;
+      margin-bottom: 6px;
     }
     .label{
-      font-weight:600;
-      font-size:14px;
-      color:#111827;
+      font-size: 13px;
+      font-weight: 650;
+      color: #111827;
     }
-
-    .toggle{
-      font-size:13px;
-      color:var(--muted);
-      display:flex;
-      gap:6px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-    .toggle a{
-      color: var(--q4c-red);
-      font-weight:700;
-      text-decoration:none;
-      cursor:pointer;
-    }
-    .toggle a:hover{ text-decoration:underline; }
 
     .input{
       width:100%;
-      height:56px;
-      border:1px solid var(--border);
+      margin-top: 8px;
+      border: 1px solid var(--line);
       border-radius: 14px;
-      padding: 0 16px;
-      font-size:18px;
-      outline:none;
+      padding: 16px 14px;
+      font-size: 18px;
+      outline: none;
+      background: #fff;
       transition: box-shadow .15s ease, border-color .15s ease;
-      background:#fff;
-      color:#0b1220;
-      caret-color: var(--q4c-red); /* cursor só no input */
     }
     .input:focus{
-      border-color: rgba(212,20,29,.55);
-      box-shadow: 0 0 0 4px rgba(212,20,29,.12);
+      border-color: rgba(215,25,32,.45);
+      box-shadow: 0 0 0 4px rgba(215,25,32,.10);
     }
 
     .btn{
       width:100%;
-      height:58px;
-      border:none;
+      border: none;
       border-radius: 16px;
-      margin-top:14px;
-      background: linear-gradient(180deg, var(--q4c-red), var(--q4c-red-dark));
-      color:#fff;
-      font-size:18px;
-      font-weight:800;
-      letter-spacing:.01em;
+      padding: 16px 16px;
+      font-size: 15px;
+      font-weight: 750;
       cursor:pointer;
-      transition: transform .06s ease, filter .15s ease, opacity .15s ease;
+      margin-top: 14px;
+      background: var(--brand);
+      color:#fff;
+      transition: transform .05s ease, background .15s ease, opacity .15s ease;
     }
-    .btn:hover{ filter: brightness(1.02); transform: translateY(-1px); }
-    .btn:active{ transform: translateY(0px); }
-    .btn:disabled{
-      opacity:.55;
-      cursor:not-allowed;
-      transform:none;
-    }
+    .btn:hover{ background: var(--brandDark); }
+    .btn:active{ transform: translateY(1px); }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; }
 
-    /* footer */
-    .card-footer{
-      padding: 16px 22px 22px;
+    .toggle{
+      margin-top: 12px;
       text-align:center;
-      color:var(--muted);
-      font-size:14px;
+      font-size: 13px;
+      color: var(--muted);
+      user-select:none;
     }
-    .card-footer a{
-      color:var(--q4c-red);
-      font-weight:700;
+    .toggle a{
+      color: var(--brand);
+      font-weight: 750;
+      text-decoration:none;
+      cursor:pointer;
+    }
+    .toggle a:hover{ text-decoration: underline; }
+
+    .footer{
+      padding: 16px 22px 20px;
+      color: var(--muted);
+      font-size: 12.5px;
+      text-align:center;
+      background: linear-gradient(to bottom, rgba(243,244,246,.0), rgba(243,244,246,.65));
+      border-top: 1px solid rgba(229,231,235,.6);
+    }
+    .footer a{
+      color: var(--brand);
+      font-weight: 700;
       text-decoration:none;
     }
-    .card-footer a:hover{ text-decoration:underline; }
+    .footer a:hover{ text-decoration: underline; }
 
-    /* Página 2 (pendências) - escondida inicialmente */
-    .page{
+    /* Tela 2: cards */
+    .cards{
+      display:flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .card{
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px 14px;
+      background:#fff;
+      text-align:left;
+    }
+    .card-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .pill{
+      font-size: 11px;
+      font-weight: 750;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(215,25,32,.10);
+      color: var(--brand);
+      white-space: nowrap;
+    }
+    .pill.gray{
+      background: rgba(17,24,39,.06);
+      color: #111827;
+      font-weight: 700;
+    }
+
+    .card-title{
+      font-size: 14px;
+      font-weight: 780;
+      margin: 0;
+      line-height: 1.25;
+    }
+    .card-meta{
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.4;
+    }
+
+    .row-actions{
+      display:flex;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .btn2{
+      border-radius: 14px;
+      padding: 11px 12px;
+      font-size: 13px;
+      font-weight: 750;
+      border: 1px solid var(--line);
+      cursor:pointer;
+      background:#fff;
+    }
+    .btn2.primary{
+      background: var(--brand);
+      color:#fff;
+      border-color: transparent;
+    }
+    .btn2.primary:hover{ background: var(--brandDark); }
+    .btn2:hover{ border-color: rgba(17,24,39,.18); }
+
+    .backlink{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size: 13px;
+      color: var(--muted);
+      cursor:pointer;
+      user-select:none;
+      margin-bottom: 10px;
+    }
+    .backlink:hover{ color:#374151; }
+
+    /* Modal Termos */
+    .modal-overlay{
+      position:fixed;
+      inset:0;
+      background: rgba(17,24,39,.55);
       display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 18px;
+      z-index: 50;
     }
-    .page.active{
-      display:block;
+    .modal{
+      width:100%;
+      max-width: 720px;
+      background:#fff;
+      border-radius: 18px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.25);
+      overflow:hidden;
+      border: 1px solid rgba(17,24,39,.08);
+    }
+    .modal-top{
+      padding: 14px 16px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+    .modal-top strong{ font-size: 14px; }
+    .modal-close{
+      border:none;
+      background: transparent;
+      font-size: 18px;
+      cursor:pointer;
+      padding: 6px 10px;
+      border-radius: 10px;
+    }
+    .modal-close:hover{ background: rgba(17,24,39,.06); }
+    .modal-body{
+      padding: 16px;
+      color:#111827;
+      font-size: 13.5px;
+      line-height: 1.65;
+      max-height: 70vh;
+      overflow:auto;
     }
 
-    /* pequenas melhorias mobile */
-    @media (max-width:520px){
-      .title{ font-size: 28px; }
-      .card-body{ padding: 10px 18px 8px; }
-      .form{ padding:14px; }
-      .logo{ width:88px; }
+    /* Responsivo */
+    @media (max-width: 420px){
+      .screen{ padding: 10px 18px 22px; }
+      .title{ font-size: 20px; }
+      .logo img{ width: 82px; }
     }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="card">
-
-      <!-- ======= PÁGINA 1: Entrada de Documento ======= -->
-      <div id="page1" class="page active">
-        <div class="card-header">
-          <!-- Troque o src pela sua URL CDN/RAW -->
-          <img
-            class="logo"
-            src="https://cdn.jsdelivr.net/gh/asilvino19-beep/Logo@main/Logo.png"
-            alt="Quatro C"
-          />
-        </div>
-
-        <div class="card-body">
-          <h1 class="title">Acesse ao portal de negociação</h1>
-          <p class="subtitle">Preencha o campo abaixo</p>
-
-          <div class="form">
-            <div class="label-row">
-              <div class="label" id="docLabel">Digite seu CPF:</div>
-
-              <!-- Link dinâmico CPF/CNPJ -->
-              <div class="toggle" aria-live="polite">
-                <span id="togglePrefix">É pessoa jurídica?</span>
-                <a id="toggleDocType" href="#" role="button">Entrar com CNPJ</a>
-              </div>
-            </div>
-
-            <input
-              id="docInput"
-              class="input"
-              inputmode="numeric"
-              autocomplete="off"
-              spellcheck="false"
-              placeholder="000.000.000-00"
-              aria-label="Documento"
-            />
-
-            <button id="btnConfirmar" class="btn">Confirmar</button>
-          </div>
-        </div>
-
-        <div class="card-footer">
-          Conosco, seus dados são tratados de forma segura e sigilosa. Caso tenha dúvidas ou queira saber mais sobre, acesse nossos
-          <a id="linkTermos" href="https://asilvino19-beep.github.io/TermoePolitica-Chat/" target="_blank" rel="noopener">Termos e Política</a>.
+  <div class="app">
+    <div class="shell">
+      <!-- Top -->
+      <div class="topbar">
+        <div class="logo">
+          <img id="logoImg" alt="QuatroC" />
         </div>
       </div>
 
-      <!-- ======= PÁGINA 2: Pendências (se houver) ======= -->
-      <div id="page2" class="page">
-        <!-- Mantive a estrutura para você usar depois com o backend, sem quebrar nada -->
-        <div class="card-header">
-          <img
-            class="logo"
-            src="https://cdn.jsdelivr.net/gh/asilvino19-beep/Logo@main/Logo.png"
-            alt="Quatro C"
-          />
+      <!-- SCREEN 1 -->
+      <div id="screen1" class="screen">
+        <div class="title">Acesse ao portal de negociação</div>
+        <div class="subtitle">Preencha o campo abaixo</div>
+
+        <div class="divider"></div>
+
+        <div class="fieldrow">
+          <div class="label" id="docLabel">Digite seu CPF:</div>
         </div>
 
-        <div class="card-body">
-          <h1 class="title" style="font-size:30px;">Pendências encontradas</h1>
-          <p class="subtitle">Aguarde, carregando informações…</p>
+        <input
+          id="docInput"
+          class="input"
+          inputmode="numeric"
+          autocomplete="off"
+          placeholder="000.000.000-00"
+        />
 
-          <!-- Você vai preencher este bloco via JS usando response.mensagens -->
-          <div id="pendenciasContainer" class="form"></div>
+        <button id="btnConfirm" class="btn">Confirmar</button>
 
-          <button id="btnVoltar" class="btn" style="margin-top:18px;background:#0f172a;">
-            Voltar
-          </button>
-        </div>
-
-        <div class="card-footer">
-          Atendimento seguro • Quatro C
+        <div class="toggle">
+          <span id="toggleText">É pessoa jurídica?</span>
+          <a id="toggleLink">Entrar com CNPJ</a>
         </div>
       </div>
 
+      <!-- SCREEN 2 -->
+      <div id="screen2" class="screen" style="display:none;">
+        <div class="backlink" id="btnBack">← Voltar</div>
+
+        <div class="title" id="resultTitle">Resultado da consulta</div>
+        <div class="subtitle" id="resultSubtitle">
+          Confira abaixo as informações localizadas para o documento informado.
+        </div>
+
+        <div id="resultArea"></div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        Conosco, seus dados são tratados de forma segura e sigilosa.
+        Caso tenha dúvidas ou queira saber mais, acesse nossos
+        <a id="openTerms">Termos e Política</a>.
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Termos -->
+  <div id="termsOverlay" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-top">
+        <strong>Termos e Política • QuatroC</strong>
+        <button class="modal-close" id="closeTerms" aria-label="Fechar">✕</button>
+      </div>
+      <div class="modal-body" id="termsBody"></div>
     </div>
   </div>
 
   <script>
-    // ================= CONFIGURAÇÃO =================
-    const API_URL = "https://billowing-voice-6efd.asilvino19.workers.dev/";
+    // =================== CONFIG ===================
+    const API_URL = "https://billowing-voice-6efd.asilvino19.workers.dev/"; // o seu
+    const LOGO_URL = "https://cdn.jsdelivr.net/gh/asilvino19-beep/Logo@main/Logo.png"; // vou te explicar já já
 
-    // ======= Estado =======
+    // Termos (HTML pronto — você pode ajustar o texto depois)
+    const TERMOS_HTML = `
+      <p><strong>1) Confidencialidade e uso de dados</strong><br/>
+      A QuatroC trata as informações fornecidas neste portal de forma segura e sigilosa, com o objetivo de viabilizar o atendimento de negociação, regularização ou orientação relacionada a pendências vinculadas ao documento informado.</p>
+
+      <p><strong>2) Finalidade do portal</strong><br/>
+      Este portal disponibiliza informações e direcionamentos de autoatendimento quando aplicável. Em alguns cenários, o atendimento poderá ser concluído com suporte humano.</p>
+
+      <p><strong>3) Segurança</strong><br/>
+      Recomendamos que você não compartilhe suas credenciais, códigos de verificação ou informações sensíveis com terceiros. Caso identifique qualquer comportamento incomum, interrompa o atendimento e solicite suporte.</p>
+
+      <p><strong>4) Atualização de informações</strong><br/>
+      As informações exibidas podem sofrer atualização conforme registros e validações internas. Se houver divergência, você poderá solicitar revisão com um atendente.</p>
+
+      <p><strong>5) Canais oficiais</strong><br/>
+      Para continuidade do atendimento, utilize sempre os canais oficiais informados neste portal.</p>
+
+      <p style="color:#6b7280;font-size:12.5px;margin-top:18px;">
+      Última atualização: ${new Date().toLocaleDateString('pt-BR')}
+      </p>
+    `;
+
+    // =================== STATE ===================
     let sessionId = Date.now().toString();
-    let step = "inicio";
-    let documento = null;
+    let isCnpjMode = false; // false=CPF, true=CNPJ
+    let documentoDigits = "";
+    let lastBackendResponse = null;
 
-    // Tipo do documento na UI
-    let docType = "cpf"; // "cpf" | "cnpj"
+    // =================== DOM ===================
+    const screen1 = document.getElementById("screen1");
+    const screen2 = document.getElementById("screen2");
 
-    // ======= Elementos =======
-    const page1 = document.getElementById("page1");
-    const page2 = document.getElementById("page2");
-
+    const logoImg = document.getElementById("logoImg");
     const docInput = document.getElementById("docInput");
     const docLabel = document.getElementById("docLabel");
-    const toggleDocType = document.getElementById("toggleDocType");
-    const togglePrefix = document.getElementById("togglePrefix");
-    const btnConfirmar = document.getElementById("btnConfirmar");
+    const btnConfirm = document.getElementById("btnConfirm");
+    const toggleLink = document.getElementById("toggleLink");
 
-    const pendenciasContainer = document.getElementById("pendenciasContainer");
-    const btnVoltar = document.getElementById("btnVoltar");
+    const btnBack = document.getElementById("btnBack");
+    const resultArea = document.getElementById("resultArea");
+    const resultTitle = document.getElementById("resultTitle");
+    const resultSubtitle = document.getElementById("resultSubtitle");
 
-    // ======= Helpers (máscaras + limites) =======
-    function onlyDigits(s){ return (s || "").replace(/\D/g, ""); }
+    const termsOverlay = document.getElementById("termsOverlay");
+    const openTerms = document.getElementById("openTerms");
+    const closeTerms = document.getElementById("closeTerms");
+    const termsBody = document.getElementById("termsBody");
 
-    function maskCPF(d){
-      // 000.000.000-00
-      d = d.slice(0,11);
-      d = d.replace(/^(\d{3})(\d)/, "$1.$2");
-      d = d.replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
-      d = d.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
-      return d;
+    // =================== INIT ===================
+    logoImg.src = LOGO_URL;
+    termsBody.innerHTML = TERMOS_HTML;
+
+    function showScreen(n){
+      if(n === 1){
+        screen1.style.display = "";
+        screen2.style.display = "none";
+        // foco travado no input (evita "tracinho" em áreas indevidas)
+        setTimeout(()=> docInput.focus(), 50);
+      }else{
+        screen1.style.display = "none";
+        screen2.style.display = "";
+      }
     }
 
-    function maskCNPJ(d){
+    // =================== MASKS ===================
+    function onlyDigits(s){ return (s || "").replace(/\D/g, ""); }
+
+    function maskCpf(d){
+      // 000.000.000-00
+      const p1 = d.slice(0,3);
+      const p2 = d.slice(3,6);
+      const p3 = d.slice(6,9);
+      const p4 = d.slice(9,11);
+      let out = p1;
+      if(p2) out += "." + p2;
+      if(p3) out += "." + p3;
+      if(p4) out += "-" + p4;
+      return out;
+    }
+
+    function maskCnpj(d){
       // 00.000.000/0000-00
-      d = d.slice(0,14);
-      d = d.replace(/^(\d{2})(\d)/, "$1.$2");
-      d = d.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
-      d = d.replace(/^(\d{2})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3/$4");
-      d = d.replace(/^(\d{2})\.(\d{3})\.(\d{3})\/(\d{4})(\d)/, "$1.$2.$3/$4-$5");
-      return d;
+      const p1 = d.slice(0,2);
+      const p2 = d.slice(2,5);
+      const p3 = d.slice(5,8);
+      const p4 = d.slice(8,12);
+      const p5 = d.slice(12,14);
+      let out = p1;
+      if(p2) out += "." + p2;
+      if(p3) out += "." + p3;
+      if(p4) out += "/" + p4;
+      if(p5) out += "-" + p5;
+      return out;
     }
 
     function applyMask(){
-      const d = onlyDigits(docInput.value);
-      if(docType === "cpf"){
-        docInput.value = maskCPF(d);
-      } else {
-        docInput.value = maskCNPJ(d);
-      }
-      updateButtonState();
-    }
+      const max = isCnpjMode ? 14 : 11;
+      documentoDigits = documentoDigits.slice(0, max);
 
-    function updateButtonState(){
-      const d = onlyDigits(docInput.value);
-      const ok = (docType === "cpf") ? (d.length === 11) : (d.length === 14);
-      btnConfirmar.disabled = !ok;
-    }
+      docInput.value = isCnpjMode ? maskCnpj(documentoDigits) : maskCpf(documentoDigits);
 
-    function setDocType(type){
-      docType = type;
-
-      if(docType === "cpf"){
-        docLabel.textContent = "Digite seu CPF:";
-        docInput.placeholder = "000.000.000-00";
-        togglePrefix.textContent = "É pessoa jurídica?";
-        toggleDocType.textContent = "Entrar com CNPJ";
-      } else {
+      if(isCnpjMode){
         docLabel.textContent = "Digite seu CNPJ:";
         docInput.placeholder = "00.000.000/0000-00";
-        togglePrefix.textContent = "É pessoa física?";
-        toggleDocType.textContent = "Entrar com CPF";
+        toggleLink.textContent = "Entrar com CPF";
+      }else{
+        docLabel.textContent = "Digite seu CPF:";
+        docInput.placeholder = "000.000.000-00";
+        toggleLink.textContent = "Entrar com CNPJ";
       }
 
-      // Reaplica máscara e limites já com o novo tipo
+      btnConfirm.disabled = documentoDigits.length !== max;
+    }
+
+    // Captura digitação/colar e mantém só números
+    docInput.addEventListener("input", (e)=>{
+      documentoDigits = onlyDigits(e.target.value);
+      applyMask();
+    });
+
+    // Toggle CPF/CNPJ
+    toggleLink.addEventListener("click", ()=>{
+      isCnpjMode = !isCnpjMode;
+      // ao trocar, mantém o que der (corta/padroniza)
+      documentoDigits = onlyDigits(docInput.value);
       applyMask();
       docInput.focus();
+    });
+
+    // =================== MODAL TERMOS ===================
+    function openTermsModal(){
+      termsOverlay.style.display = "flex";
     }
-
-    // Evita “cursor” em qualquer lugar: isso já acontece naturalmente,
-    // mas garantimos que nada além do input seja editável.
-    // (Não usamos contenteditable em lugar nenhum.)
-
-    // ======= Navegação de páginas =======
-    function showPage(n){
-      if(n === 1){
-        page1.classList.add("active");
-        page2.classList.remove("active");
-      } else {
-        page1.classList.remove("active");
-        page2.classList.add("active");
-      }
+    function closeTermsModal(){
+      termsOverlay.style.display = "none";
     }
+    openTerms.addEventListener("click", openTermsModal);
+    closeTerms.addEventListener("click", closeTermsModal);
+    termsOverlay.addEventListener("click", (e)=>{
+      if(e.target === termsOverlay) closeTermsModal();
+    });
 
-    // ======= Backend =======
-    function setInputEnabled(enabled) {
-      docInput.disabled = !enabled;
-      btnConfirmar.disabled = !enabled || btnConfirmar.disabled; // mantém validação
-    }
-
-    async function sendToBackend(payload) {
-      try {
-        setInputEnabled(false);
-
+    // =================== BACKEND ===================
+    async function sendToBackend(payload){
+      btnConfirm.disabled = true;
+      try{
         const resp = await fetch(API_URL, {
           method: "POST",
           body: JSON.stringify(payload),
         });
 
-        setInputEnabled(true);
+        const txt = await resp.text();
+        let data = null;
+        try { data = JSON.parse(txt); } catch { data = null; }
 
-        if (!resp.ok) {
-          console.error("Erro HTTP", resp.status, await resp.text());
-          return { error: true };
+        if(!resp.ok || !data){
+          return { error: true, raw: txt };
         }
-
-        const data = await resp.json().catch(async () => {
-          const txt = await resp.text();
-          try { return JSON.parse(txt); } catch { return null; }
-        });
-
-        return data || { error: true };
-      } catch (err) {
-        console.error("Erro ao chamar backend", err);
-        setInputEnabled(true);
-        return { error: true };
+        return data;
+      }catch(err){
+        return { error: true, raw: String(err) };
+      } finally {
+        applyMask(); // re-habilita se estiver completo
       }
     }
 
-    // Você pode manter seu handler do chat. Aqui, como seu objetivo é “portal”,
-    // nós só vamos: enviar documento -> se tem dívida, abre página 2.
-    function renderPendenciasFromMensagens(response){
-      // Render simples: pega textos e cria blocos.
-      // (Você pode evoluir depois para cards)
-      pendenciasContainer.innerHTML = "";
+    // =================== RENDER HELPERS ===================
 
-      if(!response || !Array.isArray(response.mensagens)){
-        pendenciasContainer.innerHTML = "<div style='color:#64748b;'>Não foi possível carregar as informações.</div>";
+    function renderEmptyState(title, desc){
+      resultArea.innerHTML = `
+        <div class="card" style="text-align:center;">
+          <div class="card-head" style="justify-content:center;">
+            <span class="pill gray">Consulta finalizada</span>
+          </div>
+          <p class="card-title" style="margin:0;">${escapeHtml(title)}</p>
+          <p class="card-meta" style="margin-top:8px;">${escapeHtml(desc)}</p>
+          <div class="row-actions" style="justify-content:center;margin-top:14px;">
+            <button class="btn2 primary" id="btnNew">Nova consulta</button>
+          </div>
+        </div>
+      `;
+      document.getElementById("btnNew").onclick = ()=>{
+        documentoDigits = "";
+        applyMask();
+        showScreen(1);
+      };
+    }
+
+    function renderFallbackMensagens(mensagens){
+      // Quando backend ainda manda modelo "chat", mostramos de forma limpa em cards
+      const blocks = (mensagens || []).map(m=>{
+        const text = (m.texto || "").trim();
+        if(!text) return "";
+        return `
+          <div class="card">
+            <p class="card-meta" style="margin:0;color:#111827;white-space:pre-line;">${escapeHtml(text)}</p>
+          </div>
+        `;
+      }).join("");
+
+      resultArea.innerHTML = `
+        <div class="cards">
+          ${blocks || ""}
+          <div class="card">
+            <div class="row-actions">
+              <button class="btn2 primary" id="btnBackToStart">Nova consulta</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("btnBackToStart").onclick = ()=>{
+        documentoDigits = "";
+        applyMask();
+        showScreen(1);
+      };
+    }
+
+    function renderDebtsFromStructured(response){
+      // Caso você evolua o backend para devolver um array "registros"/"pendencias"
+      // Mantém compatibilidade: tenta encontrar estruturas comuns
+      const root = response;
+      const pendencias =
+        root.pendencias ||
+        root.registros ||
+        root.contratos ||
+        root.data ||
+        null;
+
+      if(!Array.isArray(pendencias) || !pendencias.length){
+        return false;
+      }
+
+      const html = pendencias.map((p, idx)=>{
+        const credor = p.Credor || p.credor || "Credor";
+        const contrato = p.NumeroContrato || p.contrato || "—";
+        const isIra = String(credor).toUpperCase().includes("SASCAR_IRA");
+
+        return `
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <p class="card-title">${escapeHtml(credor)}</p>
+                <p class="card-meta">Contrato: ${escapeHtml(String(contrato))}</p>
+              </div>
+              <span class="pill">${isIra ? "Retirada (IRA)" : "Pendência"}</span>
+            </div>
+
+            <div class="row-actions">
+              <button class="btn2 primary" data-action="details" data-index="${idx}">
+                Ver detalhes
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      resultArea.innerHTML = `<div class="cards">${html}</div>`;
+
+      // bind
+      [...resultArea.querySelectorAll('button[data-action="details"]')].forEach(btn=>{
+        btn.onclick = ()=>{
+          const i = Number(btn.getAttribute("data-index"));
+          const item = pendencias[i];
+          renderDetails(item);
+        };
+      });
+
+      return true;
+    }
+
+    function renderDetails(item){
+      const credor = item.Credor || item.credor || "";
+      const contrato = item.NumeroContrato || item.contrato || "";
+      const isIra = String(credor).toUpperCase().includes("SASCAR_IRA");
+
+      // parcelas
+      const parcelas = Array.isArray(item.parcelas) ? item.parcelas : [];
+      const total = parcelas.reduce((acc,p)=> acc + (Number(p.Valor ?? p.valor ?? 0) || 0), 0);
+
+      if(isIra){
+        // refs IRA:
+        // OS: IraOS
+        // Placa: Numerododocumento
+        // Data Emissão OS: Vencimento
+        // (como Vencimento é por parcela, mostramos lista por OS)
+        const linhas = parcelas.map(p=>{
+          const os = p.IraOS || "—";
+          const placa = p.Numerododocumento || item.Numerododocumento || "—";
+          const dt = formatDate(p.Vencimento);
+          return `<p class="card-meta" style="margin:6px 0 0;">
+            <strong>OS:</strong> ${escapeHtml(String(os))}<br/>
+            <strong>Placa:</strong> ${escapeHtml(String(placa))}<br/>
+            <strong>Data de emissão:</strong> ${escapeHtml(dt)}
+          </p>`;
+        }).join("");
+
+        resultArea.innerHTML = `
+          <div class="cards">
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <p class="card-title">Pendência de retirada de equipamento</p>
+                  <p class="card-meta">Credor: ${escapeHtml(String(credor))}<br/>Contrato: ${escapeHtml(String(contrato))}</p>
+                </div>
+                <span class="pill">SASCAR_IRA</span>
+              </div>
+
+              <p class="card-meta" style="margin-top:8px;">
+                Para dar andamento à retirada do equipamento, precisamos confirmar algumas informações.
+              </p>
+
+              ${linhas || `<p class="card-meta" style="margin-top:8px;">Não foi possível detalhar as referências no momento.</p>`}
+
+              <div class="row-actions" style="margin-top:14px;">
+                <button class="btn2 primary" id="btnEndereco">Informar endereço e horários</button>
+                <button class="btn2" id="btnAtendente">Falar com um atendente</button>
+                <button class="btn2" id="btnVoltarLista">Voltar</button>
+              </div>
+            </div>
+          </div>
+        `;
+
+        document.getElementById("btnVoltarLista").onclick = ()=> {
+          // volta para lista (re-render usando a última resposta completa)
+          handleResultRender(lastBackendResponse);
+        };
+
+        document.getElementById("btnAtendente").onclick = async ()=> {
+          await sendToBackend({
+            sessionId,
+            step: "falar_atendente",
+            documento: documentoDigits,
+            motivo: "retirada_equipamento_ira"
+          });
+          renderEmptyState("Solicitação registrada", "Um atendente dará continuidade ao seu atendimento.");
+        };
+
+        document.getElementById("btnEndereco").onclick = ()=>{
+          // sem backend novo: abrimos um mini-form local
+          resultArea.innerHTML = `
+            <div class="cards">
+              <div class="card">
+                <p class="card-title">Informe endereço e horários</p>
+                <p class="card-meta">Preencha os dados abaixo para seguirmos com a tratativa.</p>
+
+                <div style="margin-top:10px;display:flex;flex-direction:column;gap:10px;">
+                  <input id="addr" class="input" style="font-size:14px;padding:12px 12px;" placeholder="Endereço completo (rua, número, bairro, cidade/UF)" />
+                  <input id="win" class="input" style="font-size:14px;padding:12px 12px;" placeholder="Melhores dias/horários para atendimento (ex: seg a sex, 9h-12h)" />
+                </div>
+
+                <div class="row-actions" style="margin-top:14px;">
+                  <button class="btn2 primary" id="btnSendAddr">Enviar</button>
+                  <button class="btn2" id="btnBackDet">Voltar</button>
+                </div>
+              </div>
+            </div>
+          `;
+
+          document.getElementById("btnBackDet").onclick = ()=> renderDetails(item);
+
+          document.getElementById("btnSendAddr").onclick = async ()=> {
+            const endereco = (document.getElementById("addr").value || "").trim();
+            const janela = (document.getElementById("win").value || "").trim();
+
+            await sendToBackend({
+              sessionId,
+              step: "falar_atendente",
+              documento: documentoDigits,
+              motivo: "retirada_equipamento_ira",
+              endereco,
+              janela
+            });
+
+            renderEmptyState("Dados enviados", "Recebemos suas informações. Um atendente dará sequência ao agendamento.");
+          };
+        };
+
         return;
       }
 
-      response.mensagens.forEach(m => {
-        const p = document.createElement("div");
-        p.style.padding = "10px 12px";
-        p.style.border = "1px solid #e2e8f0";
-        p.style.borderRadius = "12px";
-        p.style.marginBottom = "10px";
-        p.style.whiteSpace = "pre-line";
-        p.textContent = (m && m.texto) ? m.texto : "";
-        pendenciasContainer.appendChild(p);
+      // Financeiro (padrão)
+      const linhasParcelas = parcelas.map((p,idx)=>{
+        const v = formatCurrency(p.Valor ?? p.valor ?? 0);
+        const dt = formatDate(p.Vencimento);
+        return `<p class="card-meta" style="margin:6px 0 0;">Parcela ${idx+1}: vencimento ${escapeHtml(dt)} • ${escapeHtml(v)}</p>`;
+      }).join("");
 
-        // Se vier opções, renderiza botões
-        if(m && Array.isArray(m.opcoes) && m.opcoes.length){
-          const wrap = document.createElement("div");
-          wrap.style.display = "flex";
-          wrap.style.flexDirection = "column";
-          wrap.style.gap = "8px";
-          wrap.style.margin = "8px 0 12px";
+      resultArea.innerHTML = `
+        <div class="cards">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <p class="card-title">Detalhes da pendência</p>
+                <p class="card-meta">Credor: ${escapeHtml(String(credor))}<br/>Contrato: ${escapeHtml(String(contrato))}</p>
+              </div>
+              <span class="pill">Financeiro</span>
+            </div>
 
-          m.opcoes.forEach(op => {
-            const b = document.createElement("button");
-            b.type = "button";
-            b.style.border = "1px solid #e2e8f0";
-            b.style.borderRadius = "14px";
-            b.style.padding = "10px 12px";
-            b.style.fontWeight = "700";
-            b.style.cursor = "pointer";
-            b.style.background = "#f8fafc";
-            b.textContent = op.label;
+            <p class="card-meta" style="margin-top:8px;">
+              <strong>Valor total em aberto:</strong> ${escapeHtml(formatCurrency(total))}
+            </p>
 
-            b.onclick = async () => {
-              // Aqui você mantém sua lógica de optionId/step
-              const res = await sendToBackend({
-                sessionId,
-                step,
-                optionId: op.id,
-                documento,
-              });
+            ${linhasParcelas ? `
+              <div style="margin-top:10px;border-top:1px solid var(--line);padding-top:10px;">
+                <p class="card-meta" style="margin:0;"><strong>Detalhamento</strong></p>
+                ${linhasParcelas}
+              </div>
+            ` : `
+              <p class="card-meta" style="margin-top:10px;">Sem parcelas em aberto.</p>
+            `}
 
-              // Atualiza step se veio
-              if(res && res.proximoStep !== undefined && res.proximoStep !== null){
-                step = res.proximoStep;
-              }
+            <div class="row-actions" style="margin-top:14px;">
+              <button class="btn2 primary" id="btnNegociar">Negociar agora</button>
+              <button class="btn2" id="btnAtendente2">Falar com um atendente</button>
+              <button class="btn2" id="btnVoltar2">Voltar</button>
+            </div>
+          </div>
+        </div>
+      `;
 
-              // Re-renderiza o que voltar
-              renderPendenciasFromMensagens(res);
-            };
+      document.getElementById("btnVoltar2").onclick = ()=> handleResultRender(lastBackendResponse);
 
-            wrap.appendChild(b);
-          });
+      document.getElementById("btnAtendente2").onclick = async ()=> {
+        await sendToBackend({
+          sessionId,
+          step: "falar_atendente",
+          documento: documentoDigits,
+          motivo: "negociacao"
+        });
+        renderEmptyState("Solicitação registrada", "Um atendente dará continuidade ao seu atendimento.");
+      };
 
-          pendenciasContainer.appendChild(wrap);
-        }
-      });
+      document.getElementById("btnNegociar").onclick = async ()=> {
+        // Mantém compatibilidade: se seu backend tem fluxo de negociar_auto, chamamos
+        await sendToBackend({
+          sessionId,
+          step: "escolher_caminho",
+          documento: documentoDigits,
+          optionId: "negociar_auto"
+        });
+        renderEmptyState("Direcionamento realizado", "Siga as orientações apresentadas para concluir a negociação.");
+      };
     }
 
-    // ======= Eventos =======
+    function handleResultRender(response){
+      lastBackendResponse = response;
 
-    // Troca CPF/CNPJ (agora é clicável e troca máscara + limite)
-    toggleDocType.addEventListener("click", (e) => {
-      e.preventDefault();
-      setDocType(docType === "cpf" ? "cnpj" : "cpf");
-    });
+      // 1) Se vier erro
+      if(response && response.error){
+        renderEmptyState("Falha ao consultar", "Não foi possível concluir a consulta agora. Tente novamente.");
+        return;
+      }
 
-    // Limita e mascara enquanto digita (CPF 11, CNPJ 14)
-    docInput.addEventListener("input", () => {
-      applyMask();
-    });
+      // 2) Se vier estrutura com pendências
+      if(renderDebtsFromStructured(response)){
+        return;
+      }
 
-    // Também controla colar (paste) para manter apenas dígitos e máscara
-    docInput.addEventListener("paste", (e) => {
-      // Deixa colar, mas logo após o input mascara e corta
-      setTimeout(applyMask, 0);
-    });
+      // 3) Fallback: usa mensagens do backend (modelo atual)
+      const msgs = response && Array.isArray(response.mensagens) ? response.mensagens : null;
+      if(msgs){
+        renderFallbackMensagens(msgs);
+        return;
+      }
 
-    btnConfirmar.addEventListener("click", async () => {
-      const d = onlyDigits(docInput.value);
-      documento = d;
+      // 4) Último fallback
+      renderEmptyState("Consulta concluída", "Não foi possível interpretar a resposta. Faça uma nova consulta.");
+    }
 
-      // Seu backend espera step "consulta_divida"
-      const resp = await sendToBackend({
+    // =================== ACTIONS ===================
+
+    btnConfirm.addEventListener("click", async ()=>{
+      const max = isCnpjMode ? 14 : 11;
+      if(documentoDigits.length !== max) return;
+
+      // Vai para tela 2 e mostra carregando
+      showScreen(2);
+      resultTitle.textContent = "Resultado da consulta";
+      resultSubtitle.textContent = "Estamos localizando as informações vinculadas ao documento informado.";
+      resultArea.innerHTML = `
+        <div class="card" style="text-align:center;">
+          <span class="pill gray">Carregando...</span>
+          <p class="card-meta" style="margin-top:10px;">Aguarde um momento.</p>
+        </div>
+      `;
+
+      const data = await sendToBackend({
         sessionId,
         step: "consulta_divida",
-        documento,
+        documento: documentoDigits
       });
 
-      if(resp && resp.proximoStep !== undefined && resp.proximoStep !== null){
-        step = resp.proximoStep;
-      }
-
-      // Regra: se não houver pendência ou não localizar, responde na página 1.
-      // Se houver dívida, abre página 2.
-      // (Usamos temDivida quando existir, e fallback por presença de opções/step.)
-      const temDivida = !!(resp && resp.temDivida);
-
-      if(temDivida){
-        showPage(2);
-        renderPendenciasFromMensagens(resp);
-      } else {
-        // Exibe resposta na própria página 1, abaixo do formulário (minimalista)
-        let box = document.getElementById("page1Feedback");
-        if(!box){
-          box = document.createElement("div");
-          box.id = "page1Feedback";
-          box.style.marginTop = "14px";
-          box.style.padding = "12px 14px";
-          box.style.border = "1px solid #e2e8f0";
-          box.style.borderRadius = "14px";
-          box.style.background = "#ffffff";
-          box.style.color = "#0f172a";
-          box.style.whiteSpace = "pre-line";
-          // insere logo após o form
-          const form = page1.querySelector(".form");
-          form.parentNode.appendChild(box);
-        }
-
-        if(resp && Array.isArray(resp.mensagens) && resp.mensagens.length){
-          box.textContent = resp.mensagens.map(m => m.texto || "").filter(Boolean).join("\n\n");
-        } else if(resp && resp.error){
-          box.textContent = "Não foi possível processar sua solicitação. Tente novamente.";
-        } else {
-          box.textContent = "Não foi possível localizar informações para o documento informado.";
-        }
-      }
+      // Se o backend retornar "cliente não localizado" / "sem dívida", o fallback de mensagens cobre.
+      // Se você evoluir o backend para retornar um array, o portal vira card automaticamente.
+      handleResultRender(data);
     });
 
-    btnVoltar.addEventListener("click", () => {
-      showPage(1);
-      docInput.focus();
+    btnBack.addEventListener("click", ()=>{
+      showScreen(1);
     });
 
-    // Inicialização
-    (function init(){
-      // trava o botão até documento válido
-      updateButtonState();
-      // foco no input (cursor apenas nele)
-      docInput.focus();
-    })();
+    // Sanitização simples
+    function escapeHtml(str){
+      return String(str ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function formatCurrency(v){
+      const n = Number(v) || 0;
+      return n.toLocaleString("pt-BR",{ style:"currency", currency:"BRL" });
+    }
+
+    function formatDate(iso){
+      if(!iso) return "sem data";
+      const d = new Date(iso);
+      if(isNaN(d.getTime())) return String(iso);
+      return d.toLocaleDateString("pt-BR");
+    }
+
+    // Estado inicial
+    documentoDigits = "";
+    applyMask();
+    showScreen(1);
   </script>
 </body>
 </html>
-	
