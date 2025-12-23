@@ -4,411 +4,495 @@
   <meta charset="UTF-8" />
   <title>QuatroC • Portal de Negociação</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
     :root{
-      --bg:#f4f6f8;
+      --bg:#f3f4f6;
       --card:#ffffff;
       --text:#0f172a;
       --muted:#64748b;
-      --border:#e2e8f0;
-      --shadow: 0 18px 50px rgba(2,6,23,.10);
-      --red:#d0121b;
-      --red2:#b70f17;
-      --chip:#f1f5f9;
-      --focus: rgba(208,18,27,.18);
-      --radius:18px;
-      --radius2:14px;
-      --max: 920px;
-      --maxCard: 560px;
+      --line:#e5e7eb;
+      --primary:#c8141f;        /* vermelho QuatroC (ajustável) */
+      --primary-dark:#a10f18;
+      --shadow: 0 14px 40px rgba(2,6,23,.12);
+      --radius: 18px;
     }
 
-    *{box-sizing:border-box}
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
     body{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
-      min-height:100vh;
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:24px 14px;
+      padding:18px;
     }
 
-    /* Shell */
+    /* Evita “cursor de digitação” fora do input (sem travar no modal) */
+    .no-caret, .no-caret *{
+      caret-color: transparent;
+    }
+    .no-caret{
+      cursor: default;
+      user-select: none;
+    }
+
+    /* Wrapper */
     .shell{
-      width:100%;
-      max-width: var(--max);
-    }
-
-    .panel{
+      width: 100%;
+      max-width: 980px;
+      min-height: 78vh;
       background: var(--card);
-      border: 1px solid var(--border);
       border-radius: 26px;
       box-shadow: var(--shadow);
       overflow:hidden;
+      border: 1px solid rgba(15,23,42,.06);
     }
 
     .topbar{
+      padding: 22px 26px 10px;
       display:flex;
-      justify-content:center;
       align-items:center;
-      padding:22px 18px 10px;
-      gap:12px;
+      justify-content:center;
+      border-bottom: 1px solid rgba(15,23,42,.05);
+      background: #fff;
     }
 
     .brand{
       display:flex;
-      flex-direction:column;
       align-items:center;
-      gap:10px;
-      width:100%;
+      justify-content:center;
+      gap: 10px;
+      flex-direction: column;
     }
 
     .brand img{
-      height:72px;           /* ✅ maior, sem exagero */
-      width:auto;
+      height: 58px;             /* 🔧 tamanho do logo (um pouco maior, sem exagero) */
+      width: auto;
       display:block;
       object-fit:contain;
     }
 
     .content{
-      padding: 10px 18px 0;
-      display:flex;
-      justify-content:center;
+      padding: 18px 26px 0;
+      background: #fff;
     }
 
-    .card{
-      width:100%;
-      max-width: var(--maxCard);
-      padding: 26px 22px 18px;
+    .back-row{
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
+      gap:10px;
+      margin: 8px 0 18px;
+    }
+    .back-link{
+      appearance:none;
+      border:none;
+      background:transparent;
+      color: var(--muted);
+      font-size: 16px;
+      cursor:pointer;
+      padding: 6px 6px;
+    }
+    .back-link:hover{ color: var(--text); }
+
+    .stage{
+      display:flex;
+      justify-content:center;
+      padding: 4px 0 26px;
+    }
+
+    .panel{
+      width: 100%;
+      max-width: 720px;
+      padding: 26px 22px;
       border-radius: 22px;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(15,23,42,.08);
       background: #fff;
     }
 
     .title{
+      margin: 0;
       text-align:center;
-      font-size: 28px;
-      line-height:1.15;
-      margin: 0 0 8px;
-      font-weight:800;
-      letter-spacing: -0.02em;
+      font-size: 40px;
+      letter-spacing:-.02em;
+      line-height:1.05;
     }
 
     .subtitle{
+      margin: 12px 0 0;
       text-align:center;
-      margin:0 0 18px;
       color: var(--muted);
-      font-size: 15px; /* ✅ menor */
-      line-height:1.45;
+      font-size: 18px;
+      line-height:1.4;
     }
 
-    .formRow{
-      margin-top: 14px;
+    .divider{
+      height:1px;
+      background: var(--line);
+      margin: 22px 0;
     }
 
-    label{
+    /* Form */
+    .form{
+      margin-top: 22px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+    .label-row{
       display:flex;
       align-items:center;
-      justify-content:space-between;
+      justify-content:flex-start;
       gap:10px;
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom:8px;
-    }
-
-    input{
-      width:100%;
-      height:56px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      padding: 0 16px;
+      margin-bottom: 2px;
+      color: var(--text);
+      font-weight:600;
       font-size: 16px;
-      outline:none;
-      background:#fff;
     }
-    input:focus{
-      border-color: var(--red);
-      box-shadow: 0 0 0 4px var(--focus);
+    .input{
+      width: 100%;
+      height: 56px;
+      border-radius: 14px;
+      border: 1px solid rgba(15,23,42,.15);
+      padding: 0 16px;
+      font-size: 18px;
+      outline:none;
+      caret-color: auto; /* só aqui tem cursor */
+      user-select: auto;
+    }
+    .input:focus{
+      border-color: rgba(200,20,31,.55);
+      box-shadow: 0 0 0 4px rgba(200,20,31,.12);
     }
 
-    .btn{
+    .btn-primary{
       width:100%;
-      height:56px;
-      border:0;
+      height: 58px;
+      border:none;
       border-radius: 16px;
-      background: var(--red);
+      background: var(--primary);
       color:#fff;
       font-weight:800;
-      font-size:16px;
+      font-size: 18px;
       cursor:pointer;
-      transition: transform .05s ease, background .15s ease;
-      margin-top:16px;
+      margin-top: 10px;
+      transition: transform .06s ease, background .15s ease;
     }
-    .btn:hover{ background: var(--red2); transform: translateY(-1px); }
-    .btn:disabled{ opacity:.55; cursor:default; transform:none; }
+    .btn-primary:hover{ background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-primary:disabled{ opacity:.55; cursor:default; transform:none; }
 
-    .btnGhost{
-      height:56px;
-      padding:0 18px;
+    .switch-doc{
+      text-align:center;
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .switch-doc a{
+      color: var(--primary);
+      font-weight:700;
+      text-decoration:none;
+      cursor:pointer;
+    }
+    .switch-doc a:hover{ text-decoration:underline; }
+
+    /* Options / Buttons alignment */
+    .actions{
+      display:flex;
+      gap: 14px;
+      justify-content:center; /* ✅ centralizado */
+      align-items:center;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+    .btn-outline{
+      min-width: 220px;
+      height: 56px;
       border-radius: 16px;
-      border:1px solid var(--border);
-      background:#fff;
+      background: #fff;
+      border: 1px solid rgba(200,20,31,.35);
+      color: var(--primary);
+      font-weight:800;
+      font-size: 18px;
+      cursor:pointer;
+      transition: background .15s ease, transform .06s ease, border-color .15s ease;
+    }
+    .btn-outline:hover{
+      background: rgba(200,20,31,.06);
+      border-color: rgba(200,20,31,.55);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost{
+      min-width: 220px;
+      height: 56px;
+      border-radius: 16px;
+      background: #fff;
+      border: 1px solid rgba(15,23,42,.12);
       color: var(--text);
       font-weight:800;
+      font-size: 18px;
       cursor:pointer;
+      transition: background .15s ease, transform .06s ease, border-color .15s ease;
     }
-    .btnGhost:hover{ border-color:#cbd5e1; transform: translateY(-1px); }
+    .btn-ghost:hover{
+      background: rgba(15,23,42,.03);
+      border-color: rgba(15,23,42,.18);
+      transform: translateY(-1px);
+    }
 
-    .btnRow{
-      display:flex;
-      justify-content:center; /* ✅ centraliza */
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:16px;
-    }
-    .btnRow .btn, .btnRow .btnGhost{ width: auto; min-width: 220px; }
-
-    .linkRow{
-      margin-top:12px;
-      text-align:center;
-      color: var(--muted);
-      font-size: 13px;
-    }
-    .linkRow a{
-      color: var(--red);
-      text-decoration: none;
-      font-weight: 700;
-      cursor:pointer;
-    }
-    .linkRow a:hover{ text-decoration: underline; }
-
-    /* Loading */
-    .loading{
+    /* Loading (sem borda ao redor do conteúdo) */
+    .loading-wrap{
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:center;
-      padding: 24px 0 6px;
-      gap:12px;
-      text-align:center;
+      gap: 12px;
+      padding: 18px 0 6px;
     }
     .pill{
       display:inline-flex;
       align-items:center;
       gap:10px;
-      padding:10px 14px;
+      padding: 10px 14px;
       border-radius: 999px;
-      background: var(--chip);
+      background: rgba(15,23,42,.04);
       color: var(--text);
-      font-weight:800;
+      font-weight:700;
     }
     .dot{
       width:10px;height:10px;border-radius:999px;
-      background: var(--red);
-      box-shadow: 0 0 0 4px var(--focus);
-      animation: pulse 1.2s infinite ease-in-out;
+      background: var(--primary);
+      box-shadow: 0 0 0 4px rgba(200,20,31,.12);
+      animation: pulse 1.1s infinite ease-in-out;
     }
     @keyframes pulse{
-      0%{ transform: scale(1); opacity:1}
-      50%{ transform: scale(.75); opacity:.6}
-      100%{ transform: scale(1); opacity:1}
+      0%{ transform: scale(1); opacity:.9; }
+      50%{ transform: scale(1.35); opacity:.6; }
+      100%{ transform: scale(1); opacity:.9; }
     }
 
-    /* Result text blocks */
-    .block{
-      border: 1px solid var(--border);
+    /* Card proposta */
+    .offer-card{
+      border: 1px solid rgba(15,23,42,.10);
       border-radius: 18px;
-      padding: 18px 16px;
+      padding: 18px;
       background: #fff;
     }
-    .block p{
-      margin: 0 0 10px;
-      line-height:1.5;
-    }
-    .block p:last-child{ margin:0; }
-
-    /* Back */
-    .back{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      color: var(--muted);
-      font-weight:700;
-      text-decoration:none;
-      cursor:pointer;
-      user-select:none;
-    }
-    .back:hover{ color: #334155; }
-    .backWrap{
-      max-width: var(--maxCard);
-      margin: 0 auto;
-      padding: 0 22px 6px;
-    }
-
-    /* Debt cards */
-    .debtGrid{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      margin-top:14px;
-    }
-    .debtCard{
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 14px 14px 12px;
-      background: #fff;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .debtTop{
+    .offer-top{
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      gap:12px;
+      gap: 14px;
+      flex-wrap:wrap;
     }
-    .debtTitle{
+    .offer-title{
+      margin:0;
+      font-size: 18px;
       font-weight:900;
       letter-spacing:-.01em;
     }
-    .miniLink{
-      color: var(--red);
-      font-weight:800;
-      font-size: 13px;
-      text-decoration:none;
-      cursor:pointer;
-      white-space:nowrap;
-    }
-    .miniLink:hover{ text-decoration:underline; }
-    .debtBody{
-      color: #0f172a;
-      font-size: 14px;
-      line-height:1.45;
-      white-space:pre-line;
-    }
-
-    /* Footer */
-    .footer{
-      padding: 18px 18px 22px;
-      display:flex;
-      justify-content:center;
-    }
-    .footerInner{
-      width:100%;
-      max-width: var(--maxCard);
+    .offer-meta{
+      margin: 8px 0 0;
       color: var(--muted);
       font-size: 14px;
-      text-align:center;
-      border-top: 1px solid var(--border);
-      padding-top: 14px;
-      line-height:1.5;
+      line-height:1.35;
     }
-    .footerInner a{
-      color: var(--red);
+    .offer-link{
+      border:none;
+      background:transparent;
+      color: var(--primary);
+      font-weight:900;
+      cursor:pointer;
+      padding: 6px 0;
+      text-decoration:none;
+      font-size: 14px;
+    }
+    .offer-link:hover{ text-decoration:underline; }
+
+    .offer-cta{
+      margin-top: 14px;
+      display:flex;
+      gap: 12px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+    .btn-wide{
+      min-width: 240px;
+    }
+
+    /* Footer trust */
+    .footer{
+      padding: 14px 26px 20px;
+      border-top: 1px solid rgba(15,23,42,.05);
+      background:#fff;
+    }
+    .trust{
+      max-width: 980px;
+      margin: 0 auto;
+      text-align:center;
+      color: var(--muted);
+      font-size: 15px;
+      line-height:1.4;
+    }
+    .trust a{
+      color: var(--primary);
       font-weight:900;
       text-decoration:none;
       cursor:pointer;
     }
-    .footerInner a:hover{ text-decoration: underline; }
+    .trust a:hover{ text-decoration:underline; }
 
-    /* Modal */
-    .modalOverlay{
-      position:fixed;
-      inset:0;
-      background: rgba(2,6,23,.55);
+    /* Modal Termos */
+    .overlay{
+      position: fixed;
+      inset: 0;
       display:none;
       align-items:center;
       justify-content:center;
+      background: rgba(2,6,23,.55);
       padding: 18px;
-      z-index:9999;
+      z-index: 999;
     }
+    .overlay.show{ display:flex; }
+
     .modal{
-      width:100%;
-      max-width: 640px;
+      width: min(860px, 92vw);
+      max-height: 78vh;              /* ✅ não cobre tudo */
       background:#fff;
       border-radius: 18px;
-      border:1px solid var(--border);
-      box-shadow: 0 25px 70px rgba(2,6,23,.25);
+      box-shadow: 0 22px 60px rgba(2,6,23,.32);
       overflow:hidden;
+      border: 1px solid rgba(255,255,255,.22);
+      user-select: auto;             /* ✅ permite rolar/selecionar */
+      caret-color: transparent;
     }
-    .modalHead{
+    .modal-header{
       display:flex;
       align-items:center;
       justify-content:space-between;
       padding: 14px 16px;
-      border-bottom:1px solid var(--border);
-      font-weight:900;
+      border-bottom: 1px solid rgba(15,23,42,.08);
+      background: #fff;
     }
-    .modalClose{
-      border:0;
-      background:transparent;
-      cursor:pointer;
-      font-size: 18px;
-      font-weight:900;
-      color: #334155;
-    }
-    .modalBody{
-      padding: 14px 16px 16px;
-      color:#0f172a;
-      line-height:1.55;
+    .modal-header strong{
       font-size: 14px;
+      letter-spacing:.02em;
+      text-transform: uppercase;
+      color: var(--text);
     }
-    .modalBody h3{ margin: 10px 0 6px; font-size: 15px; }
-    .modalBody ul{ margin: 8px 0 0 18px; }
-    .modalBody li{ margin: 6px 0; }
-    .muted{ color: var(--muted); }
+    .modal-close{
+      border:none;
+      background:transparent;
+      font-size: 22px;
+      line-height: 1;
+      cursor:pointer;
+      color: var(--muted);
+      padding: 4px 8px;
+    }
+    .modal-close:hover{ color: var(--text); }
 
-    @media (max-width: 560px){
-      .brand img{ height:64px; }
-      .title{ font-size: 24px; }
-      .btnRow .btn, .btnRow .btnGhost{ min-width: 160px; width:100%; }
+    .modal-body{
+      padding: 16px;
+      overflow:auto;                 /* ✅ rolagem interna */
+      max-height: calc(78vh - 52px);
+      color: #0f172a;
+    }
+    .modal-body h3{
+      margin: 0 0 10px;
+      font-size: 18px;
+      letter-spacing:-.01em;
+    }
+    .modal-body p{ margin: 10px 0; color:#334155; line-height:1.55; }
+    .modal-body ul{ margin: 10px 0 10px 18px; color:#334155; line-height:1.55; }
+    .modal-body li{ margin: 6px 0; }
+
+    /* Mobile */
+    @media (max-width: 640px){
+      .title{ font-size: 30px; }
+      .subtitle{ font-size: 16px; }
+      .panel{ padding: 22px 16px; }
+      .btn-outline,.btn-ghost{ min-width: 150px; flex:1; }
+      .brand img{ height: 52px; }
     }
   </style>
 </head>
 
 <body>
-  <div class="shell">
-    <div class="panel">
+  <div class="shell no-caret" id="appRoot">
+    <div class="topbar">
+      <div class="brand">
+        <!-- ✅ Troque pela URL final do logo -->
+        <img id="brandLogo" src="LOGO_URL_AQUI" alt="QuatroC" />
+      </div>
+    </div>
 
-      <!-- Brand -->
-      <div class="topbar">
-        <div class="brand">
-          <!-- ✅ Troque para a URL raw do GitHub (raw.githubusercontent.com) -->
-          <img id="logoImg" src="https://cdn.jsdelivr.net/gh/asilvino19-beep/Logo@main/Logo.png" alt="QuatroC" />
-        </div>
+    <div class="content">
+      <div class="back-row">
+        <button class="back-link" id="btnBack" type="button">← Voltar</button>
       </div>
 
-      <!-- Back (aparece a partir da tela 2) -->
-      <div class="backWrap" id="backWrap" style="display:none;">
-        <span class="back" id="btnBack">← Voltar</span>
+      <div class="stage">
+        <div class="panel" id="panel"></div>
       </div>
+    </div>
 
-      <!-- Content -->
-      <div class="content">
-        <div class="card" id="screen"></div>
-      </div>
-
-      <!-- Footer -->
-      <div class="footer">
-        <div class="footerInner">
-          Conosco, seus dados são tratados de forma segura e sigilosa.
-          Caso tenha dúvidas ou queira saber mais sobre, acesse nossos
-          <a id="openTerms">Termos e Política</a>.
-        </div>
+    <div class="footer">
+      <div class="trust">
+        Conosco, seus dados são tratados de forma segura e sigilosa. Caso tenha dúvidas ou queira saber mais sobre, acesse nossos
+        <a id="openTerms">Termos e Política</a>.
       </div>
     </div>
   </div>
 
-  <!-- Modal -->
-  <div class="modalOverlay" id="modalOverlay">
-    <div class="modal">
-      <div class="modalHead">
-        <span id="modalTitle">Termos e Política</span>
-        <button class="modalClose" id="modalClose">✕</button>
+  <!-- Modal Termos -->
+  <div class="overlay" id="termsOverlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Termos e Política">
+      <div class="modal-header">
+        <strong>Termos e Política</strong>
+        <button class="modal-close" id="closeTerms" aria-label="Fechar">×</button>
       </div>
-      <div class="modalBody" id="modalBody"></div>
+      <div class="modal-body" id="termsBody">
+        <h3>Compromisso com segurança e sigilo</h3>
+        <p>
+          A QuatroC adota medidas técnicas e organizacionais para proteger os dados utilizados neste portal,
+          com foco em confidencialidade, integridade e disponibilidade das informações.
+        </p>
+
+        <h3>1) Finalidade do portal</h3>
+        <p>
+          Este portal viabiliza o autoatendimento para consulta de pendências vinculadas ao documento informado
+          e direcionamento do atendimento, de forma objetiva e segura.
+        </p>
+
+        <h3>2) Dados tratados</h3>
+        <ul>
+          <li>Documento informado (CPF ou CNPJ);</li>
+          <li>Informações necessárias para validação e continuidade do atendimento (quando aplicável);</li>
+          <li>Informações sobre pendências e encaminhamentos vinculados ao documento consultado.</li>
+        </ul>
+
+        <h3>3) Sigilo e acesso</h3>
+        <p>
+          Para reduzir exposição indevida, o portal pode solicitar validações adicionais antes de exibir informações.
+          Não compartilhe seu documento com terceiros e finalize o atendimento ao concluir sua consulta.
+        </p>
+
+        <h3>4) Boas práticas</h3>
+        <ul>
+          <li>Utilize rede e dispositivo confiáveis;</li>
+          <li>Evite acessar o portal em equipamentos públicos;</li>
+          <li>Ao concluir, encerre a sessão e feche o navegador.</li>
+        </ul>
+
+        <h3>5) Atendimento humano</h3>
+        <p>
+          Se preferir, você pode optar por atendimento humano pelos canais informados no fluxo de atendimento.
+        </p>
+      </div>
     </div>
   </div>
 
@@ -416,453 +500,377 @@
     // ================= CONFIGURAÇÃO =================
     const API_URL = "https://billowing-voice-6efd.asilvino19.workers.dev/";
 
-    // ================= STATE =================
+    // ✅ URL do logo (GitHub raw / GitHub Pages / outro host)
+    // Exemplo (RAW): https://raw.githubusercontent.com/USUARIO/REPO/main/Logo.png
+    const LOGO_URL = "LOGO_URL_AQUI";
+
+    // ================= ESTADO =================
+    const panel = document.getElementById("panel");
+    const btnBack = document.getElementById("btnBack");
+
+    const brandLogo = document.getElementById("brandLogo");
+    brandLogo.src = LOGO_URL;
+
+    const termsOverlay = document.getElementById("termsOverlay");
+    const openTerms = document.getElementById("openTerms");
+    const closeTerms = document.getElementById("closeTerms");
+
     let sessionId = Date.now().toString();
     let step = "inicio";
     let documento = null;
 
-    // Dados de identidade
-    let fullNameFromCRM = "";
-    let shortNameFromCRM = "";
+    // estados auxiliares do front
+    let docMode = "cpf"; // 'cpf' | 'cnpj'
+    let lastResponse = null;
 
-    // Dívidas (texto bruto do backend, para cards e modal)
-    let debtTexts = [];     // array de blocos
-    let lastBackendResponse = null;
-
-    // ================= DOM =================
-    const screen = document.getElementById("screen");
-    const backWrap = document.getElementById("backWrap");
-    const btnBack = document.getElementById("btnBack");
-
-    const modalOverlay = document.getElementById("modalOverlay");
-    const modalClose = document.getElementById("modalClose");
-    const modalTitle = document.getElementById("modalTitle");
-    const modalBody = document.getElementById("modalBody");
-    const openTerms = document.getElementById("openTerms");
-
-    // ================= MODAL =================
-    function openModal(title, html){
-      modalTitle.textContent = title || "Detalhes";
-      modalBody.innerHTML = html || "";
-      modalOverlay.style.display = "flex";
+    // ================= MODAL TERMOS =================
+    function showTerms(){
+      termsOverlay.classList.add("show");
+      termsOverlay.setAttribute("aria-hidden", "false");
+      // permite rolagem do modal sem “travamento” no body
+      document.body.style.overflow = "hidden";
     }
-    function closeModal(){
-      modalOverlay.style.display = "none";
+    function hideTerms(){
+      termsOverlay.classList.remove("show");
+      termsOverlay.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
     }
-    modalClose.addEventListener("click", closeModal);
-    modalOverlay.addEventListener("click", (e)=>{ if(e.target === modalOverlay) closeModal(); });
-
-    openTerms.addEventListener("click", () => {
-      openModal("Termos e Política • QuatroC", getTermsHTML());
+    openTerms.addEventListener("click", showTerms);
+    closeTerms.addEventListener("click", hideTerms);
+    termsOverlay.addEventListener("click", (e) => {
+      if (e.target === termsOverlay) hideTerms();
+    });
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && termsOverlay.classList.contains("show")) hideTerms();
     });
 
-    // ================= HELPERS =================
-    function setBackVisible(visible){
-      backWrap.style.display = visible ? "block" : "none";
+    // ================= HELPERS CPF/CNPJ =================
+    function onlyDigits(v){ return (v || "").replace(/\D/g,""); }
+
+    function maskCPF(d){
+      // 000.000.000-00
+      d = onlyDigits(d).slice(0,11);
+      d = d.replace(/^(\d{3})(\d)/, "$1.$2");
+      d = d.replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
+      d = d.replace(/\.(\d{3})(\d)/, ".$1-$2");
+      return d;
     }
 
-    function sanitizeDigits(v){ return (v || "").replace(/\D/g, ""); }
-
-    function maskCPF(v){
-      v = sanitizeDigits(v).slice(0,11);
-      v = v.replace(/^(\d{3})(\d)/, "$1.$2");
-      v = v.replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
-      v = v.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
-      return v;
+    function maskCNPJ(d){
+      // 00.000.000/0000-00
+      d = onlyDigits(d).slice(0,14);
+      d = d.replace(/^(\d{2})(\d)/, "$1.$2");
+      d = d.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+      d = d.replace(/\.(\d{3})(\d)/, ".$1/$2");
+      d = d.replace(/(\d{4})(\d)/, "$1-$2");
+      return d;
     }
 
-    function maskCNPJ(v){
-      v = sanitizeDigits(v).slice(0,14);
-      v = v.replace(/^(\d{2})(\d)/, "$1.$2");
-      v = v.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
-      v = v.replace(/^(\d{2})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3/$4");
-      v = v.replace(/^(\d{2})\.(\d{3})\.(\d{3})\/(\d{4})(\d)/, "$1.$2.$3/$4-$5");
-      return v;
+    function formatDocForInput(v){
+      return docMode === "cnpj" ? maskCNPJ(v) : maskCPF(v);
     }
 
-    function pickShortName(full){
-      const parts = (full || "").trim().split(/\s+/).filter(Boolean);
-      if(parts.length === 0) return "";
-      if(parts.length === 1) return parts[0];
-      // ✅ “resumir”: primeiro + segundo nome (conforme seu exemplo)
-      return `${parts[0]} ${parts[1]}`;
+    function docPlaceholder(){
+      return docMode === "cnpj" ? "00.000.000/0000-00" : "000.000.000-00";
     }
 
-    function buildNameChallengeOptions(full){
-      const parts = (full || "").trim().split(/\s+/).filter(Boolean);
-      if(parts.length <= 1){
-        const correct = parts[0] || "";
-        const decoys = ["MARIA", "JOÃO", "ANA"].filter(n => n !== correct).slice(0,2);
-        return [correct, ...decoys];
-      }
-
-      const correct = full.trim();
-      const last = parts[parts.length - 1];
-      const base = parts.slice(0, parts.length - 1).join(" ");
-
-      const pool = ["SILVA","SANTOS","OLIVEIRA","SOUZA","COSTA","PEREIRA","ALMEIDA","LIMA"];
-      const d1 = pool.find(x => x !== last) || "SILVA";
-      const d2 = pool.find(x => x !== last && x !== d1) || "SANTOS";
-
-      return [
-        correct,
-        `${base} ${d1}`,
-        `${base} ${d2}`,
-      ];
+    function docLabel(){
+      return docMode === "cnpj" ? "Digite seu CNPJ:" : "Digite seu CPF:";
     }
 
-    function parseDebtBlocksFromMessages(messages){
-      // pega textos longos (resumo) e quebra em blocos por linhas em branco
-      const joined = (messages || [])
-        .map(m => (m && m.texto ? String(m.texto) : ""))
-        .join("\n\n")
-        .trim();
-
-      if(!joined) return [];
-
-      // “Como deseja prosseguir?” e textos de interface não entram como dívida
-      const cleaned = joined
-        .replace(/Como deseja prosseguir\?/gi, "")
-        .replace(/Abaixo seguem informações sobre seu\(s\) débito\(s\):/gi, "")
-        .trim();
-
-      if(!cleaned) return [];
-
-      return cleaned
-        .split(/\n\s*\n/g)
-        .map(t => t.trim())
-        .filter(Boolean);
+    function isDocValid(d){
+      d = onlyDigits(d);
+      return docMode === "cnpj" ? d.length === 14 : d.length === 11;
     }
 
-    // ================= UI RENDERERS =================
-    function renderScreen1(){
-      setBackVisible(false);
+    // ================= UI RENDER =================
+    function render(){
+      // Determina “tela” com base no step
+      // Observação: mantemos o backend igual — aqui só troca a apresentação.
+      const s = step;
 
-      screen.innerHTML = `
-        <h1 class="title">Acesse ao portal de negociação</h1>
-        <p class="subtitle">Preencha o campo abaixo</p>
+      // back button visível só depois do início
+      btnBack.style.visibility = (s === "inicio") ? "hidden" : "visible";
 
-        <div class="formRow">
-          <label>
-            <span id="docLabel">Digite seu CPF:</span>
-          </label>
-          <input id="docInput" inputmode="numeric" placeholder="000.000.000-00" autocomplete="off" />
-          <button class="btn" id="btnConfirmar">Confirmar</button>
+      if (s === "inicio"){
+        panel.innerHTML = `
+          <h1 class="title">Acesse ao portal de negociação</h1>
+          <p class="subtitle">Preencha o campo abaixo</p>
 
-          <div class="linkRow">
-            É pessoa jurídica? <a id="toggleDoc">Entrar com CNPJ</a>
-          </div>
-        </div>
-      `;
+          <div class="form">
+            <div class="label-row">${docLabel()}</div>
+            <input
+              id="docInput"
+              class="input"
+              inputmode="numeric"
+              autocomplete="off"
+              placeholder="${docPlaceholder()}"
+            />
+            <button id="btnConfirm" class="btn-primary" disabled>Confirmar</button>
 
-      const docInput = document.getElementById("docInput");
-      const docLabel = document.getElementById("docLabel");
-      const toggleDoc = document.getElementById("toggleDoc");
-      const btnConfirmar = document.getElementById("btnConfirmar");
-
-      let mode = "cpf"; // cpf | cnpj
-
-      function applyMode(){
-        if(mode === "cpf"){
-          docLabel.textContent = "Digite seu CPF:";
-          docInput.placeholder = "000.000.000-00";
-          toggleDoc.textContent = "Entrar com CNPJ";
-          docInput.value = maskCPF(docInput.value);
-        }else{
-          docLabel.textContent = "Digite seu CNPJ:";
-          docInput.placeholder = "00.000.000/0000-00";
-          toggleDoc.textContent = "Entrar com CPF";
-          docInput.value = maskCNPJ(docInput.value);
-        }
-        docInput.focus();
-      }
-
-      docInput.addEventListener("input", () => {
-        if(mode === "cpf") docInput.value = maskCPF(docInput.value);
-        else docInput.value = maskCNPJ(docInput.value);
-      });
-
-      toggleDoc.addEventListener("click", (e) => {
-        e.preventDefault();
-        mode = (mode === "cpf") ? "cnpj" : "cpf";
-        applyMode();
-      });
-
-      btnConfirmar.addEventListener("click", async () => {
-        const digits = sanitizeDigits(docInput.value);
-        if(mode === "cpf" && digits.length !== 11){
-          openModal("Atenção", `<p>Informe um CPF válido (11 dígitos).</p>`);
-          return;
-        }
-        if(mode === "cnpj" && digits.length !== 14){
-          openModal("Atenção", `<p>Informe um CNPJ válido (14 dígitos).</p>`);
-          return;
-        }
-
-        documento = digits;
-        step = "consulta_divida";
-
-        // Tela 2 (loading) e chama backend
-        renderScreen2Loading();
-        await sendToBackend({ sessionId, step: "consulta_divida", documento });
-      });
-
-      applyMode();
-    }
-
-    function renderScreen2Loading(){
-      setBackVisible(true);
-
-      screen.innerHTML = `
-        <h1 class="title">Resultado da consulta</h1>
-        <p class="subtitle">Estamos localizando as informações vinculadas ao documento informado.</p>
-
-        <div class="loading">
-          <div class="pill"><span class="dot"></span> Carregando...</div>
-          <div class="muted">Aguarde um momento.</div>
-        </div>
-      `;
-    }
-
-    function renderScreen3ConfirmIdentity(){
-      setBackVisible(true);
-
-      screen.innerHTML = `
-        <h1 class="title">Resultado da consulta</h1>
-
-        <div class="block">
-          <p>Localizamos o cadastro em nome de <strong>${escapeHtml(shortNameFromCRM)}</strong>.</p>
-          <p>Estamos falando com essa pessoa?</p>
-        </div>
-
-        <div class="btnRow">
-          <button class="btn" id="btnSim">Sim</button>
-          <button class="btnGhost" id="btnNao">Não</button>
-        </div>
-      `;
-
-      document.getElementById("btnSim").addEventListener("click", () => {
-        // ✅ vai para a tela de double-check (não fica “na mesma tela”)
-        renderScreen3bDoubleCheck();
-      });
-
-      document.getElementById("btnNao").addEventListener("click", () => {
-        renderNotClient();
-      });
-    }
-
-    function renderScreen3bDoubleCheck(){
-      setBackVisible(true);
-
-      const options = buildNameChallengeOptions(fullNameFromCRM);
-
-      const title = (fullNameFromCRM.trim().split(/\s+/).filter(Boolean).length <= 1)
-        ? "Para dar sequência, confirme o primeiro nome"
-        : "Para dar sequência, confirme o nome completo";
-
-      screen.innerHTML = `
-        <h1 class="title">Validação de segurança</h1>
-        <p class="subtitle">${title}</p>
-
-        <div class="btnRow" id="nameOptions" style="margin-top:6px;"></div>
-      `;
-
-      const wrap = document.getElementById("nameOptions");
-
-      options.forEach((opt) => {
-        const b = document.createElement("button");
-        b.className = "btnGhost";
-        b.style.minWidth = "260px";
-        b.textContent = opt;
-        b.addEventListener("click", async () => {
-          const isCorrect = (opt || "").trim().toUpperCase() === (fullNameFromCRM || "").trim().toUpperCase();
-          if(!isCorrect){
-            openModal("Não corresponde", `<p>Não foi possível validar as informações. Você pode realizar uma nova consulta.</p>`);
-            renderNotClient();
-            return;
-          }
-          // ✅ Validado -> tela de escolha de caminho
-          renderScreen4ChoosePath();
-        });
-        wrap.appendChild(b);
-      });
-    }
-
-    function renderScreen4ChoosePath(){
-      setBackVisible(true);
-
-      screen.innerHTML = `
-        <h1 class="title">Como deseja prosseguir?</h1>
-        <p class="subtitle">Selecione uma opção para continuar o atendimento.</p>
-
-        <div class="btnRow">
-          <button class="btnGhost" id="btnNegociar">Negociar pelo autoatendimento</button>
-          <button class="btn" id="btnAtendente">Falar com um atendente</button>
-        </div>
-      `;
-
-      document.getElementById("btnAtendente").addEventListener("click", async () => {
-        // mantém o contrato atual do backend
-        await sendToBackend({
-          sessionId,
-          step: "falar_atendente",
-          documento,
-          motivo: "negociação"
-        });
-      });
-
-      document.getElementById("btnNegociar").addEventListener("click", () => {
-        // Renderiza cards com base no último retorno do resumo (se já veio),
-        // ou chama backend caso ainda não tenha a estrutura.
-        // No seu fluxo atual, após identidade confirmada, você busca resumo via TechFy.
-        // Então aqui: se ainda não temos dívidas, chamamos o backend para o passo atual.
-        if(debtTexts.length){
-          renderScreen5DebtCards();
-        }else{
-          // força backend no step atual para gerar resumo/next
-          sendToBackend({ sessionId, step: "confirmar_identidade", documento, optionId: "identidade_sim" });
-        }
-      });
-    }
-
-    function renderScreen5DebtCards(){
-      setBackVisible(true);
-
-      // Se não há pendências (ou credor sem parcelas), tratamos como “sem pendência”
-      if(!debtTexts.length){
-        screen.innerHTML = `
-          <h1 class="title">Resultado da consulta</h1>
-          <p class="subtitle">Nenhuma pendência foi localizada para o documento informado.</p>
-
-          <div class="btnRow">
-            <button class="btnGhost" id="btnNova">Nova consulta</button>
+            <div class="switch-doc">
+              ${docMode === "cnpj"
+                ? `É pessoa física? <a id="toggleDoc">Entrar com CPF</a>`
+                : `É pessoa jurídica? <a id="toggleDoc">Entrar com CNPJ</a>`
+              }
+            </div>
           </div>
         `;
-        document.getElementById("btnNova").addEventListener("click", resetAll);
+
+        const docInput = document.getElementById("docInput");
+        const btnConfirm = document.getElementById("btnConfirm");
+        const toggleDoc = document.getElementById("toggleDoc");
+
+        docInput.focus();
+
+        docInput.addEventListener("input", () => {
+          const masked = formatDocForInput(docInput.value);
+          docInput.value = masked;
+
+          btnConfirm.disabled = !isDocValid(masked);
+        });
+
+        btnConfirm.addEventListener("click", async () => {
+          const digits = onlyDigits(docInput.value);
+          if (!digits) return;
+          documento = digits;
+          // tela de carregamento (sem "Resultado da consulta")
+          step = "loading_busca";
+          render();
+          await sendToBackend({ sessionId, step: "consulta_divida", documento });
+        });
+
+        toggleDoc.addEventListener("click", () => {
+          docMode = (docMode === "cnpj") ? "cpf" : "cnpj";
+          render();
+        });
+
         return;
       }
 
-      const cards = debtTexts.map((t, idx) => {
-        return `
-          <div class="debtCard">
-            <div class="debtTop">
-              <div class="debtTitle">Pendência identificada</div>
-              <a class="miniLink" data-idx="${idx}">Detalhes da dívida</a>
-            </div>
-            <div class="debtBody">${escapeHtml(t)}</div>
+      if (s === "loading_busca"){
+        panel.innerHTML = `
+          <p class="subtitle" style="margin-top:0;">
+            Estamos localizando as informações vinculadas ao documento informado.
+          </p>
+
+          <div class="loading-wrap">
+            <div class="pill"><span class="dot"></span>Carregando...</div>
+            <div class="subtitle" style="margin:0;">Aguarde um momento.</div>
           </div>
         `;
-      }).join("");
+        return;
+      }
 
-      screen.innerHTML = `
-        <h1 class="title">Pendências localizadas</h1>
-        <p class="subtitle">Selecione uma opção para prosseguir.</p>
+      if (s === "confirmar_identidade"){
+        // Espera do backend: lastResponse.payload.nome_resumido, ou inferimos do texto
+        const nomeResumido =
+          (lastResponse && lastResponse.payload && lastResponse.payload.nome_resumido) ||
+          (lastResponse && lastResponse.nome_resumido) ||
+          extractNomeResumidoFromMensagens(lastResponse) ||
+          "NOME LOCALIZADO";
 
-        <div class="debtGrid">${cards}</div>
+        panel.innerHTML = `
+          <h1 class="title">Resultado da consulta</h1>
 
-        <div class="btnRow">
-          <button class="btnGhost" id="btnGerarBoleto">Negociar agora</button>
-          <button class="btn" id="btnAtendente2">Falar com um atendente</button>
-        </div>
-      `;
+          <div class="divider"></div>
 
-      // Modal “Detalhes”
-      screen.querySelectorAll(".miniLink").forEach(a => {
-        a.addEventListener("click", () => {
-          const idx = Number(a.getAttribute("data-idx"));
-          const text = debtTexts[idx] || "";
-          openModal("Detalhes da dívida", `<pre style="white-space:pre-wrap;margin:0;font-family:inherit;">${escapeHtml(text)}</pre>`);
+          <p class="subtitle" style="margin-top:0; color: var(--text); font-size:18px;">
+            Localizamos o cadastro em nome de <strong>${escapeHtml(nomeResumido)}</strong>.<br/>
+            Estamos falando com essa pessoa?
+          </p>
+
+          <div class="actions">
+            <button class="btn-outline" id="btnIdSim">Sim</button>
+            <button class="btn-outline" id="btnIdNao">Não</button>
+          </div>
+        `;
+
+        document.getElementById("btnIdSim").addEventListener("click", () => {
+          // backend segue igual — envia optionId
+          sendToBackend({ sessionId, step: "confirmar_identidade", optionId: "identidade_sim", documento });
         });
-      });
 
-      // Aqui você liga com sua lógica real de negociação:
-      // - se já existe opção gerar boleto do backend, o seu fluxo segue
-      // Como o backend já trabalha com optionId, mantemos isso:
-      document.getElementById("btnAtendente2").addEventListener("click", async () => {
-        await sendToBackend({
-          sessionId,
-          step: "falar_atendente",
-          documento,
-          motivo: "negociação"
+        document.getElementById("btnIdNao").addEventListener("click", () => {
+          // Só aqui aparece “Nova consulta”
+          step = "nao_sou_cliente";
+          render();
         });
-      });
 
-      document.getElementById("btnGerarBoleto").addEventListener("click", async () => {
-        // Se existir “gerar_boleto” no seu backend, ele segue.
-        // Caso o seu backend use outro id, troque aqui.
-        await sendToBackend({
-          sessionId,
-          step,
-          documento,
-          optionId: "gerar_boleto"
+        return;
+      }
+
+      if (s === "nao_sou_cliente"){
+        panel.innerHTML = `
+          <h1 class="title">Resultado da consulta</h1>
+          <p class="subtitle">Para sua segurança, precisamos reiniciar a consulta com o documento correto.</p>
+          <div class="actions" style="margin-top:18px;">
+            <button class="btn-primary btn-wide" id="btnNovaConsulta">Nova consulta</button>
+          </div>
+        `;
+        document.getElementById("btnNovaConsulta").addEventListener("click", resetToStart);
+        return;
+      }
+
+      if (s === "validar_nome_completo"){
+        const opcoes = (lastResponse && lastResponse.payload && Array.isArray(lastResponse.payload.opcoes_nome))
+          ? lastResponse.payload.opcoes_nome
+          : extractOpcoesFromMensagens(lastResponse);
+
+        panel.innerHTML = `
+          <h1 class="title">Resultado da consulta</h1>
+          <div class="divider"></div>
+
+          <h2 class="title" style="font-size:34px; margin-top:0;">Confirmação</h2>
+          <p class="subtitle">Para darmos sequência, confirme o nome completo</p>
+
+          <div class="divider"></div>
+
+          <div class="actions" style="flex-direction:column; gap:12px;">
+            ${opcoes.map((o,i)=>`
+              <button class="btn-ghost" style="min-width: min(520px, 100%);" data-opt="${escapeAttr(o.id || ("opt_"+i))}">
+                ${escapeHtml(o.label || o)}
+              </button>
+            `).join("")}
+          </div>
+        `;
+
+        panel.querySelectorAll("button[data-opt]").forEach(btn=>{
+          btn.addEventListener("click", () => {
+            const optionId = btn.getAttribute("data-opt");
+            sendToBackend({ sessionId, step: "validar_nome_completo", optionId, documento });
+          });
         });
-      });
+
+        return;
+      }
+
+      if (s === "direcionamento"){
+        panel.innerHTML = `
+          <h1 class="title">Como deseja prosseguir?</h1>
+          <p class="subtitle">Selecione uma opção para continuar o atendimento.</p>
+
+          <div class="divider"></div>
+
+          <div class="actions">
+            <button class="btn-ghost" id="btnNegociar">Negociar pelo autoatendimento</button>
+            <button class="btn-primary btn-wide" id="btnAtendente">Falar com um atendente</button>
+          </div>
+        `;
+
+        document.getElementById("btnNegociar").addEventListener("click", () => {
+          sendToBackend({ sessionId, step: "direcionamento", optionId: "negociar", documento });
+        });
+
+        document.getElementById("btnAtendente").addEventListener("click", () => {
+          sendToBackend({ sessionId, step: "direcionamento", optionId: "falar_atendente", documento });
+        });
+
+        return;
+      }
+
+      if (s === "pendencias"){
+        // Proposta (placeholder) + detalhes em modal
+        const offer = (lastResponse && lastResponse.payload && lastResponse.payload.oferta) ? lastResponse.payload.oferta : {};
+        const debt = (lastResponse && lastResponse.payload && lastResponse.payload.divida) ? lastResponse.payload.divida : {};
+
+        const contrato = offer.contrato || debt.contrato || extractContrato(lastResponse) || "—";
+        const valorOferta = offer.valor_oferta || offer.valor || null;
+        const labelOferta = offer.titulo || "Proposta disponível";
+
+        panel.innerHTML = `
+          <h1 class="title">Pendências localizadas</h1>
+          <p class="subtitle">Selecione uma opção para prosseguir.</p>
+
+          <div class="divider"></div>
+
+          <div class="offer-card">
+            <div class="offer-top">
+              <div>
+                <p class="offer-title">${escapeHtml(labelOferta)}</p>
+                <p class="offer-meta">
+                  Contrato: <strong>${escapeHtml(contrato)}</strong>
+                  ${valorOferta ? `<br/>Condição: <strong>${escapeHtml(valorOferta)}</strong>` : ``}
+                </p>
+              </div>
+
+              <button class="offer-link" id="btnDebtDetails" type="button">Detalhes da dívida</button>
+            </div>
+
+            <div class="offer-cta">
+              <button class="btn-primary btn-wide" id="btnQueroOferta">Quero essa oferta</button>
+              <button class="btn-ghost btn-wide" id="btnFalarAtendente2">Falar com um atendente</button>
+            </div>
+          </div>
+        `;
+
+        // abre modal com detalhes (um único bloco — não fragmentado)
+        document.getElementById("btnDebtDetails").addEventListener("click", () => {
+          fillDebtModal(debt, lastResponse);
+          showTerms(); // reutiliza overlay, mas troca conteúdo temporariamente
+          swapTermsToDebtDetails();
+        });
+
+        document.getElementById("btnQueroOferta").addEventListener("click", () => {
+          sendToBackend({ sessionId, step: "pendencias", optionId: "quero_oferta", documento });
+        });
+
+        document.getElementById("btnFalarAtendente2").addEventListener("click", () => {
+          sendToBackend({ sessionId, step: "pendencias", optionId: "falar_atendente", documento });
+        });
+
+        return;
+      }
+
+      // fallback: se cair aqui, volta pro início
+      resetToStart();
     }
 
-    function renderNotClient(){
-      setBackVisible(true);
-
-      screen.innerHTML = `
-        <h1 class="title">Resultado da consulta</h1>
-        <p class="subtitle">Para proteger os dados, realize uma nova consulta com o documento correto.</p>
-
-        <div class="btnRow">
-          <button class="btnGhost" id="btnNova">Nova consulta</button>
-        </div>
-      `;
-
-      document.getElementById("btnNova").addEventListener("click", resetAll);
-    }
-
-    function renderAtendenteMessage(link){
-      setBackVisible(true);
-
-      screen.innerHTML = `
-        <h1 class="title">Atendimento humano</h1>
-        <p class="subtitle">Para seguir com um atendente, utilize o canal abaixo.</p>
-
-        <div class="block">
-          <p><strong>Link de atendimento:</strong></p>
-          <p><a href="${escapeAttr(link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link)}</a></p>
-        </div>
-
-        <div class="btnRow">
-          <button class="btnGhost" id="btnNova">Nova consulta</button>
-        </div>
-      `;
-
-      document.getElementById("btnNova").addEventListener("click", resetAll);
-    }
-
-    function resetAll(){
-      sessionId = Date.now().toString();
-      step = "inicio";
-      documento = null;
-      fullNameFromCRM = "";
-      shortNameFromCRM = "";
-      debtTexts = [];
-      lastBackendResponse = null;
-      renderScreen1();
-    }
-
+    // ================= BACK / RESET =================
     btnBack.addEventListener("click", () => {
-      // Voltar simples: se estiver em qualquer etapa após a consulta, volta para tela inicial
-      resetAll();
+      // comportamento simples: volta 1 passo conforme fluxo
+      if (step === "confirmar_identidade" || step === "loading_busca") {
+        resetToStart();
+        return;
+      }
+      if (step === "validar_nome_completo"){
+        step = "confirmar_identidade";
+        render();
+        return;
+      }
+      if (step === "direcionamento"){
+        step = "validar_nome_completo";
+        render();
+        return;
+      }
+      if (step === "pendencias"){
+        step = "direcionamento";
+        render();
+        return;
+      }
+      resetToStart();
     });
 
-    // ================= BACKEND =================
-    async function sendToBackend(payload) {
-      try {
-        lastBackendResponse = null;
+    function resetToStart(){
+      step = "inicio";
+      documento = null;
+      lastResponse = null;
+      render();
+    }
 
+    // ================= API =================
+    async function sendToBackend(payload){
+      try{
         const resp = await fetch(API_URL, {
           method: "POST",
           body: JSON.stringify(payload),
         });
 
-        if (!resp.ok) {
-          openModal("Erro", `<p>Não foi possível processar sua solicitação. Tente novamente.</p>`);
-          resetAll();
+        if (!resp.ok){
+          console.error("HTTP", resp.status, await resp.text());
+          step = "inicio";
+          render();
+          alert("Não foi possível processar sua solicitação. Tente novamente.");
           return;
         }
 
@@ -871,143 +879,179 @@
           try { return JSON.parse(txt); } catch { return null; }
         });
 
-        if(!data){
-          openModal("Erro", `<p>Resposta inválida do servidor.</p>`);
-          resetAll();
-          return;
+        lastResponse = data;
+
+        // IMPORTANTÍSSIMO:
+        // Você já usa response.proximoStep — vamos continuar respeitando isso.
+        if (data && data.proximoStep){
+          step = mapBackendStepToUI(data.proximoStep, data);
+        } else {
+          // fallback: tenta inferir (mínimo)
+          step = inferStep(data);
         }
 
-        lastBackendResponse = data;
-
-        // Atualiza step
-        if (data.proximoStep !== undefined && data.proximoStep !== null) {
-          step = data.proximoStep;
-        }
-
-        // Interpreta mensagens
-        const msgs = (data.mensagens && Array.isArray(data.mensagens)) ? data.mensagens : [];
-
-        // 1) Identidade (pega nome do retorno)
-        // Procuramos um texto com "Localizamos o cadastro em nome de"
-        const identityMsg = msgs.map(m => m.texto || "").find(t => /Localizamos o cadastro em nome de/i.test(t));
-        if(identityMsg){
-          const m = identityMsg.match(/Localizamos o cadastro em nome de\s+(.+?)[\.\n]/i);
-          fullNameFromCRM = (m && m[1]) ? String(m[1]).trim() : "";
-          shortNameFromCRM = pickShortName(fullNameFromCRM);
-          // ✅ Agora que localizou, mostra tela 3 (confirmação)
-          renderScreen3ConfirmIdentity();
-          return;
-        }
-
-        // 2) Se backend devolveu texto de “falar atendente” com link, mostramos mensagem simples.
-        const maybeLink = msgs.map(m => m.texto || "").find(t => /https?:\/\/\S+/i.test(t));
-        if(step === "falar_atendente" && maybeLink){
-          const url = (maybeLink.match(/https?:\/\/\S+/i) || [])[0] || "";
-          renderAtendenteMessage(url || ""); // se vazio, ainda exibe
-          return;
-        }
-
-        // 3) Resumo de dívidas: capturamos os blocos
-        const parsedDebts = parseDebtBlocksFromMessages(msgs);
-        if(parsedDebts.length){
-          debtTexts = parsedDebts;
-
-          // Se o backend está te jogando para etapa errada por causa de "digitação",
-          // aqui garantimos a UI correta: escolhe caminho -> cards.
-          // Se já escolheu "Negociar", renderiza direto:
-          renderScreen5DebtCards();
-          return;
-        }
-
-        // 4) Sem pendência / doc não localizado (mensagem genérica)
-        const anyText = msgs.map(m => m.texto || "").join("\n").trim();
-        if(anyText){
-          // Se não veio dívida e não veio identidade, tratamos como “sem pendência” / “não localizado”
-          screen.innerHTML = `
-            <h1 class="title">Resultado da consulta</h1>
-            <p class="subtitle">${escapeHtml(anyText)}</p>
-            <div class="btnRow">
-              <button class="btnGhost" id="btnNova">Nova consulta</button>
-            </div>
-          `;
-          setBackVisible(true);
-          document.getElementById("btnNova").addEventListener("click", resetAll);
-          return;
-        }
-
-        // fallback
-        renderNotClient();
-
-      } catch (err) {
-        openModal("Conexão", `<p>Não foi possível se conectar. Verifique sua internet e tente novamente.</p>`);
-        resetAll();
+        render();
+      }catch(err){
+        console.error(err);
+        alert("Não foi possível se conectar. Verifique sua conexão e tente novamente.");
+        resetToStart();
       }
     }
 
-    // ================= TERMS HTML =================
-    function getTermsHTML(){
-      return `
-        <p><strong>Compromisso com segurança e sigilo</strong></p>
-        <p>
-          A QuatroC adota medidas técnicas e organizacionais para proteger os dados utilizados neste portal,
-          com foco em confidencialidade, integridade e disponibilidade das informações.
-        </p>
+    // ================= STEP MAPPING =================
+    function mapBackendStepToUI(backendStep, data){
+      // ajuste conforme seus steps reais no Worker/Fluxo
+      // mantemos nomes amigáveis no front
+      switch(backendStep){
+        case "inicio":
+          return "inicio";
+        case "consulta_divida":
+          return "loading_busca";
+        case "confirmar_identidade":
+          return "confirmar_identidade";
+        case "validar_nome_completo":
+          return "validar_nome_completo";
+        case "direcionamento":
+          return "direcionamento";
+        case "pendencias":
+        case "resumo_divida":
+          return "pendencias";
+        default:
+          return backendStep; // se já vier no formato do front
+      }
+    }
 
-        <h3>1) Finalidade do portal</h3>
-        <p>
-          Este portal tem como finalidade viabilizar autoatendimento para consulta de pendências e direcionamento
-          do atendimento, de forma objetiva e segura.
-        </p>
+    function inferStep(data){
+      // fallback bem conservador
+      if (!data) return "inicio";
+      if (data.mensagens && JSON.stringify(data.mensagens).toLowerCase().includes("estamos falando")) return "confirmar_identidade";
+      return "inicio";
+    }
 
-        <h3>2) Dados tratados</h3>
-        <ul>
-          <li>Documento informado (CPF ou CNPJ);</li>
-          <li>Informações de cadastro e dados necessários para atendimento (ex.: contatos e endereços quando aplicável);</li>
-          <li>Informações sobre pendências/encaminhamentos vinculados ao documento consultado.</li>
-        </ul>
+    // ================= EXTRAÇÃO / UTIL =================
+    function escapeHtml(str){
+      return String(str ?? "").replace(/[&<>"']/g, s => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[s]));
+    }
+    function escapeAttr(str){
+      return escapeHtml(str).replace(/"/g, "&quot;");
+    }
 
-        <h3>3) Sigilo e acesso</h3>
-        <p>
-          Para reduzir exposição indevida, o portal pode solicitar validações adicionais antes de exibir informações.
-          Não compartilhe seu documento com terceiros.
-        </p>
+    function extractNomeResumidoFromMensagens(data){
+      try{
+        const txt = (data.mensagens || []).map(m=>m.texto).join(" ");
+        // pega “em nome de X.” e remove sobrenomes extras (mantém 2 tokens)
+        const m = txt.match(/nome de\s+([A-ZÀ-Ú\s]+)[\.\,]/i);
+        if (!m) return null;
+        const nome = m[1].trim().replace(/\s+/g," ");
+        const parts = nome.split(" ");
+        return parts.slice(0,2).join(" ");
+      }catch{
+        return null;
+      }
+    }
 
-        <h3>4) Boas práticas</h3>
-        <ul>
-          <li>Utilize rede e dispositivo confiáveis;</li>
-          <li>Evite acessar o portal em equipamentos públicos;</li>
-          <li>Finalize o atendimento ao concluir sua consulta.</li>
-        </ul>
+    function extractOpcoesFromMensagens(data){
+      // Espera algo como mensagens[0].opcoes = [{id,label}]
+      const out = [];
+      try{
+        (data.mensagens || []).forEach(m=>{
+          if (Array.isArray(m.opcoes)){
+            m.opcoes.forEach(o => out.push(o));
+          }
+        });
+      }catch{}
+      // fallback com 3 opções “genéricas” (não ideal)
+      if (!out.length) return [
+        {id:"opt_1", label:"Confirmar nome 1"},
+        {id:"opt_2", label:"Confirmar nome 2"},
+        {id:"opt_3", label:"Confirmar nome 3"},
+      ];
+      return out;
+    }
 
-        <h3>5) Atendimento humano</h3>
-        <p>
-          Caso prefira, você pode optar por seguir com atendimento humano pelos canais disponibilizados durante o fluxo.
-        </p>
+    function extractContrato(data){
+      try{
+        const txt = JSON.stringify(data);
+        const m = txt.match(/"NumeroContrato"\s*:\s*"([^"]+)"/);
+        return m ? m[1] : null;
+      }catch{ return null; }
+    }
 
-        <p class="muted" style="margin-top:12px;">
-          Última atualização: ${new Date().toLocaleDateString("pt-BR")}
-        </p>
+    // ================= MODAL “DETALHES DA DÍVIDA” =================
+    let termsBackup = null;
+
+    function swapTermsToDebtDetails(){
+      const body = document.getElementById("termsBody");
+      if (!termsBackup){
+        termsBackup = body.innerHTML;
+      }
+      // conteúdo já preenchido pelo fillDebtModal()
+      // ao fechar, restauramos termos
+      closeTerms.onclick = () => {
+        restoreTermsModal();
+        hideTerms();
+      };
+    }
+
+    function restoreTermsModal(){
+      const body = document.getElementById("termsBody");
+      if (termsBackup){
+        body.innerHTML = termsBackup;
+      }
+      closeTerms.onclick = hideTerms;
+    }
+
+    function fillDebtModal(debt, data){
+      const body = document.getElementById("termsBody");
+
+      // tenta montar um bloco único de informações
+      const contrato = debt.contrato || extractContrato(data) || "—";
+      const credor = debt.credor || (debt.Credor || null);
+      const valorTotal = debt.valor_total || debt.valor || null;
+      const vencimento = debt.vencimento || null;
+
+      // parcelas (se vier)
+      const parcelas = Array.isArray(debt.parcelas) ? debt.parcelas : (debt.Parcelas || []);
+
+      body.innerHTML = `
+        <h3>Detalhes da dívida</h3>
+        <p><strong>Contrato:</strong> ${escapeHtml(contrato)}</p>
+        ${credor ? `<p><strong>Credor:</strong> ${escapeHtml(credor)}</p>` : ``}
+        ${valorTotal ? `<p><strong>Valor total em aberto:</strong> ${escapeHtml(valorTotal)}</p>` : ``}
+        ${vencimento ? `<p><strong>Vencimento:</strong> ${escapeHtml(vencimento)}</p>` : ``}
+
+        ${parcelas && parcelas.length ? `
+          <h3 style="margin-top:16px;">Parcelas</h3>
+          <ul>
+            ${parcelas.map(p=>`
+              <li>
+                Vencimento: ${escapeHtml((p.Vencimento || p.vencimento || "").toString().slice(0,10) || "—")}
+                • Valor: ${escapeHtml(String(p.Valor ?? p.valor ?? "—"))}
+              </li>
+            `).join("")}
+          </ul>
+        ` : `<p style="margin-top:14px; color:#334155;">Sem detalhamento adicional disponível no momento.</p>`}
       `;
     }
 
-    // ================= ESCAPE =================
-    function escapeHtml(str){
-      return String(str || "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+    // ================= INIT =================
+    function init(){
+      render();
+      // opcional: notificar backend “inicio” (se você usa)
+      // sendToBackend({ sessionId, step: "inicio" });
     }
-    function escapeAttr(str){
-      return escapeHtml(str).replaceAll('"',"&quot;");
-    }
-
-    // ================= START =================
-    function start(){
-      renderScreen1();
-    }
-    start();
+    init();
   </script>
+
+  <!--
+    ✅ COMO GERAR URL DO LOGO NO GITHUB (sem baixar)
+    Use o domínio raw.githubusercontent.com no formato:
+    https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPO/main/Logo.png
+
+    Exemplo:
+    const LOGO_URL = "https://raw.githubusercontent.com/asilvino19-beep/Logo/main/Logo.png";
+  -->
 </body>
 </html>
