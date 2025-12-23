@@ -43,12 +43,12 @@
 
     .top{
       width:100%;
-      padding:18px 20px 8px; /* ↓ menor */
+      padding:18px 20px 8px;
       display:flex;
       justify-content:center;
     }
     .logo{
-      width:78px; /* ↓ menor */
+      width:78px;
       height:auto;
       filter: drop-shadow(0 14px 28px rgba(15,23,42,.08));
     }
@@ -61,14 +61,14 @@
 
     .shell{
       background:var(--card);
-      border-radius:24px; /* ↓ menor */
+      border-radius:24px;
       box-shadow:var(--shadow);
       border:1px solid var(--line);
       overflow:hidden;
     }
 
     .shellInner{
-      padding:18px 18px 14px; /* ↓ menor */
+      padding:18px 18px 14px;
     }
 
     .backRow{
@@ -86,15 +86,14 @@
 
     .panel{
       border:1px solid var(--line);
-      border-radius:20px; /* ↓ menor */
-      padding:18px;       /* ↓ menor */
+      border-radius:20px;
+      padding:18px;
       background:#fff;
     }
 
-    /* títulos (globais) - ↓ menores para corrigir proporção */
     .title{
       text-align:center;
-      font-size:44px; /* ↓ menor */
+      font-size:44px;
       line-height:1.08;
       letter-spacing:-.02em;
       margin:14px 0 8px;
@@ -105,7 +104,7 @@
       text-align:center;
       margin:0 0 14px;
       color:var(--muted);
-      font-size:18px; /* ↓ menor */
+      font-size:18px;
       font-weight:500;
     }
 
@@ -114,11 +113,10 @@
     .stack{
       display:flex;
       flex-direction:column;
-      gap:14px; /* ↓ menor */
+      gap:14px;
       align-items:center;
     }
 
-    /* ======== (AJUSTE) Seletor CPF/CNPJ agora compacto e vai ao lado do label ======== */
     .segInline{
       display:inline-flex;
       gap:6px;
@@ -146,7 +144,6 @@
       border:1px solid rgba(15,23,42,.06);
     }
 
-    /* input */
     .inputWrap{
       width:100%;
       max-width:620px;
@@ -154,7 +151,6 @@
       text-align:left;
     }
 
-    /* (AJUSTE) Label com seletor ao lado */
     .labelRow{
       display:flex;
       align-items:center;
@@ -163,15 +159,15 @@
       margin:8px 0 8px;
     }
     .labelRow .labelText{
-      font-size:16px; /* ↓ menor */
+      font-size:16px;
       font-weight:900;
       color:#111827;
     }
 
     .inputWrap input{
       width:100%;
-      padding:14px 16px; /* ↓ menor */
-      font-size:18px;    /* ↓ menor */
+      padding:14px 16px;
+      font-size:18px;
       border-radius:14px;
       border:1px solid var(--line);
       outline:none;
@@ -182,7 +178,6 @@
       box-shadow:0 0 0 4px rgba(200,16,46,.08);
     }
 
-    /* botões */
     .row{
       display:flex;
       justify-content:center;
@@ -194,13 +189,13 @@
     .btn{
       cursor:pointer;
       border-radius:999px;
-      padding:14px 20px; /* ↓ menor */
+      padding:14px 20px;
       font-weight:900;
       letter-spacing:.01em;
-      font-size:16px;    /* ↓ menor */
+      font-size:16px;
       border:1px solid transparent;
       transition:.18s ease;
-      min-width:200px;   /* ↓ menor */
+      min-width:200px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -208,7 +203,7 @@
       user-select:none;
       line-height:1;
     }
-    .btn.wide{min-width:480px; max-width:620px; width:100%;} /* ↓ menor */
+    .btn.wide{min-width:480px; max-width:620px; width:100%;}
     .btn.outline{
       background:var(--btnOutlineBg);
       color:var(--btnOutlineText);
@@ -265,10 +260,10 @@
 
     .foot{
       text-align:center;
-      padding:14px 18px 10px; /* ↓ menor */
+      padding:14px 18px 10px;
       border-top:1px solid var(--line);
       color:var(--muted);
-      font-size:16px; /* ↓ menor */
+      font-size:16px;
       line-height:1.5;
     }
     .foot a{
@@ -428,15 +423,13 @@
             <span>←</span><span>Voltar</span>
           </div>
 
-          <!-- VIEW: START (TELA INICIAL) -->
+          <!-- VIEW: START -->
           <div class="view active" id="vStart">
             <div class="panel">
-              <!-- (AJUSTE) mais profissional: título menor e objetivo -->
               <h1 class="title">Portal de negociação</h1>
               <p class="subtitle">Informe o documento para localizar o cadastro</p>
 
               <div class="inputWrap" style="margin-top:6px;">
-                <!-- (AJUSTE) CPF/CNPJ ao lado do “Digite:” e sem repetição -->
                 <div class="labelRow">
                   <div class="labelText">Digite:</div>
                   <div class="segInline" aria-label="Tipo de documento">
@@ -517,7 +510,23 @@
             </div>
           </div>
 
-          <!-- VIEW: NEXT -->
+          <!-- VIEW: ESCOLHER O QUE TRATAR (quando houver mais de uma ficha/credor) -->
+          <div class="view" id="vChooseCase">
+            <div class="panel">
+              <h1 class="title" style="font-size:46px;">O que deseja tratar?</h1>
+              <p class="subtitle">Selecione uma pendência para continuar.</p>
+
+              <div class="stack" style="margin-top:8px; width:100%;">
+                <div class="msgBox centerText" style="max-width:720px;">
+                  Identificamos mais de uma pendência vinculada ao seu cadastro. Escolha abaixo para prosseguir.
+                </div>
+
+                <div class="stack" id="caseOptions" style="width:100%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- VIEW: NEXT (quando houver só uma ficha ou após escolher uma) -->
           <div class="view" id="vNext">
             <div class="panel">
               <h1 class="title" style="font-size:46px;">Como deseja prosseguir?</h1>
@@ -526,25 +535,6 @@
               <div class="row" style="margin-top:8px;">
                 <button class="btn outline" id="btnAuto" type="button">Negociar pelo autoatendimento</button>
                 <button class="btn outline" id="btnHumano" type="button">Falar com um atendente</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- VIEW: HUMAN -->
-          <div class="view" id="vHuman">
-            <div class="panel">
-              <h1 class="title" style="font-size:42px;">Atendimento humano</h1>
-              <p class="subtitle">Para falar com um atendente, acesse o chat no link abaixo:</p>
-
-              <div class="stack" style="margin-top:6px;">
-                <div class="msgBox centerText" style="max-width:680px;">
-                  <a href="#" id="humanLink" style="color:var(--brand);font-weight:900;text-decoration:none;">
-                    Acessar chat humano
-                  </a>
-                  <div class="muted" style="margin-top:8px;font-size:14px;">
-                    (Este link será definido no back/integração.)
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -687,7 +677,11 @@
 
   <script>
     const LOGO_URL = "https://cdn.jsdelivr.net/gh/asilvino19-beep/Logo@main/Logo.png";
-    const CHAT_HUMANO_URL = "#";
+
+    // Links por projeto (definidos por credor)
+    const CHAT_LINK_SASCAR = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-sascar?theme=blue&pickup=y";
+    const CHAT_LINK_IRA    = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ira?theme=blue&pickup=y";
+    const CHAT_LINK_DEFAULT= "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y";
 
     const $ = (id) => document.getElementById(id);
 
@@ -698,6 +692,34 @@
     function formatMoneyBR(value){
       const n = Number(value||0);
       return n.toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
+    }
+
+    // Normaliza para comparar credor com segurança
+    function norm(str){
+      return (str||"")
+        .toString()
+        .toUpperCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+        .replace(/\s+/g," ")
+        .trim();
+    }
+
+    // Mapeamento credor -> chat
+    function getChatLinkByCredor(credor){
+      const c = norm(credor);
+      // Sascar fixa (pode vir "SASCAR", "SASCAR FIXA", etc.)
+      if (c.includes("SASCAR")) return CHAT_LINK_SASCAR;
+      // Ira
+      if (c.includes("IRA")) return CHAT_LINK_IRA;
+      // Demais: Amil
+      return CHAT_LINK_DEFAULT;
+    }
+
+    // Abre o chat (sem tela)
+    function openChatForCredor(credor){
+      const url = getChatLinkByCredor(credor);
+      // abre em nova aba/janela (melhor UX, não perde o portal)
+      window.open(url, "_blank", "noopener,noreferrer");
     }
 
     function setActiveView(viewId){
@@ -725,6 +747,19 @@
     let currentDoc = "";
     let foundRecord = null;
 
+    // Caso selecionado quando o cliente tiver mais de uma ficha/credor
+    let selectedCase = null;
+
+    /*
+      Modelo esperado do back:
+      foundRecord.cases = [
+        { credor: "SASCAR FIXA", debt:{...} },
+        { credor: "IRA", debt:{...} },
+        { credor: "AMIL", debt:{...} }
+      ]
+
+      Se vier só 1, cases tem 1 item.
+    */
     function mockFetchCRM(documentDigits){
       const demoCPF = {
         type:"CPF",
@@ -735,15 +770,45 @@
           "ALEXANDRE VALENTE SILVA",
           "ALEXANDRE VALENTE SANTOS"
         ],
-        debt:{
-          credor:"ATACADÃO",
-          contrato:"10024099300",
-          vencimento:"21/02/2024",
-          valorOriginal:1646.42,
-          valorAtual:1666.42,
-          oferta:{ parcelas:24, parcelaValor:10.06, descontoPct:85, total:241.44 },
-          parcelasDetalhe:[ {parcela:1, venc:"21/02/2024", valor:1666.42} ]
-        }
+        // Exemplo com múltiplas fichas
+        cases:[
+          {
+            credor:"SASCAR FIXA",
+            debt:{
+              credor:"SASCAR FIXA",
+              contrato:"10024099300",
+              vencimento:"21/02/2024",
+              valorOriginal:1646.42,
+              valorAtual:1666.42,
+              oferta:{ parcelas:24, parcelaValor:10.06, descontoPct:85, total:241.44 },
+              parcelasDetalhe:[ {parcela:1, venc:"21/02/2024", valor:1666.42} ]
+            }
+          },
+          {
+            credor:"IRA",
+            debt:{
+              credor:"IRA",
+              contrato:"555001122",
+              vencimento:"10/03/2024",
+              valorOriginal:820.00,
+              valorAtual:820.00,
+              oferta:{ parcelas:6, parcelaValor:136.67, descontoPct:0, total:820.00 },
+              parcelasDetalhe:[ {parcela:1, venc:"10/03/2024", valor:820.00} ]
+            }
+          },
+          {
+            credor:"AMIL",
+            debt:{
+              credor:"AMIL",
+              contrato:"900112233",
+              vencimento:"05/04/2024",
+              valorOriginal:420.50,
+              valorAtual:430.10,
+              oferta:{ parcelas:10, parcelaValor:43.01, descontoPct:0, total:430.10 },
+              parcelasDetalhe:[ {parcela:1, venc:"05/04/2024", valor:430.10} ]
+            }
+          }
+        ]
       };
 
       const demoCNPJ = {
@@ -755,15 +820,21 @@
           "N OLIVEIRA COMÉRCIO LTDA",
           "N OLIVEIRA SERVIÇOS"
         ],
-        debt:{
-          credor:"ATACADÃO",
-          contrato:"205108950",
-          vencimento:"18/09/2025",
-          valorOriginal:31836.00,
-          valorAtual:31836.00,
-          oferta:{ parcelas:12, parcelaValor:2653.00, descontoPct:0, total:31836.00 },
-          parcelasDetalhe:[ {parcela:1, venc:"18/09/2025", valor:31836.00} ]
-        }
+        // Exemplo com uma ficha só
+        cases:[
+          {
+            credor:"SASCAR FIXA",
+            debt:{
+              credor:"SASCAR FIXA",
+              contrato:"205108950",
+              vencimento:"18/09/2025",
+              valorOriginal:31836.00,
+              valorAtual:31836.00,
+              oferta:{ parcelas:12, parcelaValor:2653.00, descontoPct:0, total:31836.00 },
+              parcelasDetalhe:[ {parcela:1, venc:"18/09/2025", valor:31836.00} ]
+            }
+          }
+        ]
       };
 
       if (isCNPJ(documentDigits)) return demoCNPJ;
@@ -790,6 +861,7 @@
     function goStart(){
       currentDoc = "";
       foundRecord = null;
+      selectedCase = null;
       $("docInput").value = "";
       setDocType("CPF");
       setActiveView("vStart");
@@ -799,8 +871,13 @@
       if (currentView === "vLoading") return goStart();
       if (currentView === "vResult") return goStart();
       if (currentView === "vValidate") return setActiveView("vResult");
-      if (currentView === "vNext") return setActiveView("vValidate");
-      if (currentView === "vOffer" || currentView === "vHuman") return setActiveView("vNext");
+      if (currentView === "vChooseCase") return setActiveView("vValidate");
+      if (currentView === "vNext") {
+        // se veio de múltiplos casos, volta para seleção; se foi único, volta para validação
+        if (foundRecord?.cases?.length > 1) return setActiveView("vChooseCase");
+        return setActiveView("vValidate");
+      }
+      if (currentView === "vOffer") return setActiveView("vNext");
       if (currentView === "vWrongName" || currentView === "vNewConsulta" || currentView === "vError") return goStart();
       return goStart();
     });
@@ -817,8 +894,8 @@
 
     $("openDebtDetails").addEventListener("click", (e) => {
       e.preventDefault();
-      if (!foundRecord?.debt) return;
-      renderDebtDetails(foundRecord.debt);
+      if (!selectedCase?.debt) return;
+      renderDebtDetails(selectedCase.debt);
       openOverlay("debtOverlay");
     });
     $("closeDebt").addEventListener("click", () => closeOverlay("debtOverlay"));
@@ -913,7 +990,16 @@
 
         b.addEventListener("click", () => {
           if (opt === correct){
-            setActiveView("vNext");
+            // Após confirmar nome, se existir mais de uma ficha, escolher qual tratar.
+            const cases = (foundRecord?.cases || []).filter(x => x && x.credor);
+            if (cases.length > 1){
+              renderCaseOptions(cases);
+              setActiveView("vChooseCase");
+            } else {
+              // caso único
+              selectedCase = cases[0] || null;
+              setActiveView("vNext");
+            }
           } else {
             $("wrongNameText").textContent =
               "Para sua segurança, o nome selecionado não corresponde ao cadastro encontrado. Reinicie a consulta com o documento correto.";
@@ -927,18 +1013,57 @@
       wrap.appendChild(container);
     }
 
-    $("btnHumano").addEventListener("click", () => {
-      $("humanLink").href = CHAT_HUMANO_URL;
-      setActiveView("vHuman");
-    });
+    // Renderiza botões de “qual pendência tratar”
+    function renderCaseOptions(cases){
+      const wrap = $("caseOptions");
+      wrap.innerHTML = "";
 
+      const container = document.createElement("div");
+      container.style.width = "100%";
+      container.style.maxWidth = "640px";
+      container.style.display = "flex";
+      container.style.flexDirection = "column";
+      container.style.gap = "12px";
+
+      // remove duplicados por credor (se back vier repetido)
+      const seen = new Set();
+      const unique = [];
+      for (const c of cases){
+        const key = norm(c.credor);
+        if (!seen.has(key)){
+          seen.add(key);
+          unique.push(c);
+        }
+      }
+
+      unique.forEach(c => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "btn outline";
+        b.style.width = "100%";
+        b.style.minWidth = "0";
+        b.textContent = `Tratar pendência: ${c.credor}`;
+
+        b.addEventListener("click", () => {
+          selectedCase = c;
+          setActiveView("vNext");
+        });
+
+        container.appendChild(b);
+      });
+
+      wrap.appendChild(container);
+    }
+
+    // Autoatendimento: usa o caso selecionado
     $("btnAuto").addEventListener("click", () => {
-      if (!foundRecord?.debt){
+      if (!selectedCase?.debt){
         setActiveView("vError");
         return;
       }
-      const debt = foundRecord.debt;
-      $("offerCredor").textContent = debt.credor || "Credor";
+
+      const debt = selectedCase.debt;
+      $("offerCredor").textContent = debt.credor || (selectedCase.credor || "Credor");
       $("offerVenc").textContent = `Venceu em ${debt.vencimento || "--/--/----"}`;
       $("offerValor").textContent = formatMoneyBR(debt.valorAtual);
 
@@ -950,17 +1075,29 @@
       setActiveView("vOffer");
     });
 
+    // Atendimento humano: abre link direto conforme credor selecionado
+    $("btnHumano").addEventListener("click", () => {
+      if (!selectedCase?.credor){
+        setActiveView("vError");
+        return;
+      }
+      openChatForCredor(selectedCase.credor);
+    });
+
+    // “Quero essa oferta” / “Ver outras ofertas”
+    // Aqui você decide: jogar para chat humano do caso selecionado.
     $("btnQueroOferta").addEventListener("click", () => {
-      setActiveView("vHuman");
+      if (!selectedCase?.credor) return setActiveView("vError");
+      openChatForCredor(selectedCase.credor);
     });
     $("btnOutrasOfertas").addEventListener("click", () => {
-      setActiveView("vHuman");
+      if (!selectedCase?.credor) return setActiveView("vError");
+      openChatForCredor(selectedCase.credor);
     });
 
     (function initLogo(){
       const img = $("logoImg");
       img.src = LOGO_URL;
-      img.onload = () => {};
       img.onerror = () => { img.style.display = "none"; };
     })();
 
