@@ -15,7 +15,7 @@
       --shadow:0 18px 45px rgba(15,23,42,.08);
       --radius:22px;
 
-      --brand:#c8102e; /* vermelho */
+      --brand:#c8102e;
       --brand2:#e11d48;
       --btnText:#ffffff;
 
@@ -41,36 +41,34 @@
       align-items:center;
     }
 
-    /* topo com logo */
     .top{
       width:100%;
-      padding:24px 20px 10px;
+      padding:18px 20px 8px;
       display:flex;
       justify-content:center;
     }
     .logo{
-      width:92px;
+      width:78px;
       height:auto;
       filter: drop-shadow(0 14px 28px rgba(15,23,42,.08));
     }
 
-    /* container */
     .wrap{
       width:100%;
       max-width:var(--maxw);
-      padding:8px 16px 24px;
+      padding:8px 16px 20px;
     }
 
     .shell{
       background:var(--card);
-      border-radius:28px;
+      border-radius:24px;
       box-shadow:var(--shadow);
       border:1px solid var(--line);
       overflow:hidden;
     }
 
     .shellInner{
-      padding:22px 22px 18px;
+      padding:18px 18px 14px;
     }
 
     .backRow{
@@ -88,89 +86,89 @@
 
     .panel{
       border:1px solid var(--line);
-      border-radius:24px;
-      padding:22px;
+      border-radius:20px;
+      padding:18px;
       background:#fff;
     }
 
-    /* títulos */
     .title{
       text-align:center;
-      font-size:52px;
-      line-height:1.05;
+      font-size:44px;
+      line-height:1.08;
       letter-spacing:-.02em;
-      margin:18px 0 8px;
+      margin:14px 0 8px;
       font-weight:800;
       color:#0b1222;
     }
     .subtitle{
       text-align:center;
-      margin:0 0 18px;
+      margin:0 0 14px;
       color:var(--muted);
-      font-size:22px;
+      font-size:18px;
       font-weight:500;
     }
 
-    .centerText{
-      text-align:center;
-    }
+    .centerText{ text-align:center; }
 
-    /* layout de conteúdo */
     .stack{
       display:flex;
       flex-direction:column;
-      gap:16px;
+      gap:14px;
       align-items:center;
     }
 
-    /* seletor CPF/CNPJ (botão que diferencia) */
-    .seg{
-      display:flex;
-      gap:10px;
+    .segInline{
+      display:inline-flex;
+      gap:6px;
       background:#f7f8fc;
       border:1px solid var(--line);
-      padding:8px;
+      padding:5px;
       border-radius:999px;
-      width:fit-content;
-      margin:10px auto 0;
     }
-    .seg button{
+    .segInline button{
       border:0;
       background:transparent;
-      padding:10px 16px;
+      padding:7px 11px;
       border-radius:999px;
-      font-weight:800;
+      font-weight:900;
       color:var(--muted);
       cursor:pointer;
-      font-size:14px;
+      font-size:12px;
       letter-spacing:.02em;
+      line-height:1;
     }
-    .seg button.active{
+    .segInline button.active{
       background:#fff;
       color:#111827;
       box-shadow:0 10px 18px rgba(15,23,42,.06);
       border:1px solid rgba(15,23,42,.06);
     }
 
-    /* input */
     .inputWrap{
       width:100%;
-      max-width:640px;
+      max-width:620px;
       margin:0 auto;
       text-align:left;
     }
-    .inputWrap label{
-      display:block;
-      font-size:18px;
-      font-weight:800;
-      margin:6px 0 8px;
+
+    .labelRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin:8px 0 8px;
+    }
+    .labelRow .labelText{
+      font-size:16px;
+      font-weight:900;
       color:#111827;
     }
+
     .inputWrap input{
       width:100%;
-      padding:16px 18px;
-      font-size:20px;
-      border-radius:16px;
+      padding:14px 16px;
+      font-size:18px;
+      border-radius:14px;
       border:1px solid var(--line);
       outline:none;
       box-shadow: inset 0 1px 0 rgba(15,23,42,.02);
@@ -180,11 +178,10 @@
       box-shadow:0 0 0 4px rgba(200,16,46,.08);
     }
 
-    /* botões */
     .row{
       display:flex;
       justify-content:center;
-      gap:14px;
+      gap:12px;
       flex-wrap:wrap;
       width:100%;
     }
@@ -192,13 +189,13 @@
     .btn{
       cursor:pointer;
       border-radius:999px;
-      padding:16px 22px;
+      padding:14px 20px;
       font-weight:900;
       letter-spacing:.01em;
-      font-size:18px;
+      font-size:16px;
       border:1px solid transparent;
       transition:.18s ease;
-      min-width:220px;
+      min-width:200px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -206,7 +203,7 @@
       user-select:none;
       line-height:1;
     }
-    .btn.wide{min-width:520px; max-width:640px; width:100%;}
+    .btn.wide{min-width:480px; max-width:620px; width:100%;}
     .btn.outline{
       background:var(--btnOutlineBg);
       color:var(--btnOutlineText);
@@ -224,7 +221,6 @@
     .btn.primary:hover{transform:translateY(-1px)}
     .btn.primary:active{transform:translateY(0px); opacity:.98}
 
-    /* Caixa de texto / mensagem de resultado */
     .msgBox{
       width:100%;
       max-width:760px;
@@ -238,7 +234,6 @@
     }
     .msgBox b{font-weight:900}
 
-    /* Loading (sem borda extra) */
     .loadingWrap{
       display:flex;
       flex-direction:column;
@@ -263,13 +258,12 @@
     }
     .muted{color:var(--muted)}
 
-    /* Rodapé */
     .foot{
       text-align:center;
-      padding:16px 20px 12px;
+      padding:14px 18px 10px;
       border-top:1px solid var(--line);
       color:var(--muted);
-      font-size:18px;
+      font-size:16px;
       line-height:1.5;
     }
     .foot a{
@@ -280,11 +274,9 @@
     }
     .foot a:hover{text-decoration:underline}
 
-    /* esconder views */
     .view{display:none}
     .view.active{display:block}
 
-    /* Modal (Termos/Política e Detalhes da dívida) */
     .overlay{
       position:fixed;
       inset:0;
@@ -332,14 +324,13 @@
     .x:hover{background:#f3f5f9}
     .modalBody{
       padding:16px;
-      overflow:auto;  /* scroll interno */
+      overflow:auto;
       color:#0f172a;
       line-height:1.65;
     }
     .modalBody h4{margin:14px 0 8px; font-size:16px}
     .modalBody ul{margin:8px 0 10px 18px}
 
-    /* Tela proposta (inspirada) */
     .offerWrap{
       width:100%;
       max-width:520px;
@@ -406,15 +397,15 @@
     }
     .btn.small{min-width:0; width:100%; padding:14px 18px; font-size:16px}
 
-    /* Responsivo */
     @media (max-width:640px){
-      .title{font-size:38px}
-      .subtitle{font-size:18px}
+      .title{font-size:34px}
+      .subtitle{font-size:16px}
       .btn{min-width:160px}
       .btn.wide{min-width:0}
-      .shellInner{padding:18px}
-      .panel{padding:18px}
-      .foot{font-size:16px}
+      .shellInner{padding:16px}
+      .panel{padding:16px}
+      .foot{font-size:15px}
+      .labelRow{flex-direction:column; align-items:flex-start; gap:8px;}
     }
   </style>
 </head>
@@ -432,22 +423,24 @@
             <span>←</span><span>Voltar</span>
           </div>
 
-          <!-- VIEW: START (TELA INICIAL) -->
+          <!-- VIEW: START -->
           <div class="view active" id="vStart">
             <div class="panel">
-              <h1 class="title">Acesse ao portal de negociação</h1>
-              <p class="subtitle">Preencha o campo abaixo</p>
+              <h1 class="title">Portal de negociação</h1>
+              <p class="subtitle">Informe o documento para localizar o cadastro</p>
 
-              <!-- BOTÃO/CONTROLE CPF x CNPJ -->
-              <div class="seg" aria-label="Tipo de documento">
-                <button id="segCPF" class="active" type="button">CPF</button>
-                <button id="segCNPJ" type="button">CNPJ</button>
-              </div>
+              <div class="inputWrap" style="margin-top:6px;">
+                <div class="labelRow">
+                  <div class="labelText">Digite:</div>
+                  <div class="segInline" aria-label="Tipo de documento">
+                    <button id="segCPF" class="active" type="button">CPF</button>
+                    <button id="segCNPJ" type="button">CNPJ</button>
+                  </div>
+                </div>
 
-              <div class="inputWrap" style="margin-top:14px;">
-                <label for="docInput">Digite seu CPF ou CNPJ</label>
                 <input id="docInput" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00" />
-                <div class="row" style="margin-top:16px;">
+
+                <div class="row" style="margin-top:14px;">
                   <button class="btn primary wide" id="btnConsultar" type="button">Confirmar</button>
                 </div>
               </div>
@@ -457,29 +450,26 @@
           <!-- VIEW: LOADING -->
           <div class="view" id="vLoading">
             <div class="panel">
-              <!-- ATENÇÃO: aqui NÃO aparece "Resultado da consulta" -->
               <p class="subtitle" style="margin-top:10px;">
                 Estamos localizando as informações vinculadas ao documento informado.
               </p>
 
-              <!-- sem borda ao redor (somente conteúdo) -->
               <div class="loadingWrap">
                 <div class="pill"><span class="dot"></span>Carregando...</div>
-                <div class="muted" style="font-size:22px;font-weight:600;">Aguarde um momento.</div>
+                <div class="muted" style="font-size:20px;font-weight:600;">Aguarde um momento.</div>
               </div>
             </div>
           </div>
 
-          <!-- VIEW: RESULT (CONFIRMAÇÃO CPF/CNPJ) -->
+          <!-- VIEW: RESULT -->
           <div class="view" id="vResult">
             <div class="panel">
-              <h1 class="title" style="font-size:48px;">Resultado da consulta</h1>
+              <h1 class="title" style="font-size:44px;">Resultado da consulta</h1>
 
               <div class="stack" style="margin-top:10px;">
                 <div class="msgBox centerText" id="resultMsg"></div>
 
                 <div class="row">
-                  <!-- mesma cor / mesmo estilo -->
                   <button class="btn outline" id="btnSim" type="button">Sim</button>
                   <button class="btn outline" id="btnNao" type="button">Não</button>
                 </div>
@@ -487,11 +477,10 @@
             </div>
           </div>
 
-          <!-- VIEW: VALIDATION (NOME COMPLETO / RAZÃO SOCIAL) -->
+          <!-- VIEW: VALIDATION -->
           <div class="view" id="vValidate">
             <div class="panel">
-              <!-- removeu "Validação de segurança" e removeu "Confirmação" -->
-              <h1 class="title" style="font-size:44px;">&nbsp;</h1>
+              <h1 class="title" style="font-size:42px;">&nbsp;</h1>
               <p class="subtitle" style="margin-top:-18px;">
                 Para darmos sequência, confirme o nome completo
               </p>
@@ -506,10 +495,10 @@
             </div>
           </div>
 
-          <!-- VIEW: WRONG NAME (EXPLICA + NOVA CONSULTA) -->
+          <!-- VIEW: WRONG NAME -->
           <div class="view" id="vWrongName">
             <div class="panel">
-              <h1 class="title" style="font-size:46px;">Não foi possível validar</h1>
+              <h1 class="title" style="font-size:42px;">Não foi possível validar</h1>
               <p class="subtitle" id="wrongNameText">
                 Para sua segurança, o nome selecionado não corresponde ao cadastro encontrado.
                 Reinicie a consulta com o documento correto.
@@ -521,43 +510,39 @@
             </div>
           </div>
 
-          <!-- VIEW: NEXT (COMO PROSSEGUIR) -->
+          <!-- VIEW: ESCOLHER O QUE TRATAR (quando houver mais de uma ficha/credor) -->
+          <div class="view" id="vChooseCase">
+            <div class="panel">
+              <h1 class="title" style="font-size:46px;">O que deseja tratar?</h1>
+              <p class="subtitle">Selecione uma pendência para continuar.</p>
+
+              <div class="stack" style="margin-top:8px; width:100%;">
+                <div class="msgBox centerText" style="max-width:720px;">
+                  Identificamos mais de uma pendência vinculada ao seu cadastro. Escolha abaixo para prosseguir.
+                </div>
+
+                <div class="stack" id="caseOptions" style="width:100%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- VIEW: NEXT (quando houver só uma ficha ou após escolher uma) -->
           <div class="view" id="vNext">
             <div class="panel">
-              <h1 class="title" style="font-size:52px;">Como deseja prosseguir?</h1>
+              <h1 class="title" style="font-size:46px;">Como deseja prosseguir?</h1>
               <p class="subtitle">Selecione uma opção para continuar o atendimento.</p>
 
               <div class="row" style="margin-top:8px;">
-                <!-- botões harmonizados (mesmo estilo) -->
                 <button class="btn outline" id="btnAuto" type="button">Negociar pelo autoatendimento</button>
                 <button class="btn outline" id="btnHumano" type="button">Falar com um atendente</button>
               </div>
             </div>
           </div>
 
-          <!-- VIEW: HUMAN (LINK CHAT HUMANO) -->
-          <div class="view" id="vHuman">
-            <div class="panel">
-              <h1 class="title" style="font-size:46px;">Atendimento humano</h1>
-              <p class="subtitle">Para falar com um atendente, acesse o chat no link abaixo:</p>
-
-              <div class="stack" style="margin-top:6px;">
-                <div class="msgBox centerText" style="max-width:680px;">
-                  <a href="#" id="humanLink" style="color:var(--brand);font-weight:900;text-decoration:none;">
-                    Acessar chat humano
-                  </a>
-                  <div class="muted" style="margin-top:8px;font-size:14px;">
-                    (Este link será definido no back/integração.)
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- VIEW: OFFER (PROPOSTA) -->
+          <!-- VIEW: OFFER -->
           <div class="view" id="vOffer">
             <div class="panel">
-              <h1 class="title" style="font-size:46px;">Minhas dívidas</h1>
+              <h1 class="title" style="font-size:42px;">Minhas dívidas</h1>
               <p class="subtitle" style="margin-bottom:10px;">Negociações disponíveis:</p>
 
               <div class="offerWrap">
@@ -595,11 +580,10 @@
             </div>
           </div>
 
-          <!-- VIEW: NEW CONSULTA (somente quando NÃO é o cliente / orientação) -->
+          <!-- VIEW: NEW CONSULTA -->
           <div class="view" id="vNewConsulta">
             <div class="panel">
-              <!-- retirar “Orientação” e centralizar -->
-              <h1 class="title" style="font-size:52px;">Nova consulta</h1>
+              <h1 class="title" style="font-size:46px;">Nova consulta</h1>
               <p class="subtitle">Para sua segurança, precisamos reiniciar a consulta com o documento correto.</p>
 
               <div class="row" style="margin-top:10px;">
@@ -608,10 +592,10 @@
             </div>
           </div>
 
-          <!-- VIEW: ERROR (instabilidade) -->
+          <!-- VIEW: ERROR -->
           <div class="view" id="vError">
             <div class="panel">
-              <h1 class="title" style="font-size:46px;">Não foi possível concluir</h1>
+              <h1 class="title" style="font-size:42px;">Não foi possível concluir</h1>
               <p class="subtitle">
                 Não foi possível se conectar. Verifique sua conexão e tente novamente.
               </p>
@@ -624,7 +608,6 @@
 
         </div>
 
-        <!-- FOOTER -->
         <div class="foot">
           Conosco, seus dados são tratados de forma segura e sigilosa.
           Caso tenha dúvidas ou queira saber mais, acesse nossos
@@ -688,24 +671,18 @@
         <h3>Detalhes da dívida</h3>
         <button class="x" id="closeDebt" aria-label="Fechar">×</button>
       </div>
-      <div class="modalBody" id="debtBody">
-        <!-- preenchido via JS -->
-      </div>
+      <div class="modalBody" id="debtBody"></div>
     </div>
   </div>
 
   <script>
-    /* =========================
-       CONFIG
-    ========================== */
     const LOGO_URL = "https://cdn.jsdelivr.net/gh/asilvino19-beep/Logo@main/Logo.png";
 
-    // Links placeholders (definidos no back depois)
-    const CHAT_HUMANO_URL = "#";
+    // Links por projeto (definidos por credor)
+    const CHAT_LINK_SASCAR = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-sascar?theme=blue&pickup=y";
+    const CHAT_LINK_IRA    = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ira?theme=blue&pickup=y";
+    const CHAT_LINK_DEFAULT= "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y";
 
-    /* =========================
-       HELPERS
-    ========================== */
     const $ = (id) => document.getElementById(id);
 
     function onlyDigits(str){ return (str||"").replace(/\D/g,""); }
@@ -717,12 +694,39 @@
       return n.toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
     }
 
+    // Normaliza para comparar credor com segurança
+    function norm(str){
+      return (str||"")
+        .toString()
+        .toUpperCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+        .replace(/\s+/g," ")
+        .trim();
+    }
+
+    // Mapeamento credor -> chat
+    function getChatLinkByCredor(credor){
+      const c = norm(credor);
+      // Sascar fixa (pode vir "SASCAR", "SASCAR FIXA", etc.)
+      if (c.includes("SASCAR")) return CHAT_LINK_SASCAR;
+      // Ira
+      if (c.includes("IRA")) return CHAT_LINK_IRA;
+      // Demais: Amil
+      return CHAT_LINK_DEFAULT;
+    }
+
+    // Abre o chat (sem tela)
+    function openChatForCredor(credor){
+      const url = getChatLinkByCredor(credor);
+      // abre em nova aba/janela (melhor UX, não perde o portal)
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+
     function setActiveView(viewId){
       const views = document.querySelectorAll(".view");
       views.forEach(v => v.classList.remove("active"));
       $(viewId).classList.add("active");
 
-      // Botão voltar só aparece fora da tela inicial
       $("btnVoltar").style.visibility = (viewId === "vStart") ? "hidden" : "visible";
       currentView = viewId;
     }
@@ -738,45 +742,73 @@
       el.setAttribute("aria-hidden", "true");
     }
 
-    /* =========================
-       STATE (simula back)
-    ========================== */
     let currentView = "vStart";
-    let docType = "CPF"; // CPF | CNPJ (controle)
+    let docType = "CPF";
     let currentDoc = "";
-    let foundRecord = null; // resultado do "CRM"
+    let foundRecord = null;
 
-    // SIMULAÇÃO: retorno do CRM
-    // (trocar pelo fetch real depois)
+    // Caso selecionado quando o cliente tiver mais de uma ficha/credor
+    let selectedCase = null;
+
+    /*
+      Modelo esperado do back:
+      foundRecord.cases = [
+        { credor: "SASCAR FIXA", debt:{...} },
+        { credor: "IRA", debt:{...} },
+        { credor: "AMIL", debt:{...} }
+      ]
+
+      Se vier só 1, cases tem 1 item.
+    */
     function mockFetchCRM(documentDigits){
-      // exemplos:
-      // CPF 00000000000 -> pessoa
-      // CNPJ 00000000000000 -> empresa
       const demoCPF = {
         type:"CPF",
-        displayName:"ALEXANDRE VALENTE",          // resumido (primeiro + segundo nome)
-        fullName:"ALEXANDRE VALENTE LEAL",        // correto
+        displayName:"ALEXANDRE VALENTE",
+        fullName:"ALEXANDRE VALENTE LEAL",
         options:[
           "ALEXANDRE VALENTE LEAL",
           "ALEXANDRE VALENTE SILVA",
           "ALEXANDRE VALENTE SANTOS"
         ],
-        debt:{
-          credor:"ATACADÃO",
-          contrato:"10024099300",
-          vencimento:"21/02/2024",
-          valorOriginal:1646.42,
-          valorAtual:1666.42,
-          oferta:{
-            parcelas:24,
-            parcelaValor:10.06,
-            descontoPct:85,
-            total:241.44
+        // Exemplo com múltiplas fichas
+        cases:[
+          {
+            credor:"SASCAR FIXA",
+            debt:{
+              credor:"SASCAR FIXA",
+              contrato:"10024099300",
+              vencimento:"21/02/2024",
+              valorOriginal:1646.42,
+              valorAtual:1666.42,
+              oferta:{ parcelas:24, parcelaValor:10.06, descontoPct:85, total:241.44 },
+              parcelasDetalhe:[ {parcela:1, venc:"21/02/2024", valor:1666.42} ]
+            }
           },
-          parcelasDetalhe:[
-            {parcela:1, venc:"21/02/2024", valor:1666.42}
-          ]
-        }
+          {
+            credor:"IRA",
+            debt:{
+              credor:"IRA",
+              contrato:"555001122",
+              vencimento:"10/03/2024",
+              valorOriginal:820.00,
+              valorAtual:820.00,
+              oferta:{ parcelas:6, parcelaValor:136.67, descontoPct:0, total:820.00 },
+              parcelasDetalhe:[ {parcela:1, venc:"10/03/2024", valor:820.00} ]
+            }
+          },
+          {
+            credor:"AMIL",
+            debt:{
+              credor:"AMIL",
+              contrato:"900112233",
+              vencimento:"05/04/2024",
+              valorOriginal:420.50,
+              valorAtual:430.10,
+              oferta:{ parcelas:10, parcelaValor:43.01, descontoPct:0, total:430.10 },
+              parcelasDetalhe:[ {parcela:1, venc:"05/04/2024", valor:430.10} ]
+            }
+          }
+        ]
       };
 
       const demoCNPJ = {
@@ -788,74 +820,64 @@
           "N OLIVEIRA COMÉRCIO LTDA",
           "N OLIVEIRA SERVIÇOS"
         ],
-        debt:{
-          credor:"ATACADÃO",
-          contrato:"205108950",
-          vencimento:"18/09/2025",
-          valorOriginal:31836.00,
-          valorAtual:31836.00,
-          oferta:{
-            parcelas:12,
-            parcelaValor:2653.00,
-            descontoPct:0,
-            total:31836.00
-          },
-          parcelasDetalhe:[
-            {parcela:1, venc:"18/09/2025", valor:31836.00}
-          ]
-        }
+        // Exemplo com uma ficha só
+        cases:[
+          {
+            credor:"SASCAR FIXA",
+            debt:{
+              credor:"SASCAR FIXA",
+              contrato:"205108950",
+              vencimento:"18/09/2025",
+              valorOriginal:31836.00,
+              valorAtual:31836.00,
+              oferta:{ parcelas:12, parcelaValor:2653.00, descontoPct:0, total:31836.00 },
+              parcelasDetalhe:[ {parcela:1, venc:"18/09/2025", valor:31836.00} ]
+            }
+          }
+        ]
       };
 
-      // regra simples de demo:
       if (isCNPJ(documentDigits)) return demoCNPJ;
       if (isCPF(documentDigits)) return demoCPF;
-
-      return null; // não localizado
+      return null;
     }
 
-    /* =========================
-       SEGMENT CPF/CNPJ (botão)
-    ========================== */
     function setDocType(type){
       docType = type;
       $("segCPF").classList.toggle("active", type==="CPF");
       $("segCNPJ").classList.toggle("active", type==="CNPJ");
-
-      // placeholder conforme tipo
       $("docInput").placeholder = (type==="CPF") ? "000.000.000-00" : "00.000.000/0000-00";
     }
 
     $("segCPF").addEventListener("click", () => setDocType("CPF"));
     $("segCNPJ").addEventListener("click", () => setDocType("CNPJ"));
 
-    // se colar / digitar e ficar claro pelo tamanho, ajusta o seletor automaticamente
     $("docInput").addEventListener("input", () => {
       const d = onlyDigits($("docInput").value);
       if (d.length >= 14) setDocType("CNPJ");
       else if (d.length <= 11) setDocType("CPF");
     });
 
-    /* =========================
-       NAVEGAÇÃO (Voltar / Nova consulta)
-    ========================== */
     function goStart(){
-      // reset
       currentDoc = "";
       foundRecord = null;
+      selectedCase = null;
       $("docInput").value = "";
       setDocType("CPF");
       setActiveView("vStart");
     }
 
     $("btnVoltar").addEventListener("click", () => {
-      // Regra segura:
-      // - se estiver em telas de fluxo, volta uma etapa; se ficar confuso, volta ao início.
-      // Para evitar desvios, aqui fazemos retorno simples:
       if (currentView === "vLoading") return goStart();
       if (currentView === "vResult") return goStart();
       if (currentView === "vValidate") return setActiveView("vResult");
-      if (currentView === "vNext") return setActiveView("vValidate");
-      if (currentView === "vOffer" || currentView === "vHuman") return setActiveView("vNext");
+      if (currentView === "vChooseCase") return setActiveView("vValidate");
+      if (currentView === "vNext") {
+        // se veio de múltiplos casos, volta para seleção; se foi único, volta para validação
+        if (foundRecord?.cases?.length > 1) return setActiveView("vChooseCase");
+        return setActiveView("vValidate");
+      }
+      if (currentView === "vOffer") return setActiveView("vNext");
       if (currentView === "vWrongName" || currentView === "vNewConsulta" || currentView === "vError") return goStart();
       return goStart();
     });
@@ -864,22 +886,16 @@
     $("btnNovaConsulta2").addEventListener("click", goStart);
     $("btnNovaConsulta3").addEventListener("click", goStart);
 
-    /* =========================
-       Termos/Política modal
-    ========================== */
     $("openTerms").addEventListener("click", (e) => { e.preventDefault(); openOverlay("termsOverlay"); });
     $("closeTerms").addEventListener("click", () => closeOverlay("termsOverlay"));
     $("termsOverlay").addEventListener("click", (e) => {
       if (e.target.id === "termsOverlay") closeOverlay("termsOverlay");
     });
 
-    /* =========================
-       Detalhes da dívida modal
-    ========================== */
     $("openDebtDetails").addEventListener("click", (e) => {
       e.preventDefault();
-      if (!foundRecord?.debt) return;
-      renderDebtDetails(foundRecord.debt);
+      if (!selectedCase?.debt) return;
+      renderDebtDetails(selectedCase.debt);
       openOverlay("debtOverlay");
     });
     $("closeDebt").addEventListener("click", () => closeOverlay("debtOverlay"));
@@ -911,35 +927,25 @@
       `;
     }
 
-    /* =========================
-       CONSULTA
-    ========================== */
     $("btnConsultar").addEventListener("click", () => {
       const digits = onlyDigits($("docInput").value);
       currentDoc = digits;
 
-      // validação básica
       if (!isCPF(digits) && !isCNPJ(digits)){
-        // mantém UX: sem alert agressivo, usa tela de erro suave
         setActiveView("vError");
         return;
       }
 
-      // vai para loading
       setActiveView("vLoading");
 
-      // simula tempo de back
       setTimeout(() => {
         foundRecord = mockFetchCRM(digits);
 
         if (!foundRecord){
-          // não localizou: pode ser instabilidade ou não encontrado.
-          // aqui usamos a tela de "Nova consulta" (orientação)
           setActiveView("vNewConsulta");
           return;
         }
 
-        // monta mensagem de confirmação com base em CPF/CNPJ
         const name = foundRecord.displayName;
         if (foundRecord.type === "CPF"){
           $("resultMsg").innerHTML =
@@ -953,17 +959,11 @@
       }, 650);
     });
 
-    /* =========================
-       RESULT: SIM/NÃO
-    ========================== */
     $("btnNao").addEventListener("click", () => {
-      // vai para orientação (nova consulta) SEM "Resultado da consulta" (já está no vNewConsulta)
       setActiveView("vNewConsulta");
     });
 
     $("btnSim").addEventListener("click", () => {
-      // IMPORTANTÍSSIMO: NÃO volta para loading.
-      // Vai direto para validação do nome completo/razão social.
       if (!foundRecord) return setActiveView("vError");
       renderNameOptions(foundRecord.options || [], foundRecord.fullName);
       setActiveView("vValidate");
@@ -973,7 +973,6 @@
       const wrap = $("nameOptions");
       wrap.innerHTML = "";
 
-      // mantém proporção (não estoura tela)
       const container = document.createElement("div");
       container.style.width = "100%";
       container.style.maxWidth = "640px";
@@ -981,8 +980,6 @@
       container.style.flexDirection = "column";
       container.style.gap = "12px";
 
-      // caso especial: se “nome completo” tiver 1 sobrenome só / poucos termos,
-      // o back pode enviar options adequadas (aqui apenas respeitamos o array).
       options.forEach(opt => {
         const b = document.createElement("button");
         b.type = "button";
@@ -993,7 +990,16 @@
 
         b.addEventListener("click", () => {
           if (opt === correct){
-            setActiveView("vNext");
+            // Após confirmar nome, se existir mais de uma ficha, escolher qual tratar.
+            const cases = (foundRecord?.cases || []).filter(x => x && x.credor);
+            if (cases.length > 1){
+              renderCaseOptions(cases);
+              setActiveView("vChooseCase");
+            } else {
+              // caso único
+              selectedCase = cases[0] || null;
+              setActiveView("vNext");
+            }
           } else {
             $("wrongNameText").textContent =
               "Para sua segurança, o nome selecionado não corresponde ao cadastro encontrado. Reinicie a consulta com o documento correto.";
@@ -1007,23 +1013,57 @@
       wrap.appendChild(container);
     }
 
-    /* =========================
-       NEXT: AUTO / HUMANO
-    ========================== */
-    $("btnHumano").addEventListener("click", () => {
-      $("humanLink").href = CHAT_HUMANO_URL;
-      setActiveView("vHuman");
-    });
+    // Renderiza botões de “qual pendência tratar”
+    function renderCaseOptions(cases){
+      const wrap = $("caseOptions");
+      wrap.innerHTML = "";
 
+      const container = document.createElement("div");
+      container.style.width = "100%";
+      container.style.maxWidth = "640px";
+      container.style.display = "flex";
+      container.style.flexDirection = "column";
+      container.style.gap = "12px";
+
+      // remove duplicados por credor (se back vier repetido)
+      const seen = new Set();
+      const unique = [];
+      for (const c of cases){
+        const key = norm(c.credor);
+        if (!seen.has(key)){
+          seen.add(key);
+          unique.push(c);
+        }
+      }
+
+      unique.forEach(c => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "btn outline";
+        b.style.width = "100%";
+        b.style.minWidth = "0";
+        b.textContent = `Tratar pendência: ${c.credor}`;
+
+        b.addEventListener("click", () => {
+          selectedCase = c;
+          setActiveView("vNext");
+        });
+
+        container.appendChild(b);
+      });
+
+      wrap.appendChild(container);
+    }
+
+    // Autoatendimento: usa o caso selecionado
     $("btnAuto").addEventListener("click", () => {
-      // se back estiver indisponível, exibe erro (mantém para instabilidade)
-      if (!foundRecord?.debt){
+      if (!selectedCase?.debt){
         setActiveView("vError");
         return;
       }
-      // carrega card proposta
-      const debt = foundRecord.debt;
-      $("offerCredor").textContent = debt.credor || "Credor";
+
+      const debt = selectedCase.debt;
+      $("offerCredor").textContent = debt.credor || (selectedCase.credor || "Credor");
       $("offerVenc").textContent = `Venceu em ${debt.vencimento || "--/--/----"}`;
       $("offerValor").textContent = formatMoneyBR(debt.valorAtual);
 
@@ -1035,31 +1075,32 @@
       setActiveView("vOffer");
     });
 
-    // Ações do card (placeholders)
-    $("btnQueroOferta").addEventListener("click", () => {
-      // aqui entra o fluxo real (back) – mantém UX e não usa alert.
-      // por enquanto, simulamos sucesso indo para humano (pode ser outra tela depois).
-      setActiveView("vHuman");
-    });
-    $("btnOutrasOfertas").addEventListener("click", () => {
-      // placeholder
-      setActiveView("vHuman");
+    // Atendimento humano: abre link direto conforme credor selecionado
+    $("btnHumano").addEventListener("click", () => {
+      if (!selectedCase?.credor){
+        setActiveView("vError");
+        return;
+      }
+      openChatForCredor(selectedCase.credor);
     });
 
-    /* =========================
-       Logo
-    ========================== */
+    // “Quero essa oferta” / “Ver outras ofertas”
+    // Aqui você decide: jogar para chat humano do caso selecionado.
+    $("btnQueroOferta").addEventListener("click", () => {
+      if (!selectedCase?.credor) return setActiveView("vError");
+      openChatForCredor(selectedCase.credor);
+    });
+    $("btnOutrasOfertas").addEventListener("click", () => {
+      if (!selectedCase?.credor) return setActiveView("vError");
+      openChatForCredor(selectedCase.credor);
+    });
+
     (function initLogo(){
       const img = $("logoImg");
       img.src = LOGO_URL;
-      img.onload = () => {};
-      img.onerror = () => {
-        // fallback simples sem quebrar layout
-        img.style.display = "none";
-      };
+      img.onerror = () => { img.style.display = "none"; };
     })();
 
-    /* init */
     setDocType("CPF");
   </script>
 </body>
