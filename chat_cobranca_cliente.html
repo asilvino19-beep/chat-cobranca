@@ -1,980 +1,1066 @@
 <!doctype html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>QuatroC • Portal de Negociação</title>
+  <title>Portal de Negociação - QuatroC</title>
 
   <style>
     :root{
-      --red:#c8102e;
-      --red2:#e3122f;
-      --ink:#111827;
-      --muted:#6b7280;
-      --line:#e5e7eb;
-      --bg:#f6f7fb;
+      --bg:#f4f6fb;
       --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --line:#e6eaf2;
+      --shadow:0 18px 45px rgba(15,23,42,.08);
       --radius:22px;
-      --shadow: 0 18px 50px rgba(17,24,39,.10);
-      --shadow2: 0 10px 30px rgba(17,24,39,.08);
-      --maxw: 860px; /* mantém proporcional e evita “telas gigantes” */
+
+      --brand:#c8102e; /* vermelho */
+      --brand2:#e11d48;
+      --btnText:#ffffff;
+
+      --btnOutlineBg:#ffffff;
+      --btnOutlineText:var(--brand);
+      --btnOutlineBorder:rgba(200,16,46,.28);
+
+      --maxw:980px;
     }
 
     *{box-sizing:border-box}
-    html,body{height:100%}
     body{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      color:var(--ink);
-      background: radial-gradient(1200px 500px at 50% -150px, rgba(200,16,46,.10), transparent 60%),
-                  radial-gradient(900px 500px at 20% 110%, rgba(200,16,46,.06), transparent 60%),
-                  var(--bg);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9ff 0%, var(--bg) 100%);
+      color:var(--text);
+    }
+
+    .page{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+    }
+
+    /* topo com logo */
+    .top{
+      width:100%;
+      padding:24px 20px 10px;
+      display:flex;
+      justify-content:center;
+    }
+    .logo{
+      width:92px;
+      height:auto;
+      filter: drop-shadow(0 14px 28px rgba(15,23,42,.08));
+    }
+
+    /* container */
+    .wrap{
+      width:100%;
+      max-width:var(--maxw);
+      padding:8px 16px 24px;
     }
 
     .shell{
-      min-height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px 16px;
-    }
-
-    .frame{
-      width:min(var(--maxw), 100%);
-      background:rgba(255,255,255,.72);
-      border:1px solid rgba(229,231,235,.7);
+      background:var(--card);
       border-radius:28px;
-      box-shadow: var(--shadow);
+      box-shadow:var(--shadow);
+      border:1px solid var(--line);
       overflow:hidden;
-      backdrop-filter: blur(8px);
     }
 
-    .topbar{
+    .shellInner{
+      padding:22px 22px 18px;
+    }
+
+    .backRow{
       display:flex;
       align-items:center;
-      justify-content:center;
-      padding:22px 18px 10px;
-      background: linear-gradient(to bottom, rgba(255,255,255,.85), rgba(255,255,255,.55));
-      border-bottom:1px solid rgba(229,231,235,.6);
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:12px;
-    }
-    .brand img{
-      height:64px;
-      width:auto;
-      display:block;
-      filter: drop-shadow(0 10px 18px rgba(17,24,39,.08));
-    }
-    .brand .fallback{
-      display:none;
-      font-weight:800;
-      letter-spacing:.2px;
-      color:var(--ink);
-    }
-
-    .content{
-      padding:20px 22px 6px;
-    }
-
-    .navrow{
-      display:flex;
-      align-items:center;
-      justify-content:flex-start;
       gap:10px;
-      margin:4px 2px 14px;
-    }
-    .backlink{
-      border:none;
-      background:transparent;
       color:var(--muted);
-      font-weight:600;
+      font-weight:500;
       cursor:pointer;
-      padding:8px 10px;
-      border-radius:10px;
+      user-select:none;
+      width:max-content;
+      margin-bottom:10px;
     }
-    .backlink:hover{background:rgba(17,24,39,.04); color:var(--ink);}
+    .backRow:hover{opacity:.85}
 
     .panel{
-      background:var(--card);
-      border:1px solid rgba(229,231,235,.8);
-      border-radius:var(--radius);
-      box-shadow: var(--shadow2);
-      padding:26px 22px;
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:22px;
+      background:#fff;
     }
 
+    /* títulos */
     .title{
-      font-size: clamp(28px, 3.5vw, 44px);
-      line-height:1.05;
-      margin:0 0 10px;
-      letter-spacing:-.7px;
       text-align:center;
+      font-size:52px;
+      line-height:1.05;
+      letter-spacing:-.02em;
+      margin:18px 0 8px;
+      font-weight:800;
+      color:#0b1222;
     }
     .subtitle{
+      text-align:center;
       margin:0 0 18px;
       color:var(--muted);
-      text-align:center;
-      font-size: clamp(14px, 1.6vw, 18px);
+      font-size:22px;
+      font-weight:500;
     }
 
-    .divider{
-      height:1px;
-      background:rgba(229,231,235,.85);
-      margin:18px 0;
-    }
-
-    .center{
+    .centerText{
       text-align:center;
     }
 
+    /* layout de conteúdo */
+    .stack{
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+      align-items:center;
+    }
+
+    /* seletor CPF/CNPJ (botão que diferencia) */
+    .seg{
+      display:flex;
+      gap:10px;
+      background:#f7f8fc;
+      border:1px solid var(--line);
+      padding:8px;
+      border-radius:999px;
+      width:fit-content;
+      margin:10px auto 0;
+    }
+    .seg button{
+      border:0;
+      background:transparent;
+      padding:10px 16px;
+      border-radius:999px;
+      font-weight:800;
+      color:var(--muted);
+      cursor:pointer;
+      font-size:14px;
+      letter-spacing:.02em;
+    }
+    .seg button.active{
+      background:#fff;
+      color:#111827;
+      box-shadow:0 10px 18px rgba(15,23,42,.06);
+      border:1px solid rgba(15,23,42,.06);
+    }
+
+    /* input */
+    .inputWrap{
+      width:100%;
+      max-width:640px;
+      margin:0 auto;
+      text-align:left;
+    }
+    .inputWrap label{
+      display:block;
+      font-size:18px;
+      font-weight:800;
+      margin:6px 0 8px;
+      color:#111827;
+    }
+    .inputWrap input{
+      width:100%;
+      padding:16px 18px;
+      font-size:20px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      outline:none;
+      box-shadow: inset 0 1px 0 rgba(15,23,42,.02);
+    }
+    .inputWrap input:focus{
+      border-color:rgba(200,16,46,.35);
+      box-shadow:0 0 0 4px rgba(200,16,46,.08);
+    }
+
+    /* botões */
     .row{
       display:flex;
-      gap:14px;
       justify-content:center;
-      align-items:stretch;
+      gap:14px;
       flex-wrap:wrap;
+      width:100%;
     }
 
     .btn{
-      appearance:none;
-      border:1.5px solid rgba(200,16,46,.45);
-      background:#fff;
-      color:var(--red);
-      border-radius:18px;
-      padding:16px 18px;
-      font-weight:800;
       cursor:pointer;
-      min-width: 200px;
-      max-width: 320px;
-      width: 100%;
-      transition: transform .06s ease, background .18s ease, color .18s ease, border-color .18s ease;
-      box-shadow: 0 10px 22px rgba(17,24,39,.06);
+      border-radius:999px;
+      padding:16px 22px;
+      font-weight:900;
+      letter-spacing:.01em;
+      font-size:18px;
+      border:1px solid transparent;
+      transition:.18s ease;
+      min-width:220px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      user-select:none;
+      line-height:1;
     }
-    .btn:hover{ transform: translateY(-1px); border-color: rgba(200,16,46,.70); }
-    .btn:active{ transform: translateY(0px) scale(.99); }
-
+    .btn.wide{min-width:520px; max-width:640px; width:100%;}
+    .btn.outline{
+      background:var(--btnOutlineBg);
+      color:var(--btnOutlineText);
+      border-color:var(--btnOutlineBorder);
+    }
+    .btn.outline:hover{
+      background:rgba(200,16,46,.06);
+      border-color:rgba(200,16,46,.38);
+    }
     .btn.primary{
-      background: linear-gradient(180deg, var(--red2), var(--red));
-      color:#fff;
-      border-color: rgba(200,16,46,.80);
+      background:linear-gradient(180deg, var(--brand2) 0%, var(--brand) 100%);
+      color:var(--btnText);
+      box-shadow:0 14px 26px rgba(200,16,46,.22);
     }
-    .btn.primary:hover{ filter: brightness(1.02); }
+    .btn.primary:hover{transform:translateY(-1px)}
+    .btn.primary:active{transform:translateY(0px); opacity:.98}
 
-    /* quando quer “mesma cor” (Sim/Não e Direcionamento): ambos brancos, destaque no hover/foco */
-    .btn.same{
+    /* Caixa de texto / mensagem de resultado */
+    .msgBox{
+      width:100%;
+      max-width:760px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px 18px;
       background:#fff;
-      color:var(--red);
+      color:#0f172a;
+      font-size:19px;
+      line-height:1.55;
     }
+    .msgBox b{font-weight:900}
 
-    .btn.small{
-      min-width: 160px;
-      max-width: 240px;
-      padding:14px 16px;
-      border-radius:16px;
-      font-size:16px;
-    }
-
-    .btn.wide{
-      max-width: 520px;
-    }
-
-    .inputWrap{
+    /* Loading (sem borda extra) */
+    .loadingWrap{
       display:flex;
       flex-direction:column;
-      gap:10px;
-      max-width: 520px;
-      margin:0 auto;
+      align-items:center;
+      gap:14px;
+      padding:14px 0 0;
     }
-    label{font-weight:700; color:var(--ink)}
-    .hint{font-size:13px; color:var(--muted); margin-top:-6px}
-
-    input{
-      width:100%;
-      font-size:18px;
-      padding:16px 16px;
-      border-radius:16px;
-      border:1px solid rgba(229,231,235,.9);
-      outline:none;
-      box-shadow: 0 10px 22px rgba(17,24,39,.05);
-    }
-    input:focus{
-      border-color: rgba(200,16,46,.50);
-      box-shadow: 0 0 0 4px rgba(200,16,46,.10), 0 10px 22px rgba(17,24,39,.06);
-    }
-
     .pill{
       display:inline-flex;
       align-items:center;
       gap:10px;
-      padding:12px 14px;
+      padding:10px 16px;
       border-radius:999px;
-      background: rgba(17,24,39,.04);
-      border:1px solid rgba(229,231,235,.9);
-      font-weight:800;
-      margin:0 auto;
+      background:#f2f4f8;
+      font-weight:900;
+      color:#0f172a;
     }
     .dot{
-      width:10px; height:10px; border-radius:99px;
-      background: var(--red);
-      box-shadow: 0 0 0 6px rgba(200,16,46,.12);
+      width:10px;height:10px;border-radius:50%;
+      background:var(--brand);
+      box-shadow:0 0 0 6px rgba(200,16,46,.10);
     }
-    .loadingText{ margin:12px 0 0; color:var(--muted); text-align:center; font-weight:600; }
+    .muted{color:var(--muted)}
 
-    .footer{
-      padding:16px 20px 22px;
+    /* Rodapé */
+    .foot{
       text-align:center;
+      padding:16px 20px 12px;
+      border-top:1px solid var(--line);
       color:var(--muted);
-      font-size:14px;
+      font-size:18px;
+      line-height:1.5;
     }
-    .footer a{
-      color:var(--red);
+    .foot a{
+      color:var(--brand);
+      font-weight:900;
       text-decoration:none;
-      font-weight:800;
+      cursor:pointer;
     }
-    .footer a:hover{text-decoration:underline;}
+    .foot a:hover{text-decoration:underline}
 
-    /* Modal Termos e Política (caixa proporcional + scroll interno) */
-    .modalOverlay{
+    /* esconder views */
+    .view{display:none}
+    .view.active{display:block}
+
+    /* Modal (Termos/Política e Detalhes da dívida) */
+    .overlay{
       position:fixed;
       inset:0;
+      background:rgba(15,23,42,.55);
       display:none;
       align-items:center;
       justify-content:center;
       padding:18px;
-      background: rgba(17,24,39,.55);
       z-index:50;
     }
+    .overlay.active{display:flex}
     .modal{
-      width:min(720px, 100%);
-      max-height: min(74vh, 680px);
+      width:min(760px, 94vw);
+      max-height:min(78vh, 720px);
       background:#fff;
       border-radius:18px;
-      border:1px solid rgba(229,231,235,.9);
-      box-shadow: var(--shadow);
+      border:1px solid rgba(15,23,42,.10);
+      box-shadow:0 30px 90px rgba(15,23,42,.25);
       overflow:hidden;
       display:flex;
       flex-direction:column;
     }
-    .modalHeader{
+    .modalHead{
       display:flex;
-      justify-content:space-between;
       align-items:center;
+      justify-content:space-between;
       padding:14px 16px;
-      border-bottom:1px solid rgba(229,231,235,.9);
-      background: rgba(255,255,255,.95);
+      border-bottom:1px solid var(--line);
     }
-    .modalHeader strong{font-size:15px}
-    .modalClose{
-      border:none;
+    .modalHead h3{
+      margin:0;
+      font-size:18px;
+      font-weight:900;
+      color:#0b1222;
+    }
+    .x{
+      border:0;
       background:transparent;
+      font-size:24px;
       cursor:pointer;
-      font-size:22px;
-      line-height:1;
+      color:#0b1222;
       padding:6px 10px;
       border-radius:10px;
-      color:var(--muted);
     }
-    .modalClose:hover{background:rgba(17,24,39,.06); color:var(--ink);}
+    .x:hover{background:#f3f5f9}
     .modalBody{
-      padding:16px 18px 18px;
-      overflow:auto;
-      color:#111827;
+      padding:16px;
+      overflow:auto;  /* scroll interno */
+      color:#0f172a;
+      line-height:1.65;
     }
-    .modalBody h3{ margin:14px 0 8px; font-size:16px; }
-    .modalBody p, .modalBody li{ color:#374151; line-height:1.55; }
-    .modalBody ul{ margin:8px 0 0 18px; }
+    .modalBody h4{margin:14px 0 8px; font-size:16px}
+    .modalBody ul{margin:8px 0 10px 18px}
 
-    /* util */
-    .hidden{ display:none !important; }
+    /* Tela proposta (inspirada) */
+    .offerWrap{
+      width:100%;
+      max-width:520px;
+      margin:0 auto;
+      border:1px solid var(--line);
+      border-radius:18px;
+      overflow:hidden;
+      background:#fff;
+    }
+    .offerTop{
+      padding:14px 16px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .offerTop .mini{
+      color:var(--muted);
+      font-weight:700;
+      font-size:13px;
+    }
+    .offerTop a{
+      color:var(--brand);
+      font-weight:900;
+      text-decoration:none;
+      cursor:pointer;
+      font-size:13px;
+      white-space:nowrap;
+    }
+    .offerTop a:hover{text-decoration:underline}
+    .offerBody{
+      padding:14px 16px 16px;
+    }
+    .offerLine{
+      margin:6px 0;
+      color:#0b1222;
+      font-weight:800;
+      font-size:15px;
+    }
+    .offerBig{
+      margin:10px 0 14px;
+      font-size:26px;
+      font-weight:950;
+      letter-spacing:-.01em;
+      color:#0b1222;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(200,16,46,.08);
+      color:var(--brand);
+      font-weight:900;
+      font-size:12px;
+      margin-left:8px;
+    }
+    .offerBtns{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:10px;
+    }
+    .btn.small{min-width:0; width:100%; padding:14px 18px; font-size:16px}
 
+    /* Responsivo */
     @media (max-width:640px){
-      .panel{ padding:22px 16px; }
-      .btn{ min-width: 160px; }
-      .brand img{ height:56px; }
-      .content{ padding:18px 14px 6px; }
+      .title{font-size:38px}
+      .subtitle{font-size:18px}
+      .btn{min-width:160px}
+      .btn.wide{min-width:0}
+      .shellInner{padding:18px}
+      .panel{padding:18px}
+      .foot{font-size:16px}
     }
   </style>
 </head>
 
 <body>
-  <div class="shell">
-    <div class="frame" role="application" aria-label="Portal de negociação QuatroC">
-      <div class="topbar">
-        <div class="brand" aria-label="QuatroC">
-          <img id="logoImg" src="https://cdn.jsdelivr.net/gh/asilvino19-beep/Logo@main/Logo.png" alt="QuatroC" />
-          <div id="logoFallback" class="fallback">QuatroC</div>
-        </div>
-      </div>
+  <div class="page">
+    <div class="top">
+      <img class="logo" id="logoImg" alt="QuatroC" />
+    </div>
 
-      <div class="content">
-        <div class="navrow">
-          <button class="backlink" id="btnVoltar" type="button">← Voltar</button>
-        </div>
-
-        <!-- TELA 1 (inicial) -->
-        <section id="viewStart" class="panel">
-          <h1 class="title">Acesse ao portal de negociação</h1>
-          <p class="subtitle">Preencha o campo abaixo</p>
-
-          <div class="inputWrap" style="margin-top:10px;">
-            <label for="docInput">Digite seu CPF ou CNPJ</label>
-            <div class="hint">Aceita colar com pontuação</div>
-            <input id="docInput" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00" />
-            <div class="row" style="margin-top:10px;">
-              <button class="btn primary wide" id="btnConsultar" type="button">Confirmar</button>
-            </div>
+    <div class="wrap">
+      <div class="shell">
+        <div class="shellInner">
+          <div class="backRow" id="btnVoltar" style="visibility:hidden;">
+            <span>←</span><span>Voltar</span>
           </div>
-        </section>
 
-        <!-- TELA 2 (carregando) — SEM “Resultado da consulta” -->
-        <section id="viewLoading" class="panel hidden">
-          <p class="subtitle" style="margin:0; font-weight:700;">
-            Estamos localizando as informações vinculadas ao documento informado.
-          </p>
+          <!-- VIEW: START (TELA INICIAL) -->
+          <div class="view active" id="vStart">
+            <div class="panel">
+              <h1 class="title">Acesse ao portal de negociação</h1>
+              <p class="subtitle">Preencha o campo abaixo</p>
 
-          <div style="margin-top:18px;" class="center">
-            <div class="pill" aria-live="polite">
-              <span class="dot" aria-hidden="true"></span>
-              <span>Carregando...</span>
-            </div>
-            <div class="loadingText">Aguarde um momento.</div>
-          </div>
-        </section>
-
-        <!-- TELA 3 (resultado + confirmação Sim/Não) -->
-        <section id="viewConfirm" class="panel hidden">
-          <h2 class="title" style="margin-bottom:10px;">Resultado da consulta</h2>
-
-          <div class="divider"></div>
-
-          <p id="confirmText" class="subtitle" style="margin:0; font-size:18px; color:var(--ink); font-weight:700; line-height:1.4; text-align:center;">
-            <!-- preenchido via JS -->
-          </p>
-
-          <div class="row" style="margin-top:18px;">
-            <button class="btn same small" id="btnSim" type="button">Sim</button>
-            <button class="btn same small" id="btnNao" type="button">Não</button>
-          </div>
-        </section>
-
-        <!-- TELA 4 (validação do nome completo / razão social) — SEM “Validação de segurança” e SEM “Confirmação” -->
-        <section id="viewVerifyName" class="panel hidden">
-          <h2 class="title" style="margin-bottom:6px;">&nbsp;</h2>
-          <p class="subtitle" style="margin-bottom:18px;">Para darmos sequência, confirme o nome completo</p>
-
-          <div class="row" id="nameOptions" style="flex-direction:column; align-items:center; gap:12px;">
-            <!-- botões de opções via JS -->
-          </div>
-        </section>
-
-        <!-- TELA 5 (direcionamento) — tamanho proporcional + botões alinhados e mesma cor -->
-        <section id="viewNextStep" class="panel hidden">
-          <h2 class="title" style="margin-bottom:8px;">Como deseja prosseguir?</h2>
-          <p class="subtitle">Selecione uma opção para continuar o atendimento.</p>
-
-          <div class="row" style="margin-top:10px;">
-            <button class="btn same" id="btnAuto" type="button">Negociar agora pelo autoatendimento</button>
-            <button class="btn same" id="btnHumano" type="button">Falar com um atendente</button>
-          </div>
-        </section>
-
-        <!-- TELA 6 (negociação - card de proposta + botão detalhes da dívida) -->
-        <section id="viewOffer" class="panel hidden">
-          <h2 class="title" style="margin-bottom:8px;">Negociações disponíveis</h2>
-          <p class="subtitle">Escolha uma oferta para seguir com o acordo.</p>
-
-          <div style="max-width:720px; margin:0 auto;">
-            <div style="border:1px solid rgba(229,231,235,.9); border-radius:18px; overflow:hidden; box-shadow:0 10px 24px rgba(17,24,39,.06);">
-              <div style="padding:16px 16px; background: rgba(17,24,39,.02); display:flex; align-items:center; justify-content:space-between; gap:10px;">
-                <div style="font-weight:900;">Oferta do dia</div>
-                <button id="btnDetalhesDivida" class="backlink" style="color:var(--red); font-weight:900;" type="button">Detalhes da dívida</button>
+              <!-- BOTÃO/CONTROLE CPF x CNPJ -->
+              <div class="seg" aria-label="Tipo de documento">
+                <button id="segCPF" class="active" type="button">CPF</button>
+                <button id="segCNPJ" type="button">CNPJ</button>
               </div>
 
-              <div style="padding:18px 16px;">
-                <div style="display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap;">
-                  <div>
-                    <div style="color:var(--muted); font-weight:700; font-size:13px;">Parcelado em</div>
-                    <div id="offerParcelas" style="font-size:22px; font-weight:900;">24x de R$ 10,06</div>
-                  </div>
-                  <div>
-                    <div style="color:var(--muted); font-weight:700; font-size:13px; text-align:right;">Total</div>
-                    <div id="offerTotal" style="font-size:22px; font-weight:900; text-align:right;">R$ 241,44</div>
-                  </div>
-                </div>
-
-                <div class="divider"></div>
-
-                <div class="row" style="margin-top:6px;">
-                  <button class="btn primary wide" id="btnQueroOferta" type="button">Quero essa oferta</button>
-                  <button class="btn wide" id="btnOutrasOfertas" type="button">Ver outras ofertas</button>
+              <div class="inputWrap" style="margin-top:14px;">
+                <label for="docInput">Digite seu CPF ou CNPJ</label>
+                <input id="docInput" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00" />
+                <div class="row" style="margin-top:16px;">
+                  <button class="btn primary wide" id="btnConsultar" type="button">Confirmar</button>
                 </div>
               </div>
             </div>
           </div>
-        </section>
 
-        <!-- TELA 7 (atendente humano) -->
-        <section id="viewHuman" class="panel hidden">
-          <h2 class="title" style="margin-bottom:8px;">Atendimento humano</h2>
-          <p class="subtitle">Clique no botão abaixo para falar com um atendente.</p>
+          <!-- VIEW: LOADING -->
+          <div class="view" id="vLoading">
+            <div class="panel">
+              <!-- ATENÇÃO: aqui NÃO aparece "Resultado da consulta" -->
+              <p class="subtitle" style="margin-top:10px;">
+                Estamos localizando as informações vinculadas ao documento informado.
+              </p>
 
-          <div class="row" style="margin-top:10px;">
-            <a class="btn primary wide center" id="btnAbrirChat" href="#" target="_blank" rel="noopener">Abrir chat com atendente</a>
+              <!-- sem borda ao redor (somente conteúdo) -->
+              <div class="loadingWrap">
+                <div class="pill"><span class="dot"></span>Carregando...</div>
+                <div class="muted" style="font-size:22px;font-weight:600;">Aguarde um momento.</div>
+              </div>
+            </div>
           </div>
-        </section>
 
-        <!-- TELA 8 (nova consulta / documento incorreto OU nome incorreto) -->
-        <section id="viewNewSearch" class="panel hidden">
-          <h2 id="newSearchTitle" class="title" style="margin-bottom:8px;">Nova consulta</h2>
-          <p id="newSearchMsg" class="subtitle" style="max-width:720px; margin:0 auto;">
-            Para sua segurança, precisamos reiniciar a consulta com o documento correto.
-          </p>
+          <!-- VIEW: RESULT (CONFIRMAÇÃO CPF/CNPJ) -->
+          <div class="view" id="vResult">
+            <div class="panel">
+              <h1 class="title" style="font-size:48px;">Resultado da consulta</h1>
 
-          <div class="row" style="margin-top:14px;">
-            <button class="btn primary wide" id="btnNovaConsulta" type="button">Nova consulta</button>
+              <div class="stack" style="margin-top:10px;">
+                <div class="msgBox centerText" id="resultMsg"></div>
+
+                <div class="row">
+                  <!-- mesma cor / mesmo estilo -->
+                  <button class="btn outline" id="btnSim" type="button">Sim</button>
+                  <button class="btn outline" id="btnNao" type="button">Não</button>
+                </div>
+              </div>
+            </div>
           </div>
-        </section>
 
-        <!-- TELA 9 (instabilidade) — visual mais “leve” e coerente -->
-        <section id="viewError" class="panel hidden">
-          <h2 class="title" style="margin-bottom:8px;">Não foi possível concluir</h2>
-          <p class="subtitle" id="errorMsg">Houve uma instabilidade no momento. Tente novamente em instantes.</p>
+          <!-- VIEW: VALIDATION (NOME COMPLETO / RAZÃO SOCIAL) -->
+          <div class="view" id="vValidate">
+            <div class="panel">
+              <!-- removeu "Validação de segurança" e removeu "Confirmação" -->
+              <h1 class="title" style="font-size:44px;">&nbsp;</h1>
+              <p class="subtitle" style="margin-top:-18px;">
+                Para darmos sequência, confirme o nome completo
+              </p>
 
-          <div class="row" style="margin-top:12px;">
-            <button class="btn primary wide" id="btnTentarNovamente" type="button">Tentar novamente</button>
-            <button class="btn wide" id="btnVoltarInicio" type="button">Voltar ao início</button>
+              <div class="stack" style="margin-top:8px;">
+                <div class="msgBox centerText" style="max-width:640px;">
+                  Selecione uma das opções abaixo:
+                </div>
+
+                <div class="stack" id="nameOptions" style="width:100%;"></div>
+              </div>
+            </div>
           </div>
-        </section>
-      </div>
 
-      <div class="footer">
-        Conosco, seus dados são tratados de forma segura e sigilosa.
-        Caso tenha dúvidas ou queira saber mais, acesse nossos
-        <a href="#" id="openTerms">Termos e Política</a>.
+          <!-- VIEW: WRONG NAME (EXPLICA + NOVA CONSULTA) -->
+          <div class="view" id="vWrongName">
+            <div class="panel">
+              <h1 class="title" style="font-size:46px;">Não foi possível validar</h1>
+              <p class="subtitle" id="wrongNameText">
+                Para sua segurança, o nome selecionado não corresponde ao cadastro encontrado.
+                Reinicie a consulta com o documento correto.
+              </p>
+
+              <div class="row" style="margin-top:10px;">
+                <button class="btn primary" id="btnNovaConsulta1" type="button">Nova consulta</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- VIEW: NEXT (COMO PROSSEGUIR) -->
+          <div class="view" id="vNext">
+            <div class="panel">
+              <h1 class="title" style="font-size:52px;">Como deseja prosseguir?</h1>
+              <p class="subtitle">Selecione uma opção para continuar o atendimento.</p>
+
+              <div class="row" style="margin-top:8px;">
+                <!-- botões harmonizados (mesmo estilo) -->
+                <button class="btn outline" id="btnAuto" type="button">Negociar pelo autoatendimento</button>
+                <button class="btn outline" id="btnHumano" type="button">Falar com um atendente</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- VIEW: HUMAN (LINK CHAT HUMANO) -->
+          <div class="view" id="vHuman">
+            <div class="panel">
+              <h1 class="title" style="font-size:46px;">Atendimento humano</h1>
+              <p class="subtitle">Para falar com um atendente, acesse o chat no link abaixo:</p>
+
+              <div class="stack" style="margin-top:6px;">
+                <div class="msgBox centerText" style="max-width:680px;">
+                  <a href="#" id="humanLink" style="color:var(--brand);font-weight:900;text-decoration:none;">
+                    Acessar chat humano
+                  </a>
+                  <div class="muted" style="margin-top:8px;font-size:14px;">
+                    (Este link será definido no back/integração.)
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- VIEW: OFFER (PROPOSTA) -->
+          <div class="view" id="vOffer">
+            <div class="panel">
+              <h1 class="title" style="font-size:46px;">Minhas dívidas</h1>
+              <p class="subtitle" style="margin-bottom:10px;">Negociações disponíveis:</p>
+
+              <div class="offerWrap">
+                <div class="offerTop">
+                  <div>
+                    <div class="mini" id="offerCredor">Credor</div>
+                    <div class="mini" id="offerVenc">Vencimento</div>
+                  </div>
+                  <a id="openDebtDetails">Detalhes da dívida ↗</a>
+                </div>
+
+                <div class="offerBody">
+                  <div class="offerLine">Valor atualizado</div>
+                  <div class="offerBig" id="offerValor">R$ 0,00</div>
+
+                  <div class="offerLine" style="margin-top:2px;">
+                    Parcelado em <b id="offerParcelas">0x</b>
+                    <span class="tag" id="offerTag">Oferta</span>
+                  </div>
+
+                  <div class="offerLine" style="font-weight:800; color:var(--muted);">
+                    Total: <span id="offerTotal">R$ 0,00</span>
+                  </div>
+
+                  <div class="offerBtns">
+                    <button class="btn primary small" id="btnQueroOferta" type="button">Quero essa oferta</button>
+                    <button class="btn outline small" id="btnOutrasOfertas" type="button">Ver outras ofertas</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="muted centerText" style="margin-top:12px;font-size:14px;">
+                (As condições reais serão carregadas do back. Aqui é o layout final do card.)
+              </div>
+            </div>
+          </div>
+
+          <!-- VIEW: NEW CONSULTA (somente quando NÃO é o cliente / orientação) -->
+          <div class="view" id="vNewConsulta">
+            <div class="panel">
+              <!-- retirar “Orientação” e centralizar -->
+              <h1 class="title" style="font-size:52px;">Nova consulta</h1>
+              <p class="subtitle">Para sua segurança, precisamos reiniciar a consulta com o documento correto.</p>
+
+              <div class="row" style="margin-top:10px;">
+                <button class="btn primary" id="btnNovaConsulta2" type="button">Nova consulta</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- VIEW: ERROR (instabilidade) -->
+          <div class="view" id="vError">
+            <div class="panel">
+              <h1 class="title" style="font-size:46px;">Não foi possível concluir</h1>
+              <p class="subtitle">
+                Não foi possível se conectar. Verifique sua conexão e tente novamente.
+              </p>
+
+              <div class="row" style="margin-top:10px;">
+                <button class="btn primary" id="btnNovaConsulta3" type="button">Nova consulta</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- FOOTER -->
+        <div class="foot">
+          Conosco, seus dados são tratados de forma segura e sigilosa.
+          Caso tenha dúvidas ou queira saber mais, acesse nossos
+          <a id="openTerms">Termos e Política</a>.
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal Termos e Política -->
-  <div class="modalOverlay" id="termsOverlay" role="dialog" aria-modal="true" aria-label="Termos e Política">
-    <div class="modal">
-      <div class="modalHeader">
-        <strong>Termos e Política</strong>
-        <button class="modalClose" id="closeTerms" type="button" aria-label="Fechar">×</button>
+  <!-- MODAL: Termos e Política -->
+  <div class="overlay" id="termsOverlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Termos e Política">
+      <div class="modalHead">
+        <h3>Termos e Política</h3>
+        <button class="x" id="closeTerms" aria-label="Fechar">×</button>
       </div>
       <div class="modalBody">
-        <h3>Compromisso com segurança e sigilo</h3>
+        <h4>Compromisso com segurança e sigilo</h4>
         <p>
           A QuatroC adota medidas técnicas e organizacionais para proteger os dados utilizados neste portal,
           com foco em confidencialidade, integridade e disponibilidade das informações.
         </p>
 
-        <h3>1) Finalidade do portal</h3>
+        <h4>1) Finalidade do portal</h4>
         <p>
-          Este portal viabiliza o autoatendimento para consulta de pendências e direcionamento do atendimento,
-          de forma objetiva e segura.
+          Viabilizar autoatendimento para consulta de pendências e direcionamento do atendimento, de forma objetiva e segura.
         </p>
 
-        <h3>2) Dados tratados</h3>
+        <h4>2) Dados tratados</h4>
         <ul>
           <li>Documento informado (CPF ou CNPJ);</li>
-          <li>Informações cadastrais necessárias para atendimento (ex.: contatos e endereços quando aplicável);</li>
+          <li>Informações de cadastro necessárias para atendimento (quando aplicável);</li>
           <li>Informações sobre pendências/encaminhamentos vinculados ao documento consultado.</li>
         </ul>
 
-        <h3>3) Sigilo e acesso</h3>
+        <h4>3) Sigilo e acesso</h4>
         <p>
           Para reduzir exposição indevida, o portal pode solicitar validações adicionais antes de exibir informações.
           Não compartilhe seu documento com terceiros.
         </p>
 
-        <h3>4) Boas práticas</h3>
+        <h4>4) Boas práticas</h4>
         <ul>
           <li>Utilize rede e dispositivo confiáveis;</li>
           <li>Evite acessar o portal em equipamentos públicos;</li>
           <li>Finalize o atendimento ao concluir sua consulta.</li>
         </ul>
 
-        <h3>5) Atendimento humano</h3>
+        <h4>5) Atendimento humano</h4>
         <p>
-          Caso prefira, você pode optar por seguir com atendimento humano pelos canais disponibilizados neste portal.
+          Caso prefira, você pode optar por seguir com atendimento humano pelos canais disponibilizados.
         </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Detalhes da dívida -->
+  <div class="overlay" id="debtOverlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Detalhes da dívida">
+      <div class="modalHead">
+        <h3>Detalhes da dívida</h3>
+        <button class="x" id="closeDebt" aria-label="Fechar">×</button>
+      </div>
+      <div class="modalBody" id="debtBody">
+        <!-- preenchido via JS -->
       </div>
     </div>
   </div>
 
   <script>
-    /* ===============================
-      ✅ AJUSTES APLICADOS (resumo)
-      - “Resultado da consulta” só aparece quando existe resultado (viewConfirm).
-      - Loading: somente a frase solicitada + sem borda extra.
-      - Sim → vai direto para validação do nome completo (sem novo loading).
-      - Não → vai para Nova consulta com explicação (sem “Resultado da consulta”).
-      - CPF vs CNPJ: texto de confirmação diferente.
-      - Termos e Política: modal proporcional (caixa + scroll interno).
-      - Voltar e Nova consulta: sempre retornam para a tela inicial.
-      - Removeu alert/popup do “card”; agora navega para telas.
-      - Ajustes de proporção/tamanho e botões alinhados/mesma cor.
-    =============================== */
+    /* =========================
+       CONFIG
+    ========================== */
+    const LOGO_URL = "https://cdn.jsdelivr.net/gh/asilvino19-beep/Logo@main/Logo.png";
 
-    const views = {
-      start: document.getElementById('viewStart'),
-      loading: document.getElementById('viewLoading'),
-      confirm: document.getElementById('viewConfirm'),
-      verifyName: document.getElementById('viewVerifyName'),
-      nextStep: document.getElementById('viewNextStep'),
-      offer: document.getElementById('viewOffer'),
-      human: document.getElementById('viewHuman'),
-      newSearch: document.getElementById('viewNewSearch'),
-      error: document.getElementById('viewError'),
-    };
+    // Links placeholders (definidos no back depois)
+    const CHAT_HUMANO_URL = "#";
 
-    function show(viewKey){
-      Object.keys(views).forEach(k => views[k].classList.add('hidden'));
-      views[viewKey].classList.remove('hidden');
-      currentView = viewKey;
+    /* =========================
+       HELPERS
+    ========================== */
+    const $ = (id) => document.getElementById(id);
+
+    function onlyDigits(str){ return (str||"").replace(/\D/g,""); }
+    function isCPF(d){ return d.length === 11; }
+    function isCNPJ(d){ return d.length === 14; }
+
+    function formatMoneyBR(value){
+      const n = Number(value||0);
+      return n.toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
     }
 
-    // Navegação
-    let currentView = 'start';
-    const navStack = [];
+    function setActiveView(viewId){
+      const views = document.querySelectorAll(".view");
+      views.forEach(v => v.classList.remove("active"));
+      $(viewId).classList.add("active");
 
-    function pushAndShow(viewKey){
-      if (currentView) navStack.push(currentView);
-      show(viewKey);
-    }
-    function goBack(){
-      // regra simples: voltar uma tela; se vazio, volta início
-      const prev = navStack.pop();
-      show(prev || 'start');
-    }
-    function goHome(){
-      navStack.length = 0;
-      show('start');
-      resetFlowState();
+      // Botão voltar só aparece fora da tela inicial
+      $("btnVoltar").style.visibility = (viewId === "vStart") ? "hidden" : "visible";
+      currentView = viewId;
     }
 
-    // Elementos
-    const btnVoltar = document.getElementById('btnVoltar');
-    const btnConsultar = document.getElementById('btnConsultar');
-    const docInput = document.getElementById('docInput');
-
-    const confirmText = document.getElementById('confirmText');
-    const btnSim = document.getElementById('btnSim');
-    const btnNao = document.getElementById('btnNao');
-
-    const nameOptions = document.getElementById('nameOptions');
-
-    const btnAuto = document.getElementById('btnAuto');
-    const btnHumano = document.getElementById('btnHumano');
-
-    const btnNovaConsulta = document.getElementById('btnNovaConsulta');
-    const newSearchMsg = document.getElementById('newSearchMsg');
-
-    const btnTentarNovamente = document.getElementById('btnTentarNovamente');
-    const btnVoltarInicio = document.getElementById('btnVoltarInicio');
-
-    const btnDetalhesDivida = document.getElementById('btnDetalhesDivida');
-    const btnQueroOferta = document.getElementById('btnQueroOferta');
-    const btnOutrasOfertas = document.getElementById('btnOutrasOfertas');
-
-    const offerParcelas = document.getElementById('offerParcelas');
-    const offerTotal = document.getElementById('offerTotal');
-
-    const btnAbrirChat = document.getElementById('btnAbrirChat');
-
-    // Termos modal
-    const openTerms = document.getElementById('openTerms');
-    const termsOverlay = document.getElementById('termsOverlay');
-    const closeTerms = document.getElementById('closeTerms');
-
-    // Logo fallback
-    const logoImg = document.getElementById('logoImg');
-    const logoFallback = document.getElementById('logoFallback');
-    logoImg.addEventListener('error', () => {
-      logoImg.style.display = 'none';
-      logoFallback.style.display = 'block';
-    });
-
-    // Estado do fluxo (dados vêm do back; aqui é mock)
-    let flow = {
-      docRaw: '',
-      docType: null, // 'CPF'|'CNPJ'
-      resumoNome: '',
-      nomeCompletoCorreto: '',
-      opcoesNomeCompleto: [],
-      details: null,
-      offers: null,
-    };
-
-    function resetFlowState(){
-      flow = {
-        docRaw: '',
-        docType: null,
-        resumoNome: '',
-        nomeCompletoCorreto: '',
-        opcoesNomeCompleto: [],
-        details: null,
-        offers: null,
-      };
-      docInput.value = '';
-      docInput.placeholder = '000.000.000-00';
+    function openOverlay(overlayId){
+      const el = $(overlayId);
+      el.classList.add("active");
+      el.setAttribute("aria-hidden", "false");
+    }
+    function closeOverlay(overlayId){
+      const el = $(overlayId);
+      el.classList.remove("active");
+      el.setAttribute("aria-hidden", "true");
     }
 
-    // ========= Máscara CPF/CNPJ (digitando) =========
-    function onlyDigits(s){ return (s || '').replace(/\D+/g, ''); }
+    /* =========================
+       STATE (simula back)
+    ========================== */
+    let currentView = "vStart";
+    let docType = "CPF"; // CPF | CNPJ (controle)
+    let currentDoc = "";
+    let foundRecord = null; // resultado do "CRM"
 
-    function maskCpf(v){
-      v = onlyDigits(v).slice(0,11);
-      v = v.replace(/^(\d{3})(\d)/, '$1.$2');
-      v = v.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
-      v = v.replace(/\.(\d{3})\.(\d{3})(\d{1,2})$/, '.$1.$2-$3');
-      return v;
-    }
-
-    function maskCnpj(v){
-      v = onlyDigits(v).slice(0,14);
-      v = v.replace(/^(\d{2})(\d)/, '$1.$2');
-      v = v.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
-      v = v.replace(/\.(\d{3})(\d)/, '.$1/$2');
-      v = v.replace(/\/(\d{4})(\d)/, '/$1-$2');
-      return v;
-    }
-
-    function applyDynamicMask(){
-      const d = onlyDigits(docInput.value);
-      // Heurística: até 11, mascara CPF; acima, mascara CNPJ
-      if (d.length > 11){
-        docInput.value = maskCnpj(docInput.value);
-        docInput.placeholder = '00.000.000/0000-00';
-      } else {
-        docInput.value = maskCpf(docInput.value);
-        docInput.placeholder = '000.000.000-00';
-      }
-    }
-
-    docInput.addEventListener('input', applyDynamicMask);
-
-    // ========= MOCK de back (trocar pelo seu fetch real) =========
-    async function fetchByDocument(docDigits){
-      // SIMULA consulta no CRM
-      await sleep(650);
-
-      // Exemplo: se tiver 14 dígitos = CNPJ, retorna empresa
-      if (docDigits.length === 14){
-        return {
-          type: 'CNPJ',
-          resumoNome: 'N OLIVEIRA',            // resumo (pode ser 1 palavra)
-          razaoCorreta: 'N OLIVEIRA COMÉRCIO LTDA',
-          opcoes: [
-            'N OLIVEIRA',
-            'N OLIVEIRA COMÉRCIO LTDA',
-            'N OLIVEIRA SERVIÇOS',
-          ],
-          details: {
-            contrato: '205108950',
-            credor: 'CREDOR EXEMPLO',
-            vencimentoOriginal: '21/02/2024',
-            valorOriginal: 'R$ 1.646,42',
-            valorAtualizado: 'R$ 1.646,42',
-          },
-          offers: {
-            parcelas: '24x de R$ 10,06',
-            total: 'R$ 241,44',
-          }
-        };
-      }
-
-      // CPF
-      return {
-        type: 'CPF',
-        resumoNome: 'ALEXANDRE VALENTE',
-        nomeCorreto: 'ALEXANDRE VALENTE LEAL',
-        opcoes: [
-          'ALEXANDRE VALENTE LEAL',
-          'ALEXANDRE VALENTE SILVA',
-          'ALEXANDRE VALENTE SANTOS',
+    // SIMULAÇÃO: retorno do CRM
+    // (trocar pelo fetch real depois)
+    function mockFetchCRM(documentDigits){
+      // exemplos:
+      // CPF 00000000000 -> pessoa
+      // CNPJ 00000000000000 -> empresa
+      const demoCPF = {
+        type:"CPF",
+        displayName:"ALEXANDRE VALENTE",          // resumido (primeiro + segundo nome)
+        fullName:"ALEXANDRE VALENTE LEAL",        // correto
+        options:[
+          "ALEXANDRE VALENTE LEAL",
+          "ALEXANDRE VALENTE SILVA",
+          "ALEXANDRE VALENTE SANTOS"
         ],
-        details: {
-          contrato: '10024099300',
-          credor: 'CREDOR EXEMPLO',
-          vencimentoOriginal: '21/02/2024',
-          valorOriginal: 'R$ 1.646,42',
-          valorAtualizado: 'R$ 1.646,42',
-        },
-        offers: {
-          parcelas: '24x de R$ 10,06',
-          total: 'R$ 241,44',
+        debt:{
+          credor:"ATACADÃO",
+          contrato:"10024099300",
+          vencimento:"21/02/2024",
+          valorOriginal:1646.42,
+          valorAtual:1666.42,
+          oferta:{
+            parcelas:24,
+            parcelaValor:10.06,
+            descontoPct:85,
+            total:241.44
+          },
+          parcelasDetalhe:[
+            {parcela:1, venc:"21/02/2024", valor:1666.42}
+          ]
         }
       };
+
+      const demoCNPJ = {
+        type:"CNPJ",
+        displayName:"N OLIVEIRA",
+        fullName:"N OLIVEIRA COMÉRCIO LTDA",
+        options:[
+          "N OLIVEIRA",
+          "N OLIVEIRA COMÉRCIO LTDA",
+          "N OLIVEIRA SERVIÇOS"
+        ],
+        debt:{
+          credor:"ATACADÃO",
+          contrato:"205108950",
+          vencimento:"18/09/2025",
+          valorOriginal:31836.00,
+          valorAtual:31836.00,
+          oferta:{
+            parcelas:12,
+            parcelaValor:2653.00,
+            descontoPct:0,
+            total:31836.00
+          },
+          parcelasDetalhe:[
+            {parcela:1, venc:"18/09/2025", valor:31836.00}
+          ]
+        }
+      };
+
+      // regra simples de demo:
+      if (isCNPJ(documentDigits)) return demoCNPJ;
+      if (isCPF(documentDigits)) return demoCPF;
+
+      return null; // não localizado
     }
 
-    async function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+    /* =========================
+       SEGMENT CPF/CNPJ (botão)
+    ========================== */
+    function setDocType(type){
+      docType = type;
+      $("segCPF").classList.toggle("active", type==="CPF");
+      $("segCNPJ").classList.toggle("active", type==="CNPJ");
 
-    // ========= Fluxo =========
-    btnConsultar.addEventListener('click', async () => {
-      const docDigits = onlyDigits(docInput.value);
+      // placeholder conforme tipo
+      $("docInput").placeholder = (type==="CPF") ? "000.000.000-00" : "00.000.000/0000-00";
+    }
 
-      if (docDigits.length !== 11 && docDigits.length !== 14){
-        // mantém UX sem “Não consegui entender”, mas indica no próprio input
-        docInput.focus();
-        docInput.style.borderColor = 'rgba(200,16,46,.65)';
-        setTimeout(()=> docInput.style.borderColor='rgba(229,231,235,.9)', 600);
+    $("segCPF").addEventListener("click", () => setDocType("CPF"));
+    $("segCNPJ").addEventListener("click", () => setDocType("CNPJ"));
+
+    // se colar / digitar e ficar claro pelo tamanho, ajusta o seletor automaticamente
+    $("docInput").addEventListener("input", () => {
+      const d = onlyDigits($("docInput").value);
+      if (d.length >= 14) setDocType("CNPJ");
+      else if (d.length <= 11) setDocType("CPF");
+    });
+
+    /* =========================
+       NAVEGAÇÃO (Voltar / Nova consulta)
+    ========================== */
+    function goStart(){
+      // reset
+      currentDoc = "";
+      foundRecord = null;
+      $("docInput").value = "";
+      setDocType("CPF");
+      setActiveView("vStart");
+    }
+
+    $("btnVoltar").addEventListener("click", () => {
+      // Regra segura:
+      // - se estiver em telas de fluxo, volta uma etapa; se ficar confuso, volta ao início.
+      // Para evitar desvios, aqui fazemos retorno simples:
+      if (currentView === "vLoading") return goStart();
+      if (currentView === "vResult") return goStart();
+      if (currentView === "vValidate") return setActiveView("vResult");
+      if (currentView === "vNext") return setActiveView("vValidate");
+      if (currentView === "vOffer" || currentView === "vHuman") return setActiveView("vNext");
+      if (currentView === "vWrongName" || currentView === "vNewConsulta" || currentView === "vError") return goStart();
+      return goStart();
+    });
+
+    $("btnNovaConsulta1").addEventListener("click", goStart);
+    $("btnNovaConsulta2").addEventListener("click", goStart);
+    $("btnNovaConsulta3").addEventListener("click", goStart);
+
+    /* =========================
+       Termos/Política modal
+    ========================== */
+    $("openTerms").addEventListener("click", (e) => { e.preventDefault(); openOverlay("termsOverlay"); });
+    $("closeTerms").addEventListener("click", () => closeOverlay("termsOverlay"));
+    $("termsOverlay").addEventListener("click", (e) => {
+      if (e.target.id === "termsOverlay") closeOverlay("termsOverlay");
+    });
+
+    /* =========================
+       Detalhes da dívida modal
+    ========================== */
+    $("openDebtDetails").addEventListener("click", (e) => {
+      e.preventDefault();
+      if (!foundRecord?.debt) return;
+      renderDebtDetails(foundRecord.debt);
+      openOverlay("debtOverlay");
+    });
+    $("closeDebt").addEventListener("click", () => closeOverlay("debtOverlay"));
+    $("debtOverlay").addEventListener("click", (e) => {
+      if (e.target.id === "debtOverlay") closeOverlay("debtOverlay");
+    });
+
+    function renderDebtDetails(debt){
+      const body = $("debtBody");
+      const parcelasHtml = (debt.parcelasDetalhe||[]).map(p =>
+        `<div style="padding:10px 0;border-top:1px solid var(--line);">
+          <b>Parcela ${p.parcela}</b><br/>
+          Vencimento: ${p.venc}<br/>
+          Valor: ${formatMoneyBR(p.valor)}
+        </div>`
+      ).join("");
+
+      body.innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div><b>Contrato:</b> ${debt.contrato}</div>
+          <div><b>Vencimento original:</b> ${debt.vencimento}</div>
+          <div><b>Valor original:</b> ${formatMoneyBR(debt.valorOriginal)}</div>
+          <div><b>Valor atualizado:</b> ${formatMoneyBR(debt.valorAtual)}</div>
+          ${parcelasHtml ? `<div style="margin-top:6px;"><b>Parcelas</b>${parcelasHtml}</div>` : ""}
+          <div style="margin-top:14px;">
+            <button class="btn outline small" type="button" onclick="document.getElementById('closeDebt').click()">Voltar</button>
+          </div>
+        </div>
+      `;
+    }
+
+    /* =========================
+       CONSULTA
+    ========================== */
+    $("btnConsultar").addEventListener("click", () => {
+      const digits = onlyDigits($("docInput").value);
+      currentDoc = digits;
+
+      // validação básica
+      if (!isCPF(digits) && !isCNPJ(digits)){
+        // mantém UX: sem alert agressivo, usa tela de erro suave
+        setActiveView("vError");
         return;
       }
 
-      // define tipo e salva
-      flow.docRaw = docDigits;
-      flow.docType = (docDigits.length === 14) ? 'CNPJ' : 'CPF';
+      // vai para loading
+      setActiveView("vLoading");
 
-      // TELA 2: loading (somente a frase definida)
-      pushAndShow('loading');
+      // simula tempo de back
+      setTimeout(() => {
+        foundRecord = mockFetchCRM(digits);
 
-      try{
-        const data = await fetchByDocument(docDigits);
-
-        // popula estado
-        flow.docType = data.type;
-        flow.resumoNome = data.resumoNome;
-
-        if (flow.docType === 'CPF'){
-          flow.nomeCompletoCorreto = data.nomeCorreto;
-          flow.opcoesNomeCompleto = data.opcoes;
-        } else {
-          // CNPJ: validação por razão social
-          flow.nomeCompletoCorreto = data.razaoCorreta;
-          flow.opcoesNomeCompleto = data.opcoes;
+        if (!foundRecord){
+          // não localizou: pode ser instabilidade ou não encontrado.
+          // aqui usamos a tela de "Nova consulta" (orientação)
+          setActiveView("vNewConsulta");
+          return;
         }
 
-        flow.details = data.details;
-        flow.offers = data.offers;
+        // monta mensagem de confirmação com base em CPF/CNPJ
+        const name = foundRecord.displayName;
+        if (foundRecord.type === "CPF"){
+          $("resultMsg").innerHTML =
+            `Localizamos o cadastro em nome de <b>${name}</b>.<br/>Estamos falando com essa pessoa?`;
+        } else {
+          $("resultMsg").innerHTML =
+            `Localizamos o cadastro da empresa <b>${name}</b>.<br/>Você é responsável por esta empresa?`;
+        }
 
-        // TELA 3: resultado + confirmação
-        renderConfirm();
-        show('confirm'); // IMPORTANTE: não empilha loading na volta (loading só é transitório)
-      }catch(e){
-        renderError('Houve uma instabilidade ao consultar o documento. Tente novamente.');
-        show('error');
-      }
+        setActiveView("vResult");
+      }, 650);
     });
 
-    function renderConfirm(){
-      // Centraliza a frase (pedido)
-      if (flow.docType === 'CNPJ'){
-        confirmText.innerHTML = `Localizamos o cadastro da empresa <strong>${escapeHtml(flow.resumoNome)}</strong>.<br>Você é responsável por esta empresa?`;
-      } else {
-        confirmText.innerHTML = `Localizamos o cadastro em nome de <strong>${escapeHtml(flow.resumoNome)}</strong>.<br>Estamos falando com essa pessoa?`;
-      }
-    }
-
-    btnSim.addEventListener('click', () => {
-      // ✅ NÃO pode voltar para loading.
-      // Próximo passo: tela de confirmação do nome completo
-      renderNameOptions();
-      pushAndShow('verifyName');
+    /* =========================
+       RESULT: SIM/NÃO
+    ========================== */
+    $("btnNao").addEventListener("click", () => {
+      // vai para orientação (nova consulta) SEM "Resultado da consulta" (já está no vNewConsulta)
+      setActiveView("vNewConsulta");
     });
 
-    btnNao.addEventListener('click', () => {
-      // Tela de nova consulta COM explicação (pedido)
-      newSearchMsg.textContent =
-        'Por segurança, não exibimos informações quando o documento consultado não corresponde ao responsável. Reinicie a consulta com o documento correto.';
-      pushAndShow('newSearch');
+    $("btnSim").addEventListener("click", () => {
+      // IMPORTANTÍSSIMO: NÃO volta para loading.
+      // Vai direto para validação do nome completo/razão social.
+      if (!foundRecord) return setActiveView("vError");
+      renderNameOptions(foundRecord.options || [], foundRecord.fullName);
+      setActiveView("vValidate");
     });
 
-    function renderNameOptions(){
-      nameOptions.innerHTML = '';
-      // Ajuste do título vazio (mantém espaçamento sem texto extra)
-      // Subtítulo já está correto por pedido.
+    function renderNameOptions(options, correct){
+      const wrap = $("nameOptions");
+      wrap.innerHTML = "";
 
-      flow.opcoesNomeCompleto.forEach(nome => {
-        const b = document.createElement('button');
-        b.type = 'button';
-        b.className = 'btn same wide';
-        b.textContent = nome;
-        b.addEventListener('click', () => handleNamePick(nome));
-        nameOptions.appendChild(b);
-      });
-    }
+      // mantém proporção (não estoura tela)
+      const container = document.createElement("div");
+      container.style.width = "100%";
+      container.style.maxWidth = "640px";
+      container.style.display = "flex";
+      container.style.flexDirection = "column";
+      container.style.gap = "12px";
 
-    function handleNamePick(nomeEscolhido){
-      const ok = (nomeEscolhido || '').trim().toUpperCase() === (flow.nomeCompletoCorreto || '').trim().toUpperCase();
+      // caso especial: se “nome completo” tiver 1 sobrenome só / poucos termos,
+      // o back pode enviar options adequadas (aqui apenas respeitamos o array).
+      options.forEach(opt => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "btn outline";
+        b.style.width = "100%";
+        b.style.minWidth = "0";
+        b.textContent = opt;
 
-      if (!ok){
-        // Deve ir para “Nova consulta” COM motivo + botão que volta ao início
-        newSearchMsg.textContent =
-          'Não foi possível validar o cadastro com as informações selecionadas. Para sua segurança, reinicie a consulta e informe o documento correto.';
-        pushAndShow('newSearch');
-        return;
-      }
-
-      // Validou: vai para a tela de direcionamento (autoatendimento x atendente)
-      pushAndShow('nextStep');
-    }
-
-    btnAuto.addEventListener('click', () => {
-      // NÃO pode abrir popup/alert. Deve ir para a tela do card.
-      // (Se seu back ainda não devolver oferta, você pode cair em "error" ou mostrar “indisponível”.)
-      if (!flow.offers || !flow.details){
-        renderError('No momento não foi possível carregar as ofertas. Tente novamente em instantes.');
-        pushAndShow('error');
-        return;
-      }
-      offerParcelas.textContent = flow.offers.parcelas || '-';
-      offerTotal.textContent = flow.offers.total || '-';
-      pushAndShow('offer');
-    });
-
-    btnHumano.addEventListener('click', () => {
-      // Link do chat humano (substituir pelo link real)
-      btnAbrirChat.href = 'https://seu-link-de-chat-humano-aqui.exemplo';
-      pushAndShow('human');
-    });
-
-    // Botões “voltar” e “nova consulta” devem voltar ao início
-    btnVoltar.addEventListener('click', () => goBack());
-    btnNovaConsulta.addEventListener('click', () => goHome());
-
-    // Erro/instabilidade
-    btnTentarNovamente.addEventListener('click', () => {
-      // tenta repetir a última ação com o mesmo doc, se existir
-      if (flow.docRaw){
-        navStack.length = 0;
-        show('loading');
-        // reconsulta
-        (async () => {
-          try{
-            const data = await fetchByDocument(flow.docRaw);
-            flow.docType = data.type;
-            flow.resumoNome = data.resumoNome;
-
-            if (flow.docType === 'CPF'){
-              flow.nomeCompletoCorreto = data.nomeCorreto;
-              flow.opcoesNomeCompleto = data.opcoes;
-            } else {
-              flow.nomeCompletoCorreto = data.razaoCorreta;
-              flow.opcoesNomeCompleto = data.opcoes;
-            }
-
-            flow.details = data.details;
-            flow.offers = data.offers;
-            renderConfirm();
-            show('confirm');
-          }catch(e){
-            renderError('Ainda não foi possível concluir. Tente novamente em instantes.');
-            show('error');
+        b.addEventListener("click", () => {
+          if (opt === correct){
+            setActiveView("vNext");
+          } else {
+            $("wrongNameText").textContent =
+              "Para sua segurança, o nome selecionado não corresponde ao cadastro encontrado. Reinicie a consulta com o documento correto.";
+            setActiveView("vWrongName");
           }
-        })();
-      } else {
-        goHome();
+        });
+
+        container.appendChild(b);
+      });
+
+      wrap.appendChild(container);
+    }
+
+    /* =========================
+       NEXT: AUTO / HUMANO
+    ========================== */
+    $("btnHumano").addEventListener("click", () => {
+      $("humanLink").href = CHAT_HUMANO_URL;
+      setActiveView("vHuman");
+    });
+
+    $("btnAuto").addEventListener("click", () => {
+      // se back estiver indisponível, exibe erro (mantém para instabilidade)
+      if (!foundRecord?.debt){
+        setActiveView("vError");
+        return;
       }
+      // carrega card proposta
+      const debt = foundRecord.debt;
+      $("offerCredor").textContent = debt.credor || "Credor";
+      $("offerVenc").textContent = `Venceu em ${debt.vencimento || "--/--/----"}`;
+      $("offerValor").textContent = formatMoneyBR(debt.valorAtual);
+
+      const of = debt.oferta || {parcelas:0, parcelaValor:0, descontoPct:0, total:0};
+      $("offerParcelas").textContent = `${of.parcelas}x ${formatMoneyBR(of.parcelaValor)}`;
+      $("offerTotal").textContent = formatMoneyBR(of.total);
+      $("offerTag").textContent = (of.descontoPct && of.descontoPct > 0) ? `${of.descontoPct}%` : "Oferta";
+
+      setActiveView("vOffer");
     });
 
-    btnVoltarInicio.addEventListener('click', () => goHome());
-
-    function renderError(msg){
-      document.getElementById('errorMsg').textContent = msg || 'Houve uma instabilidade no momento. Tente novamente.';
-    }
-
-    // Detalhes da dívida (modal reaproveitando o overlay)
-    btnDetalhesDivida.addEventListener('click', () => {
-      // Preenche conteúdo no modal (sem “cobrir tela toda”, com scroll interno)
-      const body = termsOverlay.querySelector('.modalBody');
-      body.innerHTML = `
-        <h3>Detalhes da dívida</h3>
-        <p><strong>Contrato:</strong> ${escapeHtml(flow.details?.contrato || '-')}</p>
-        <p><strong>Credor:</strong> ${escapeHtml(flow.details?.credor || '-')}</p>
-        <p><strong>Vencimento original:</strong> ${escapeHtml(flow.details?.vencimentoOriginal || '-')}</p>
-        <p><strong>Valor original:</strong> ${escapeHtml(flow.details?.valorOriginal || '-')}</p>
-        <p><strong>Valor atualizado:</strong> ${escapeHtml(flow.details?.valorAtualizado || '-')}</p>
-        <div class="divider"></div>
-        <p style="color:#6b7280;font-size:13px;margin:0;">
-          Observação: as condições finais podem variar conforme atualização de cadastro e validações internas.
-        </p>
-      `;
-      termsOverlay.style.display = 'flex';
+    // Ações do card (placeholders)
+    $("btnQueroOferta").addEventListener("click", () => {
+      // aqui entra o fluxo real (back) – mantém UX e não usa alert.
+      // por enquanto, simulamos sucesso indo para humano (pode ser outra tela depois).
+      setActiveView("vHuman");
+    });
+    $("btnOutrasOfertas").addEventListener("click", () => {
+      // placeholder
+      setActiveView("vHuman");
     });
 
-    // Ações do card (placeholder)
-    btnQueroOferta.addEventListener('click', () => {
-      renderError('Etapa seguinte: aqui você conecta com o back para geração do acordo/pagamento.');
-      pushAndShow('error');
-    });
-    btnOutrasOfertas.addEventListener('click', () => {
-      renderError('Etapa seguinte: aqui você carrega outras ofertas disponíveis no back.');
-      pushAndShow('error');
-    });
+    /* =========================
+       Logo
+    ========================== */
+    (function initLogo(){
+      const img = $("logoImg");
+      img.src = LOGO_URL;
+      img.onload = () => {};
+      img.onerror = () => {
+        // fallback simples sem quebrar layout
+        img.style.display = "none";
+      };
+    })();
 
-    // Termos e Política (modal)
-    openTerms.addEventListener('click', (e) => {
-      e.preventDefault();
-      // restaura conteúdo padrão do modal
-      restoreTermsContent();
-      termsOverlay.style.display = 'flex';
-    });
-
-    closeTerms.addEventListener('click', () => termsOverlay.style.display = 'none');
-    termsOverlay.addEventListener('click', (e) => {
-      if (e.target === termsOverlay) termsOverlay.style.display = 'none';
-    });
-
-    function restoreTermsContent(){
-      const body = termsOverlay.querySelector('.modalBody');
-      body.innerHTML = `
-        <h3>Compromisso com segurança e sigilo</h3>
-        <p>
-          A QuatroC adota medidas técnicas e organizacionais para proteger os dados utilizados neste portal,
-          com foco em confidencialidade, integridade e disponibilidade das informações.
-        </p>
-
-        <h3>1) Finalidade do portal</h3>
-        <p>
-          Este portal viabiliza o autoatendimento para consulta de pendências e direcionamento do atendimento,
-          de forma objetiva e segura.
-        </p>
-
-        <h3>2) Dados tratados</h3>
-        <ul>
-          <li>Documento informado (CPF ou CNPJ);</li>
-          <li>Informações cadastrais necessárias para atendimento (ex.: contatos e endereços quando aplicável);</li>
-          <li>Informações sobre pendências/encaminhamentos vinculados ao documento consultado.</li>
-        </ul>
-
-        <h3>3) Sigilo e acesso</h3>
-        <p>
-          Para reduzir exposição indevida, o portal pode solicitar validações adicionais antes de exibir informações.
-          Não compartilhe seu documento com terceiros.
-        </p>
-
-        <h3>4) Boas práticas</h3>
-        <ul>
-          <li>Utilize rede e dispositivo confiáveis;</li>
-          <li>Evite acessar o portal em equipamentos públicos;</li>
-          <li>Finalize o atendimento ao concluir sua consulta.</li>
-        </ul>
-
-        <h3>5) Atendimento humano</h3>
-        <p>
-          Caso prefira, você pode optar por seguir com atendimento humano pelos canais disponibilizados neste portal.
-        </p>
-      `;
-    }
-
-    // Helpers
-    function escapeHtml(str){
-      return String(str ?? '')
-        .replaceAll('&','&amp;')
-        .replaceAll('<','&lt;')
-        .replaceAll('>','&gt;')
-        .replaceAll('"','&quot;')
-        .replaceAll("'","&#039;");
-    }
-
-    // start
-    show('start');
+    /* init */
+    setDocType("CPF");
   </script>
 </body>
 </html>
