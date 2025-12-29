@@ -502,7 +502,7 @@
     $("closeHuman").addEventListener("click", () => closeOverlay("humanOverlay"));
     $("humanOverlay").addEventListener("click", (e) => { if (e.target.id === "humanOverlay") closeOverlay("humanOverlay"); });
 
-    // Consultar (step "inicio")
+    // Consultar (AGORA step "consulta_divida")
     $("btnConsultar").addEventListener("click", async () => {
       const digits = onlyDigits($("docInput").value);
       currentDoc = digits;
@@ -516,7 +516,8 @@
       setActiveView("vLoading");
 
       try {
-        const data = await callBackend("inicio", { documento: digits });
+        // 🔴 AJUSTE AQUI: step inicial = "consulta_divida"
+        const data = await callBackend("consulta_divida", { documento: digits });
 
         // ----- TRATAMENTO "NÃO ENCONTRADO" -----
         if (
