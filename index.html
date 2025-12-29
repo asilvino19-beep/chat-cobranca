@@ -365,6 +365,53 @@
       window.open(url, "_blank", "noopener,noreferrer");
     }
 
+    // Nome curto (para a tela de resultado)
+    function buildDisplayName(fullName){
+      const nome = (fullName || "").trim();
+      if (!nome) return "cadastro localizado";
+      const partes = nome.split(/\s+/);
+      if (partes.length >= 2){
+        return `${partes[0]} ${partes[partes.length - 1]}`;
+      }
+      return nome;
+    }
+
+    // Gera 3 opções de nome (1 correta + 2 variações) e embaralha
+    function buildNameOptions(fullName){
+      const nome = (fullName || "").trim();
+      if (!nome) return [];
+
+      const partes = nome.split(/\s+/);
+      const set = new Set();
+      set.add(nome); // correta
+
+      if (partes.length >= 2){
+        // primeiro + último
+        set.add(`${partes[0]} ${partes[partes.length - 1]}`);
+      }
+      if (partes.length >= 3){
+        // primeiro + penúltimo + último
+        set.add(`${partes[0]} ${partes[partes.length - 2]} ${partes[partes.length - 1]}`);
+      } else if (partes.length === 2){
+        // primeiro + último + sufixo genérico
+        set.add(`${partes[0]} ${partes[1]} SILVA`);
+      } else {
+        // nome único + sobrenome genérico
+        set.add(`${partes[0]} SILVA`);
+        set.add(`${partes[0]} SOUZA`);
+      }
+
+      const arr = Array.from(set).slice(0, 3);
+
+      // embaralha (Fisher-Yates)
+      for (let i = arr.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+
+      return arr;
+    }
+
     // Máscara / limite CPF
     function maskCPF(digits){
       const d = digits.slice(0, 11);
@@ -436,7 +483,7 @@
       const body = { step, ...payload };
 
       if (!CRM_ENDPOINT) {
-        return mockFetch(step, body); // fallback dev
+        return null; // sem back ligado
       }
 
       const res = await fetch(CRM_ENDPOINT, {
@@ -451,11 +498,6 @@
 
       const data = await res.json();
       return data;
-    }
-
-    // Mock simples só para desenvolvimento local (sem dados reais)
-    function mockFetch(step, body) {
-      return null; // sempre força "Nova consulta" se não houver back ligado
     }
 
     function setDocType(type){
@@ -502,7 +544,7 @@
     $("closeHuman").addEventListener("click", () => closeOverlay("humanOverlay"));
     $("humanOverlay").addEventListener("click", (e) => { if (e.target.id === "humanOverlay") closeOverlay("humanOverlay"); });
 
-    // Consultar (AGORA step "consulta_divida")
+    // Consultar (step "consulta_divida")
     $("btnConsultar").addEventListener("click", async () => {
       const digits = onlyDigits($("docInput").value);
       currentDoc = digits;
@@ -516,44 +558,40 @@
       setActiveView("vLoading");
 
       try {
-        // 🔴 AJUSTE AQUI: step inicial = "consulta_divida"
         const data = await callBackend("consulta_divida", { documento: digits });
 
-        // ----- TRATAMENTO "NÃO ENCONTRADO" -----
-        if (
-          !data ||
-          data.found === false ||
-          data.status === "NOT_FOUND" ||
-          data.step === "nao_encontrado"
-        ){
+        // Se o back retornar algo indicando não localizado / sem dívida,
+        // você pode tratar aqui via flags (temDivida, mensagens, etc.).
+        if (!data){
           setActiveView("vNewConsulta");
           return;
         }
 
-        // Nome vindo do back (sem fallback "cadastro localizado")
-        const name =
-          data.displayName ||
-          data.fullName ||
-          data.nome ||
-          data.razaoSocial ||
-          "";
+        // Guardamos o retorno inteiro + nome completo + nome curto
+        const fullName =
+          data?.dadosCliente?.nome ||
+          data?.Nome ||
+          data?.nome ||
+          "cadastro localizado";
 
-        if (!name){
-          // Se não veio nome, tratamos como não localizado
-          setActiveView("vNewConsulta");
-          return;
-        }
+        const displayName = buildDisplayName(fullName);
 
-        foundRecord = data;
+        foundRecord = {
+          ...data,
+          fullName,
+          displayName
+        };
 
-        const type = (foundRecord.type || (isCNPJ(digits) ? "CNPJ" : "CPF")).toUpperCase();
+        const type = (
+          (data.tipoDocumento || (isCNPJ(digits) ? "CNPJ" : "CPF")) + ""
+        ).toUpperCase();
 
         if (type === "CPF"){
           $("resultMsg").innerHTML =
-            `Localizamos o cadastro em nome de <b>${name}</b>.<br/>Estamos falando com essa pessoa?`;
+            `Localizamos o cadastro em nome de <b>${displayName}</b>.<br/>Estamos falando com essa pessoa?`;
         } else {
           $("resultMsg").innerHTML =
-            `Localizamos o cadastro da empresa <b>${name}</b>.<br/>Você é responsável por esta empresa?`;
+            `Localizamos o cadastro da empresa <b>${displayName}</b>.<br/>Você é responsável por esta empresa?`;
         }
 
         setActiveView("vResult");
@@ -568,13 +606,16 @@
       setActiveView("vNewConsulta");
     });
 
-    // Resultado -> Sim (vai para validação nome)
+    // Resultado -> Sim (vai para validação nome com 3 opções)
     $("btnSim").addEventListener("click", () => {
-      if (!foundRecord) {
-        $("errorMsg").textContent = "Não foi possível carregar o cadastro. Tente novamente.";
-        return setActiveView("vError");
+      if (!foundRecord || !foundRecord.fullName){
+        // se por algum motivo não houver nome, segue direto
+        setActiveView("vNext");
+        return;
       }
-      renderNameOptions(foundRecord.options || [], foundRecord.fullName);
+
+      const options = buildNameOptions(foundRecord.fullName);
+      renderNameOptions(options, foundRecord.fullName);
       setActiveView("vValidate");
     });
 
@@ -589,7 +630,11 @@
       container.style.flexDirection = "column";
       container.style.gap = "12px";
 
-      options.forEach(opt => {
+      const list = (Array.isArray(options) && options.length)
+        ? options
+        : [correct];
+
+      list.forEach(opt => {
         const b = document.createElement("button");
         b.type = "button";
         b.className = "btn outline";
@@ -660,7 +705,7 @@
       openOverlay("humanOverlay");
     });
 
-    // Autoatendimento (ainda sem back mapeado)
+    // Autoatendimento (placeholder)
     $("btnAuto").addEventListener("click", () => {
       $("errorMsg").textContent = "Autoatendimento ainda não está conectado ao CRM. (Aguardando mapeamento do back.)";
       setActiveView("vError");
