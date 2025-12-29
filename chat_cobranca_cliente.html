@@ -133,7 +133,6 @@
     .modalBody h4{margin:14px 0 8px;font-size:16px}
     .modalBody ul{margin:8px 0 10px 18px}
 
-    /* Lista de botões dentro do modal (projetos) */
     .modalBtns{display:flex;flex-direction:column;gap:10px;margin-top:8px;}
     .modalHint{color:var(--muted);font-size:14px;margin-top:6px;}
 
@@ -335,9 +334,7 @@
   <script>
     const LOGO_URL = "https://cdn.jsdelivr.net/gh/asilvino19-beep/Logo@main/Logo.png";
 
-    // ✅ CRM (dinâmico)
-    // Coloque aqui sua URL real quando o back estiver pronto.
-    // Se ficar vazio, o sistema usa mock (apenas para dev).
+    // URL do Cloudflare Worker que faz ponte com o n8n
     const CRM_ENDPOINT = "https://billowing-voice-6efd.asilvino19.workers.dev/";
 
     const CHAT_LINK_SASCAR = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-sascar?theme=blue&pickup=y";
@@ -368,7 +365,7 @@
       window.open(url, "_blank", "noopener,noreferrer");
     }
 
-    // ✅ Máscara / Limite (CPF/CNPJ)
+    // Máscara / limite CPF
     function maskCPF(digits){
       const d = digits.slice(0, 11);
       let out = d;
@@ -378,6 +375,7 @@
       return out;
     }
 
+    // Máscara / limite CNPJ
     function maskCNPJ(digits){
       const d = digits.slice(0, 14);
       let out = d;
@@ -408,7 +406,7 @@
       return "CPF";
     }
 
-    // ✅ Views
+    // Views
     function setActiveView(viewId){
       document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
       $(viewId).classList.add("active");
@@ -416,7 +414,7 @@
       currentView = viewId;
     }
 
-    // ✅ Overlays
+    // Overlays
     function openOverlay(id){
       const el = $(id);
       el.classList.add("active");
@@ -433,27 +431,21 @@
     let currentDoc = "";
     let foundRecord = null;
 
-    // ✅ Estrutura esperada do CRM (exemplo)
-    // {
-    //   type: "CPF"|"CNPJ",
-    //   displayName: "NOME CURTO/EXIBIÇÃO",
-    //   fullName: "NOME COMPLETO CORRETO",
-    //   options: ["opção1","opção2","opção3"],
-    //   cases: [{ credor:"SASCAR FIXA" }, { credor:"IRA" }, ...]
-    // }
-    async function fetchFromCRM(documentDigits){
-      if (!CRM_ENDPOINT){
-        return mockFetchCRM(documentDigits); // fallback dev
+    // ==== CHAMADA GENÉRICA PARA O BACK (step + payload) ====
+    async function callBackend(step, payload) {
+      const body = { step, ...payload };
+
+      if (!CRM_ENDPOINT) {
+        return mockFetch(step, body); // fallback dev
       }
 
-      // Exemplo genérico: POST com {documento:"..."}
       const res = await fetch(CRM_ENDPOINT, {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify({ documento: documentDigits })
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
       });
 
-      if (!res.ok){
+      if (!res.ok) {
         throw new Error("Falha ao consultar CRM");
       }
 
@@ -461,35 +453,9 @@
       return data;
     }
 
-    // Mock APENAS para desenvolvimento (remova quando o back estiver pronto)
-    function mockFetchCRM(documentDigits){
-      const demoCPF = {
-        type:"CPF",
-        displayName:"ALEXANDRE VALENTE",
-        fullName:"ALEXANDRE VALENTE LEAL",
-        options:[
-          "ALEXANDRE VALENTE LEAL",
-          "ALEXANDRE VALENTE SILVA",
-          "ALEXANDRE VALENTE SANTOS"
-        ],
-        cases:[ {credor:"SASCAR FIXA"}, {credor:"IRA"}, {credor:"AMIL"} ]
-      };
-
-      const demoCNPJ = {
-        type:"CNPJ",
-        displayName:"N OLIVEIRA",
-        fullName:"N OLIVEIRA COMÉRCIO LTDA",
-        options:[
-          "N OLIVEIRA",
-          "N OLIVEIRA COMÉRCIO LTDA",
-          "N OLIVEIRA SERVIÇOS"
-        ],
-        cases:[ {credor:"SASCAR FIXA"} ]
-      };
-
-      if (isCNPJ(documentDigits)) return demoCNPJ;
-      if (isCPF(documentDigits)) return demoCPF;
-      return null;
+    // Mock simples só para desenvolvimento local (sem dados reais)
+    function mockFetch(step, body) {
+      return null; // sempre força "Nova consulta" se não houver back ligado
     }
 
     function setDocType(type){
@@ -508,22 +474,18 @@
       setActiveView("vStart");
     }
 
-    // ✅ Eventos topo
+    // Eventos topo
     $("segCPF").addEventListener("click", () => setDocType("CPF"));
     $("segCNPJ").addEventListener("click", () => setDocType("CNPJ"));
 
     $("docInput").addEventListener("input", () => {
       const digits = onlyDigits($("docInput").value);
-
-      // auto-identifica sem “desorganizar” o input
       const inferred = detectTypeFromDigits(digits);
       if (inferred !== docType) setDocType(inferred);
-
       applyMask();
     });
 
     $("btnVoltar").addEventListener("click", () => {
-      // Mantém seu fluxo: voltar sempre para a tela inicial
       goStart();
     });
 
@@ -540,7 +502,7 @@
     $("closeHuman").addEventListener("click", () => closeOverlay("humanOverlay"));
     $("humanOverlay").addEventListener("click", (e) => { if (e.target.id === "humanOverlay") closeOverlay("humanOverlay"); });
 
-    // ✅ Consultar (dinâmico via CRM)
+    // Consultar (step "inicio")
     $("btnConsultar").addEventListener("click", async () => {
       const digits = onlyDigits($("docInput").value);
       currentDoc = digits;
@@ -553,8 +515,8 @@
 
       setActiveView("vLoading");
 
-      try{
-        const data = await fetchFromCRM(digits);
+      try {
+        const data = await callBackend("inicio", { documento: digits });
 
         if (!data){
           setActiveView("vNewConsulta");
@@ -563,7 +525,6 @@
 
         foundRecord = data;
 
-        // Mensagem depende do tipo retornado pelo CRM (não fixa no HTML)
         const type = (foundRecord.type || (isCNPJ(digits) ? "CNPJ" : "CPF")).toUpperCase();
         const name = foundRecord.displayName || foundRecord.fullName || "cadastro localizado";
 
@@ -576,7 +537,7 @@
         }
 
         setActiveView("vResult");
-      }catch(err){
+      } catch (err) {
         $("errorMsg").textContent = "Não foi possível concluir a consulta no momento. Tente novamente.";
         setActiveView("vError");
       }
@@ -620,7 +581,6 @@
           if (correct && opt === correct){
             setActiveView("vNext");
           } else if (!correct) {
-            // Se o CRM não trouxe o "correct", ainda permite seguir
             setActiveView("vNext");
           } else {
             $("wrongNameText").textContent =
@@ -635,9 +595,7 @@
       wrap.appendChild(container);
     }
 
-    // ✅ HUMANO (nova regra solicitada)
-    // - Se só 1 projeto: abre direto o chat.
-    // - Se mais de 1: abre modal com botões por projeto.
+    // HUMANO (links por credor)
     $("btnHumano").addEventListener("click", () => {
       if (!foundRecord || !Array.isArray(foundRecord.cases) || foundRecord.cases.length === 0){
         $("errorMsg").textContent = "Não foi possível identificar o projeto para atendimento. Tente novamente.";
@@ -648,7 +606,6 @@
         .filter(c => c && c.credor)
         .map(c => ({ credor: c.credor }));
 
-      // remove duplicados por credor
       const seen = new Set();
       const unique = [];
       for (const c of cases){
@@ -664,7 +621,6 @@
         return;
       }
 
-      // + de 1 projeto: modal estilo “detalhes”
       const btnWrap = $("humanProjectBtns");
       btnWrap.innerHTML = "";
 
@@ -684,10 +640,8 @@
       openOverlay("humanOverlay");
     });
 
-    // Autoatendimento segue como está (você ainda vai mapear a próxima etapa via CRM depois)
+    // Autoatendimento (ainda sem back mapeado)
     $("btnAuto").addEventListener("click", () => {
-      // Por enquanto, mantemos o fluxo sem inventar telas novas.
-      // Aqui você vai ligar no retorno real do CRM para carregar “card/ofertas”.
       $("errorMsg").textContent = "Autoatendimento ainda não está conectado ao CRM. (Aguardando mapeamento do back.)";
       setActiveView("vError");
     });
