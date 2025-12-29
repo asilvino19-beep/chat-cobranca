@@ -59,7 +59,7 @@
     }
     .segInline button{
       border:0;background:transparent;padding:7px 11px;border-radius:999px;
-      font-weight:900;color:var(--muted);cursor:pointer;font-size:12px;letter-spacing:.02em;line-height:1;
+      font-weight:900;color:#64748b;cursor:pointer;font-size:12px;letter-spacing:.02em;line-height:1;
     }
     .segInline button.active{
       background:#fff;color:#111827;box-shadow:0 10px 18px rgba(15,23,42,.06);
@@ -86,7 +86,7 @@
       display:inline-flex;align-items:center;justify-content:center;text-align:center;user-select:none;line-height:1;
     }
     .btn.wide{min-width:480px; max-width:620px; width:100%;}
-    .btn.outline{background:var(--btnOutlineBg);color:var(--btnOutlineText);border-color:var(--btnOutlineBorder);}
+    .btn.outline{background:#ffffff;color:var(--btnOutlineText);border-color:var(--btnOutlineBorder);}
     .btn.outline:hover{background:rgba(200,16,46,.06);border-color:rgba(200,16,46,.38);}
     .btn.primary{
       background:linear-gradient(180deg, var(--brand2) 0%, var(--brand) 100%);
@@ -365,45 +365,53 @@
       window.open(url, "_blank", "noopener,noreferrer");
     }
 
-    // Nome curto (para a tela de resultado)
+    // Nome curto: primeiro + segundo
     function buildDisplayName(fullName){
       const nome = (fullName || "").trim();
       if (!nome) return "cadastro localizado";
       const partes = nome.split(/\s+/);
       if (partes.length >= 2){
-        return `${partes[0]} ${partes[partes.length - 1]}`;
+        return `${partes[0]} ${partes[1]}`;
       }
       return nome;
     }
 
-    // Gera 3 opções de nome (1 correta + 2 variações) e embaralha
-    function buildNameOptions(fullName){
-      const nome = (fullName || "").trim();
-      if (!nome) return [];
+    // Gera opções fixas falsas por tipo de documento (CPF x CNPJ)
+    function buildNameOptions(fullName, isCnpj){
+      const nomeCorreto = (fullName || "").trim();
+      if (!nomeCorreto) return [];
 
-      const partes = nome.split(/\s+/);
-      const set = new Set();
-      set.add(nome); // correta
+      const fakePF = [
+        "MARCOS SILVA SANTOS",
+        "CARLA FERREIRA ALMEIDA",
+        "RODRIGO OLIVEIRA COSTA",
+        "PATRÍCIA SOUZA LIMA",
+        "JOANA PEREIRA MELO"
+      ];
 
-      if (partes.length >= 2){
-        // primeiro + último
-        set.add(`${partes[0]} ${partes[partes.length - 1]}`);
+      const fakePJ = [
+        "ALPHA SOLUÇÕES EM SERVIÇOS LTDA",
+        "BETA COMERCIAL IMPORTAÇÃO E EXPORTAÇÃO LTDA",
+        "GAMMA TECNOLOGIA E LOGÍSTICA EIRELI",
+        "DELTA SERVIÇOS INTEGRADOS S.A.",
+        "OMEGA DISTRIBUIDORA E REPRESENTAÇÕES LTDA"
+      ];
+
+      const base = isCnpj ? fakePJ : fakePF;
+
+      // escolhe 2 nomes falsos diferentes do correto
+      const disponiveis = base.filter(n => norm(n) !== norm(nomeCorreto));
+      const falsas = [];
+
+      while (falsas.length < 2 && disponiveis.length > 0){
+        const idx = Math.floor(Math.random() * disponiveis.length);
+        const escolhido = disponiveis.splice(idx, 1)[0];
+        falsas.push(escolhido);
       }
-      if (partes.length >= 3){
-        // primeiro + penúltimo + último
-        set.add(`${partes[0]} ${partes[partes.length - 2]} ${partes[partes.length - 1]}`);
-      } else if (partes.length === 2){
-        // primeiro + último + sufixo genérico
-        set.add(`${partes[0]} ${partes[1]} SILVA`);
-      } else {
-        // nome único + sobrenome genérico
-        set.add(`${partes[0]} SILVA`);
-        set.add(`${partes[0]} SOUZA`);
-      }
 
-      const arr = Array.from(set).slice(0, 3);
+      const arr = [nomeCorreto, ...falsas].slice(0,3);
 
-      // embaralha (Fisher-Yates)
+      // embaralha
       for (let i = arr.length - 1; i > 0; i--){
         const j = Math.floor(Math.random() * (i + 1));
         [arr[i], arr[j]] = [arr[j], arr[i]];
@@ -560,38 +568,47 @@
       try {
         const data = await callBackend("consulta_divida", { documento: digits });
 
-        // Se o back retornar algo indicando não localizado / sem dívida,
-        // você pode tratar aqui via flags (temDivida, mensagens, etc.).
         if (!data){
           setActiveView("vNewConsulta");
           return;
         }
 
-        // Guardamos o retorno inteiro + nome completo + nome curto
         const fullName =
           data?.dadosCliente?.nome ||
           data?.Nome ||
           data?.nome ||
           "cadastro localizado";
 
+        // tipoDocumento vindo do back, fallback pelo tamanho
+        const tipoDocRaw = (data.tipoDocumento || (isCNPJ(digits) ? "cnpj" : "cpf") || "").toString().toLowerCase();
+        const isCnpjDoc = tipoDocRaw === "cnpj";
+
         const displayName = buildDisplayName(fullName);
 
         foundRecord = {
           ...data,
           fullName,
-          displayName
+          displayName,
+          tipoDocumento: tipoDocRaw,
+          isCnpj: isCnpjDoc
         };
 
-        const type = (
-          (data.tipoDocumento || (isCNPJ(digits) ? "CNPJ" : "CPF")) + ""
-        ).toUpperCase();
+        const typeLabel = isCnpjDoc ? "CNPJ" : "CPF";
 
-        if (type === "CPF"){
+        if (!data.temDivida){
+          // se você quiser tratar "sem dívida" de forma diferente, pode customizar aqui
           $("resultMsg").innerHTML =
-            `Localizamos o cadastro em nome de <b>${displayName}</b>.<br/>Estamos falando com essa pessoa?`;
-        } else {
+            `Localizamos o cadastro vinculado a este ${typeLabel}.<br/>Não identificamos débitos pendentes para regularização.`;
+          setActiveView("vResult");
+          return;
+        }
+
+        if (isCnpjDoc){
           $("resultMsg").innerHTML =
             `Localizamos o cadastro da empresa <b>${displayName}</b>.<br/>Você é responsável por esta empresa?`;
+        } else {
+          $("resultMsg").innerHTML =
+            `Localizamos o cadastro em nome de <b>${displayName}</b>.<br/>Estamos falando com essa pessoa?`;
         }
 
         setActiveView("vResult");
@@ -609,12 +626,11 @@
     // Resultado -> Sim (vai para validação nome com 3 opções)
     $("btnSim").addEventListener("click", () => {
       if (!foundRecord || !foundRecord.fullName){
-        // se por algum motivo não houver nome, segue direto
         setActiveView("vNext");
         return;
       }
 
-      const options = buildNameOptions(foundRecord.fullName);
+      const options = buildNameOptions(foundRecord.fullName, !!foundRecord.isCnpj);
       renderNameOptions(options, foundRecord.fullName);
       setActiveView("vValidate");
     });
