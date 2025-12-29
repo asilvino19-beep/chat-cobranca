@@ -502,7 +502,7 @@
     $("closeHuman").addEventListener("click", () => closeOverlay("humanOverlay"));
     $("humanOverlay").addEventListener("click", (e) => { if (e.target.id === "humanOverlay") closeOverlay("humanOverlay"); });
 
-    // Consultar (step "inicio")
+    // Consultar (AGORA step "consulta_divida")
     $("btnConsultar").addEventListener("click", async () => {
       const digits = onlyDigits($("docInput").value);
       currentDoc = digits;
@@ -516,9 +516,30 @@
       setActiveView("vLoading");
 
       try {
-        const data = await callBackend("inicio", { documento: digits });
+        // 🔴 AJUSTE AQUI: step inicial = "consulta_divida"
+        const data = await callBackend("consulta_divida", { documento: digits });
 
-        if (!data){
+        // ----- TRATAMENTO "NÃO ENCONTRADO" -----
+        if (
+          !data ||
+          data.found === false ||
+          data.status === "NOT_FOUND" ||
+          data.step === "nao_encontrado"
+        ){
+          setActiveView("vNewConsulta");
+          return;
+        }
+
+        // Nome vindo do back (sem fallback "cadastro localizado")
+        const name =
+          data.displayName ||
+          data.fullName ||
+          data.nome ||
+          data.razaoSocial ||
+          "";
+
+        if (!name){
+          // Se não veio nome, tratamos como não localizado
           setActiveView("vNewConsulta");
           return;
         }
@@ -526,7 +547,6 @@
         foundRecord = data;
 
         const type = (foundRecord.type || (isCNPJ(digits) ? "CNPJ" : "CPF")).toUpperCase();
-        const name = foundRecord.displayName || foundRecord.fullName || "cadastro localizado";
 
         if (type === "CPF"){
           $("resultMsg").innerHTML =
