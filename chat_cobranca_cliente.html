@@ -200,32 +200,16 @@
             </div>
           </div>
 
-          <!-- VIEW: RESULT -->
-          <div class="view" id="vResult">
-            <div class="panel">
-              <h1 class="title" style="font-size:44px;">Resultado da consulta</h1>
-
-              <div class="stack" style="margin-top:10px;">
-                <div class="msgBox centerText" id="resultMsg"></div>
-
-                <div class="row">
-                  <button class="btn outline" id="btnSim" type="button">Sim</button>
-                  <button class="btn outline" id="btnNao" type="button">Não</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- VIEW: VALIDATION -->
+          <!-- VIEW: VALIDATION (CONFIRMAÇÃO DE NOME) -->
           <div class="view" id="vValidate">
             <div class="panel">
               <h1 class="title" style="font-size:42px;">&nbsp;</h1>
-              <p class="subtitle" style="margin-top:-18px;">
+              <p class="subtitle" id="validateSubtitle" style="margin-top:-18px;">
                 Para darmos sequência, confirme o nome completo
               </p>
 
               <div class="stack" style="margin-top:8px;">
-                <div class="msgBox centerText" style="max-width:640px;">
+                <div class="msgBox centerText" id="validateBoxMsg" style="max-width:640px;">
                   Selecione uma das opções abaixo:
                 </div>
 
@@ -365,7 +349,7 @@
       window.open(url, "_blank", "noopener,noreferrer");
     }
 
-    // Nome curto: primeiro + segundo
+    // Nome curto (ainda deixei caso precise depois)
     function buildDisplayName(fullName){
       const nome = (fullName || "").trim();
       if (!nome) return "cadastro localizado";
@@ -399,7 +383,6 @@
 
       const base = isCnpj ? fakePJ : fakePF;
 
-      // escolhe 2 nomes falsos diferentes do correto
       const disponiveis = base.filter(n => norm(n) !== norm(nomeCorreto));
       const falsas = [];
 
@@ -418,6 +401,19 @@
       }
 
       return arr;
+    }
+
+    function setValidationTexts(isCnpj){
+      const subtitle = $("validateSubtitle");
+      const box = $("validateBoxMsg");
+
+      if (isCnpj){
+        subtitle.textContent = "Para darmos sequência, confirme a razão social / nome social";
+        box.textContent = "Selecione abaixo a razão social / nome social correta:";
+      } else {
+        subtitle.textContent = "Para darmos sequência, confirme o nome completo";
+        box.textContent = "Selecione abaixo o nome completo correto:";
+      }
     }
 
     // Máscara / limite CPF
@@ -579,60 +575,34 @@
           data?.nome ||
           "cadastro localizado";
 
-        // tipoDocumento vindo do back, fallback pelo tamanho
-        const tipoDocRaw = (data.tipoDocumento || (isCNPJ(digits) ? "cnpj" : "cpf") || "").toString().toLowerCase();
+        const tipoDocRaw = (data.tipoDocumento || (isCNPJ(digits) ? "cnpj" : "cpf") || "")
+          .toString()
+          .toLowerCase();
         const isCnpjDoc = tipoDocRaw === "cnpj";
 
-        const displayName = buildDisplayName(fullName);
+        // se não tiver dívida, só informa e encerra
+        if (data.temDivida === false){
+          $("errorMsg").textContent =
+            "Não identificamos débitos pendentes vinculados a este documento. Agradecemos o seu contato.";
+          setActiveView("vError");
+          return;
+        }
 
         foundRecord = {
           ...data,
           fullName,
-          displayName,
           tipoDocumento: tipoDocRaw,
           isCnpj: isCnpjDoc
         };
 
-        const typeLabel = isCnpjDoc ? "CNPJ" : "CPF";
-
-        if (!data.temDivida){
-          // se você quiser tratar "sem dívida" de forma diferente, pode customizar aqui
-          $("resultMsg").innerHTML =
-            `Localizamos o cadastro vinculado a este ${typeLabel}.<br/>Não identificamos débitos pendentes para regularização.`;
-          setActiveView("vResult");
-          return;
-        }
-
-        if (isCnpjDoc){
-          $("resultMsg").innerHTML =
-            `Localizamos o cadastro da empresa <b>${displayName}</b>.<br/>Você é responsável por esta empresa?`;
-        } else {
-          $("resultMsg").innerHTML =
-            `Localizamos o cadastro em nome de <b>${displayName}</b>.<br/>Estamos falando com essa pessoa?`;
-        }
-
-        setActiveView("vResult");
+        const options = buildNameOptions(fullName, isCnpjDoc);
+        setValidationTexts(isCnpjDoc);
+        renderNameOptions(options, fullName);
+        setActiveView("vValidate");
       } catch (err) {
         $("errorMsg").textContent = "Não foi possível concluir a consulta no momento. Tente novamente.";
         setActiveView("vError");
       }
-    });
-
-    // Resultado -> Não
-    $("btnNao").addEventListener("click", () => {
-      setActiveView("vNewConsulta");
-    });
-
-    // Resultado -> Sim (vai para validação nome com 3 opções)
-    $("btnSim").addEventListener("click", () => {
-      if (!foundRecord || !foundRecord.fullName){
-        setActiveView("vNext");
-        return;
-      }
-
-      const options = buildNameOptions(foundRecord.fullName, !!foundRecord.isCnpj);
-      renderNameOptions(options, foundRecord.fullName);
-      setActiveView("vValidate");
     });
 
     function renderNameOptions(options, correct){
