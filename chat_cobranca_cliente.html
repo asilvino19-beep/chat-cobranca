@@ -203,9 +203,11 @@
           <!-- VIEW: VALIDATION (nome / razão social) -->
           <div class="view" id="vValidate">
             <div class="panel">
-              <h1 class="title" id="validateTitle" style="font-size:42px;">&nbsp;</h1>
-              <p class="subtitle" id="validateSubtitle" style="margin-top:-18px;">
-                Para darmos sequência, confirme o nome completo.
+              <h1 class="title" id="validateTitle" style="font-size:42px;margin-bottom:6px;">
+                Para darmos sequência, confirme os dados
+              </h1>
+              <p class="subtitle" id="validateSubtitle" style="margin-top:4px;">
+                Confirme o nome completo.
               </p>
 
               <div class="stack" style="margin-top:8px;">
@@ -246,7 +248,7 @@
             </div>
           </div>
 
-          <!-- VIEW: NEW CONSULTA -->
+          <!-- VIEW: NEW CONSULTA (quando documento não bate) -->
           <div class="view" id="vNewConsulta">
             <div class="panel">
               <h1 class="title" style="font-size:46px;">Nova consulta</h1>
@@ -258,7 +260,7 @@
             </div>
           </div>
 
-          <!-- VIEW: ERROR / SEM DÍVIDA -->
+          <!-- VIEW: ERROR / SEM DÍVIDA / NÃO LOCALIZADO -->
           <div class="view" id="vError">
             <div class="panel">
               <h1 class="title" style="font-size:42px;">Não foi possível concluir</h1>
@@ -335,6 +337,13 @@
       return (str||"").toString().toUpperCase()
         .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
         .replace(/\s+/g," ").trim();
+    }
+
+    function normalizeText(str){
+      return (str || "")
+        .toString()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+        .toLowerCase();
     }
 
     function getChatLinkByCredor(credor){
@@ -433,6 +442,19 @@
       return data;
     }
 
+    // Verifica se o retorno é "cliente não localizado"
+    function isNaoLocalizado(data){
+      if (!data || !Array.isArray(data.mensagens) || !data.mensagens.length) return false;
+      const texto = normalizeText(data.mensagens[0].texto);
+      return (
+        texto.includes("cliente nao localizado") ||
+        texto.includes("nao localizamos contrato vinculado a esse documento") ||
+        texto.includes("nao localizamos contrato vinculado a este documento") ||
+        texto.includes("nao localizamos contrato vinculado a este cpf") ||
+        texto.includes("nao localizamos contrato vinculado a este cnpj")
+      );
+    }
+
     function setDocType(type){
       docType = type;
       $("segCPF").classList.toggle("active", type==="CPF");
@@ -451,11 +473,8 @@
 
     // Define textos da tela de validação conforme CPF/CNPJ
     function setValidationTexts(isCnpj){
-      const t = $("validateTitle");
       const s = $("validateSubtitle");
-      if (!t || !s) return;
-
-      t.textContent = "Para darmos sequência, confirme os dados";
+      if (!s) return;
 
       if (isCnpj){
         s.textContent = "Confirme a razão social (nome social) completa.";
@@ -532,8 +551,15 @@
         const data = await callBackend("consulta_divida", { documento: digits });
 
         if (!data){
-          // quando back não retornar estrutura (ex: cliente não localizado sem tratamento)
           setActiveView("vNewConsulta");
+          return;
+        }
+
+        // 1) Documento sem ficha -> não localizados -> tela direta de "não localizamos contrato"
+        if (isNaoLocalizado(data)) {
+          $("errorMsg").textContent =
+            "Não localizamos contrato vinculado a este documento. Verifique se o documento informado está correto.";
+          setActiveView("vError");
           return;
         }
 
@@ -556,7 +582,7 @@
           isCnpj: isCnpjDoc
         };
 
-        // sempre vai para confirmação de nome / razão
+        // 2) Sempre vai para confirmação de nome / razão social quando há ficha
         const options = buildNameOptions(fullName, isCnpjDoc);
         setValidationTexts(isCnpjDoc);
         renderNameOptions(options, fullName);
