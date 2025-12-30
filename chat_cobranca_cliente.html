@@ -229,7 +229,7 @@
                 Reinicie a consulta com o documento correto.
               </p>
 
-              <div class="row" style="margin-top:10px;">
+              <div class="row" style="margin-top:10px%;">
                 <button class="btn primary" id="btnNovaConsulta1" type="button">Nova consulta</button>
               </div>
             </div>
@@ -248,7 +248,7 @@
             </div>
           </div>
 
-          <!-- VIEW: NEW CONSULTA (quando documento não bate) -->
+          <!-- VIEW: NEW CONSULTA -->
           <div class="view" id="vNewConsulta">
             <div class="panel">
               <h1 class="title" style="font-size:46px;">Nova consulta</h1>
@@ -483,27 +483,36 @@
       }
     }
 
-    // Gera opções de nome: nome correto + 1 nome "fake" fixo por tipo
+    // Gera opções de nome:
+    //  - 1ª opção: nome REAL do CRM (todo em maiúsculo)
+    //  - 2ª e 3ª: mesmas primeiras palavras, final diferente
     function buildNameOptions(fullName, isCnpj){
-      const clean = (fullName || "").toString().trim() || "CADASTRO LOCALIZADO";
+      let clean = (fullName || "").toString().trim();
+      if (!clean) clean = "CADASTRO LOCALIZADO";
 
-      const alternativasCPF = [
-        "MARIA HELENA SANTOS",
-        "JOÃO ROBERTO LIMA"
-      ];
-      const alternativasCNPJ = [
-        "ALFA SERVIÇOS LTDA",
-        "BETA TECNOLOGIA EIRELI"
-      ];
+      const upper = clean.toUpperCase().replace(/\s+/g," ").trim();
+      const tokens = upper.split(" ").filter(Boolean);
 
-      const pool = isCnpj ? alternativasCNPJ : alternativasCPF;
-      const fake = pool[0];
+      let baseTokens;
+      if (tokens.length >= 2) baseTokens = tokens.slice(0,2);
+      else baseTokens = tokens.slice(0,1);
 
-      const options = [];
-      options.push(clean);
-      if (fake) options.push(fake);
+      const base = baseTokens.join(" ");
 
-      return options;
+      const suffixesPF   = [" SANTOS", " SILVA"];
+      const suffixesCNPJ = [" COMÉRCIO LTDA", " SERVIÇOS LTDA"];
+
+      const suffixes = isCnpj ? suffixesCNPJ : suffixesPF;
+
+      const optionsSet = new Set();
+      optionsSet.add(upper); // nome real
+
+      suffixes.forEach(suf => {
+        const alt = (base + suf).trim();
+        if (!optionsSet.has(alt)) optionsSet.add(alt);
+      });
+
+      return Array.from(optionsSet);
     }
 
     // Eventos topo
@@ -555,7 +564,7 @@
           return;
         }
 
-        // 1) Documento sem ficha -> não localizados -> tela direta de "não localizamos contrato"
+        // 1) Documento sem ficha -> tela direta de "não localizamos contrato"
         if (isNaoLocalizado(data)) {
           $("errorMsg").textContent =
             "Não localizamos contrato vinculado a este documento. Verifique se o documento informado está correto.";
@@ -566,7 +575,10 @@
         const tipoDocRaw = (data.tipoDocumento || (isCNPJ(digits) ? "cnpj" : "cpf")).toLowerCase();
         const isCnpjDoc = tipoDocRaw === "cnpj";
 
+        // Agora considera os campos fullName/displayName do back
         const fullName =
+          data.fullName ||
+          data.displayName ||
           data.nome ||
           data.nomeCliente ||
           data.Nome ||
@@ -585,7 +597,7 @@
         // 2) Sempre vai para confirmação de nome / razão social quando há ficha
         const options = buildNameOptions(fullName, isCnpjDoc);
         setValidationTexts(isCnpjDoc);
-        renderNameOptions(options, fullName);
+        renderNameOptions(options, fullName.toUpperCase());
         setActiveView("vValidate");
       } catch (err) {
         $("errorMsg").textContent = "Não foi possível concluir a consulta no momento. Tente novamente.";
@@ -593,7 +605,8 @@
       }
     });
 
-    function renderNameOptions(options, correct){
+    function renderNameOptions(options, correctUpper){
+      const correct = (correctUpper || "").toString().toUpperCase().replace(/\s+/g," ").trim();
       const wrap = $("nameOptions");
       wrap.innerHTML = "";
 
@@ -605,15 +618,17 @@
       container.style.gap = "12px";
 
       options.forEach(opt => {
+        const label = opt.toUpperCase();
         const b = document.createElement("button");
         b.type = "button";
         b.className = "btn outline";
         b.style.width = "100%";
         b.style.minWidth = "0";
-        b.textContent = opt;
+        b.textContent = label;
 
         b.addEventListener("click", () => {
-          const isCorreto = !!correct && opt === correct;
+          const chosen = label.replace(/\s+/g," ").trim();
+          const isCorreto = !!correct && chosen === correct;
 
           if (isCorreto) {
             // Se o back sinalizar que NÃO há dívida -> só então mostra tela de "sem débitos"
@@ -685,7 +700,7 @@
       openOverlay("humanOverlay");
     });
 
-    // Autoatendimento (placeholder – ainda sem back mapeado)
+    // Autoatendimento (placeholder)
     $("btnAuto").addEventListener("click", () => {
       $("errorMsg").textContent = "Autoatendimento ainda não está conectado ao CRM. (Aguardando mapeamento do back.)";
       setActiveView("vError");
