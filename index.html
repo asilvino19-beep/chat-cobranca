@@ -56,4 +56,137 @@
     }
 
     .input-wrapper {
-      positi
+      position: relative;
+    }
+
+    .login-input {
+      width: 100%;
+      height: 44px;
+      border-radius: 6px;
+      border: 1px solid #dddddd;
+      padding: 0 12px;
+      font-size: 14px;
+      color: #333;
+      outline: none;
+    }
+
+    .login-input:focus {
+      border-color: #ffcc00;
+      box-shadow: 0 0 0 1px rgba(255,204,0,0.25);
+    }
+
+    .login-input::placeholder {
+      color: #b4b4b4;
+    }
+
+    /* Olhinho da senha */
+    .eye-icon {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      color: #b4b4b4;
+      cursor: default;
+      user-select: none;
+    }
+
+    /* Botão Entrar */
+    .btn-login {
+      margin-top: 8px;
+      width: 100%;
+      height: 44px;
+      border-radius: 6px;
+      border: none;
+      background-color: #ffc400;
+      color: #333333;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .btn-login:hover {
+      background-color: #f0b800;
+    }
+
+    /* Link Esqueci minha senha */
+    .forgot {
+      margin-top: 16px;
+    }
+
+    .forgot a {
+      font-size: 13px;
+      color: #0083d6;
+      text-decoration: none;
+    }
+
+    .forgot a:hover {
+      text-decoration: underline;
+    }
+
+    /* Logo inferior direito */
+    .logo-bottom {
+      position: fixed;
+      right: 20px;
+      bottom: 16px;
+      opacity: 0.7;
+    }
+
+    .logo-bottom img {
+      height: 32px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGO SUPERIOR -->
+  <div class="logo-top">
+    <!-- Troque o src pelo caminho do logo MoreBuzz -->
+    <img src="logo-morebuzz.png" alt="MoreBuzz" />
+  </div>
+
+  <!-- CARD LOGIN -->
+  <div class="login-card">
+    <h2>Preencha seus dados para entrar</h2>
+
+    <form>
+      <div class="form-group">
+        <div class="input-wrapper">
+          <input
+            type="text"
+            class="login-input"
+            placeholder="E-mail"
+            value="caprado@grupoasserth.com.br"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-wrapper">
+          <input
+            type="password"
+            class="login-input"
+            placeholder="Senha"
+          />
+          <span class="eye-icon">&#128065;</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-login">Entrar</button>
+
+      <div class="forgot">
+        <a href="file:///C:/Users/ana.silva/Downloads/Formul%C3%A1rio%20Abertura%20de%20Chamado.html">
+          Esqueci minha senha
+        </a>
+      </div>
+    </form>
+  </div>
+
+  <!-- LOGO INFERIOR DIREITO -->
+  <div class="logo-bottom">
+    <!-- Pode reutilizar o mesmo logo ou outra versão menor -->
+    <img src="logo-morebuzz.png" alt="MoreBuzz" />
+  </div>
+
+</body>
+</html>
