@@ -125,10 +125,7 @@
     .x:hover{background:#f3f5f9}
     .modalBody{padding:16px;overflow:auto;color:#0f172a;line-height:1.65;}
 
-    /* ------------------------
-       CARDS (AJUSTADOS)
-    -------------------------*/
-
+    /* Cards */
     .debtCards{
       width:100%;
       max-width:820px;
@@ -137,7 +134,6 @@
       flex-direction:column;
       gap:14px;
     }
-
     .debtCard{
       border-radius:18px;
       border:1px solid var(--line);
@@ -145,7 +141,6 @@
       box-shadow:0 12px 30px rgba(15,23,42,.06);
       padding:16px 18px 14px;
     }
-
     .debtHeader{
       display:flex;
       align-items:center;
@@ -153,7 +148,6 @@
       justify-content:space-between;
       flex-wrap:wrap;
     }
-
     .debtLeft{
       display:flex;
       align-items:center;
@@ -161,8 +155,6 @@
       flex:1;
       min-width:0;
     }
-
-    /* ✅ LOGO agora ocupa o espaço correto */
     .debtLogoWrap{
       width:62px;
       height:62px;
@@ -182,7 +174,6 @@
       object-position:center;
       display:block;
     }
-
     .debtCredor{
       font-weight:800;
       font-size:18px;
@@ -190,30 +181,25 @@
       text-transform:uppercase;
       letter-spacing:.02em;
     }
-
     .debtMeta{
       font-size:14px;
       color:var(--muted);
       margin-top:2px;
     }
-
     .debtRight{
       text-align:right;
       min-width:180px;
     }
-
     .debtValue{
       font-size:20px;
       font-weight:800;
       color:#b91c1c;
     }
-
     .debtContract{
       font-size:14px;
       color:var(--muted);
       margin-top:2px;
     }
-
     .debtActionsRow{
       display:flex;
       justify-content:space-between;
@@ -222,12 +208,10 @@
       margin-top:12px;
       flex-wrap:wrap;
     }
-
     .debtHint{
       font-size:14px;
       color:var(--muted);
     }
-
     .debtDetailsBtn{
       border-radius:999px;
       border:1px dashed rgba(148,163,184,.8);
@@ -248,7 +232,6 @@
     .debtDetailsBtn.open span.chevron{
       transform:rotate(90deg);
     }
-
     .debtDetails{
       margin-top:10px;
       border-radius:14px;
@@ -257,20 +240,15 @@
       padding:10px 12px;
       display:none;
     }
-    .debtDetails.open{
-      display:block;
-    }
+    .debtDetails.open{ display:block; }
 
     .debtTable{
       width:100%;
       border-collapse:collapse;
       font-size:14px;
     }
-    .debtTable thead{
-      background:#eef2ff;
-    }
-    .debtTable th,
-    .debtTable td{
+    .debtTable thead{ background:#eef2ff; }
+    .debtTable th,.debtTable td{
       padding:8px 6px;
       text-align:left;
       border-bottom:1px solid #e5e7eb;
@@ -280,9 +258,7 @@
       font-weight:700;
       color:#4b5563;
     }
-    .debtTable td:last-child{
-      text-align:right;
-    }
+    .debtTable td:last-child{ text-align:right; }
 
     .nextQuestion{
       margin-top:18px;
@@ -291,7 +267,6 @@
       color:#0b1222;
       text-align:center;
     }
-
     .nextHint{
       margin-top:6px;
       font-size:15px;
@@ -367,7 +342,7 @@
             </div>
           </div>
 
-          <!-- VALIDATION (nome / razão social) -->
+          <!-- VALIDATION -->
           <div class="view" id="vValidate">
             <div class="panel">
               <h1 class="title" id="validateTitle" style="font-size:42px;margin-bottom:6px;">
@@ -400,7 +375,7 @@
             </div>
           </div>
 
-          <!-- NEXT (cards + ações) -->
+          <!-- NEXT -->
           <div class="view" id="vNext">
             <div class="panel">
               <h1 class="title" style="font-size:46px;" id="nextTitle">Resumo da pendência</h1>
@@ -489,19 +464,18 @@
   <script>
     const LOGO_URL = "https://cdn.jsdelivr.net/gh/asilvino19-beep/Logo@main/Logo.png";
 
-    // Logos por credor
     const LOGO_AMIL         = "https://asilvino19-beep.github.io/LogoAmil/LogoAmil.jpg";
     const LOGO_MICHELIN     = "https://asilvino19-beep.github.io/LogoMichelin/LogoMichelin.png";
     const LOGO_SANTAHELENA  = "https://asilvino19-beep.github.io/LogoSham/LogoSham.jfif";
     const LOGO_REDEAMERICAS = "https://asilvino19-beep.github.io/LogoRedeAmericas/LogoRedeAmericas.jfif";
 
-    // Worker
     const CRM_ENDPOINT = "https://billowing-voice-6efd.asilvino19.workers.dev/";
 
-    // Chats
     const CHAT_LINK_SASCAR = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-sascar?theme=blue&pickup=y";
     const CHAT_LINK_IRA    = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ira?theme=blue&pickup=y";
     const CHAT_LINK_DEFAULT= "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y";
+    // ✅ NOVO: Rede Américas / Ímpar
+    const CHAT_LINK_REDE_AMERICAS = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ede-americas?theme=blue&pickup=y";
 
     const $ = (id) => document.getElementById(id);
 
@@ -515,7 +489,6 @@
         .replace(/\s+/g," ").trim();
     }
 
-    // ✅ Ajuste: data pt-BR para strings tipo "2025-09-18T00:00:00"
     function formatDateBR(value){
       if (!value) return "-";
       const s = String(value);
@@ -530,6 +503,9 @@
 
     function getChatLinkByCredor(credor){
       const c = norm(credor);
+      // ✅ NOVO: Rede Américas
+      if (c.includes("REDE AMERICAS")) return CHAT_LINK_REDE_AMERICAS;
+
       if (c.includes("SASCAR")) return CHAT_LINK_SASCAR;
       if (c.includes("IRA")) return CHAT_LINK_IRA;
       return CHAT_LINK_DEFAULT;
@@ -540,7 +516,6 @@
       window.open(url, "_blank", "noopener,noreferrer");
     }
 
-    // Máscara CPF/CNPJ
     function maskCPF(digits){
       const d = digits.slice(0, 11);
       let out = d;
@@ -552,7 +527,7 @@
     function maskCNPJ(digits){
       const d = digits.slice(0, 14);
       let out = d;
-      if (d.length > 2) out = d.slice(0,2) + "." + d.slice(2);
+      if (d.length > 2) out = d.slice(0,2) + "." + out.slice(2);
       if (d.length > 5) out = out.slice(0,6) + "." + out.slice(6);
       if (d.length > 8) out = out.slice(0,10) + "/" + out.slice(10);
       if (d.length > 12) out = out.slice(0,15) + "-" + out.slice(15);
@@ -602,7 +577,6 @@
       setActiveView("vStart");
     }
 
-    // Termos
     function openOverlay(id){ $(id).classList.add("active"); }
     function closeOverlay(id){ $(id).classList.remove("active"); }
 
@@ -610,7 +584,6 @@
     $("closeTerms").addEventListener("click", ()=> closeOverlay("termsOverlay"));
     $("termsOverlay").addEventListener("click", (e)=>{ if (e.target.id === "termsOverlay") closeOverlay("termsOverlay"); });
 
-    // Modal humano
     $("closeHuman").addEventListener("click", ()=> closeOverlay("humanOverlay"));
     $("humanOverlay").addEventListener("click", (e)=>{ if (e.target.id === "humanOverlay") closeOverlay("humanOverlay"); });
 
@@ -640,30 +613,27 @@
       return await res.json();
     }
 
-    // Ajuste texto do subtitle (CPF vs CNPJ)
     function setValidationTexts(isCnpj){
       $("validateSubtitle").textContent = isCnpj
         ? "Confirme a razão social (nome social) completa."
         : "Confirme o nome completo.";
     }
 
-    // (mantém sua lógica de opções, sem mexer aqui)
     function buildNameOptions(fullName, isCnpj){
       const clean = (fullName || "").toString().trim() || "CADASTRO LOCALIZADO";
       const upper = clean.toUpperCase().replace(/\s+/g," ").trim();
       const tokens = upper.split(" ").filter(Boolean);
       const base = (tokens.length >= 2) ? (tokens[0] + " " + tokens[1]) : tokens[0];
 
-      // ✅ 2 variações (mesmo início, final diferente)
       const suffixesPF   = [" SANTOS", " SILVA"];
       const suffixesCNPJ = [" COMÉRCIO LTDA", " SERVIÇOS LTDA"];
       const suffixes = isCnpj ? suffixesCNPJ : suffixesPF;
 
-      const out = [];
-      out.push(upper);
-      out.push((base + suffixes[0]).trim());
-      out.push((base + suffixes[1]).trim());
-      return out;
+      return [
+        upper,
+        (base + suffixes[0]).trim(),
+        (base + suffixes[1]).trim()
+      ];
     }
 
     function renderNameOptions(options, correctUpper){
@@ -698,7 +668,6 @@
             return;
           }
 
-          // ✅ Se correto: entra na tela de cards
           renderDebtCardsFromRecord(foundRecord || {});
           setActiveView("vNext");
         });
@@ -709,7 +678,6 @@
       wrap.appendChild(container);
     }
 
-    // ---------- DADOS PARCELAS (normalização) ----------
     function pickParcelDoc(p){
       return p?.numeroDocumento ?? p?.NumeroDocumento ?? p?.documento ?? p?.Documento ?? p?.Placa ?? p?.placa ?? "";
     }
@@ -724,12 +692,10 @@
       return p?.IraOS ?? p?.iraOS ?? p?.OS ?? p?.os ?? "";
     }
 
-    // ---------- MAPA CREDOR ----------
     function mapCredorInfo(rawCredor, unidade){
       const c = norm(rawCredor || "");
       const unidadeTrim = (unidade || "").toString().trim();
 
-      // default
       let display = rawCredor || "Projeto";
       let logo = LOGO_URL;
 
@@ -756,9 +722,7 @@
       return { display, logo };
     }
 
-    // Normaliza lista de dívidas vindas do backend
     function normalizeDebtList(rec){
-      // tenta em rec.dividas
       if (Array.isArray(rec?.dividas) && rec.dividas.length){
         return rec.dividas.map(d => {
           const parcelas = Array.isArray(d.parcelas) ? d.parcelas : [];
@@ -780,7 +744,6 @@
         });
       }
 
-      // tenta em rec (único)
       const parcelas = Array.isArray(rec?.parcelas) ? rec.parcelas : [];
       if (!parcelas.length) return [];
 
@@ -799,14 +762,20 @@
       }];
     }
 
-    // ✅ RENDER CARDS (COM CARD ESPECIAL SASCAR_IRA)
+    // ✅ Ajuste: label do botão Auto muda se houver SASCAR_IRA
+    function updateAutoButtonLabelByDebts(debts){
+      const hasSascarIra = debts.some(d => norm(d.credorRaw).includes("SASCAR_IRA"));
+      $("btnAuto").textContent = hasSascarIra
+        ? "Agendar pelo autoatendimento"
+        : "Negociar pelo autoatendimento";
+    }
+
     function renderDebtCardsFromRecord(rec){
       const container = $("debtCardsContainer");
       container.innerHTML = "";
 
       const list = normalizeDebtList(rec);
 
-      // frase singular/plural
       $("debtIntroText").textContent = (list.length > 1)
         ? "Revise o resumo das suas pendências."
         : "Revise o resumo da sua pendência.";
@@ -817,6 +786,9 @@
         setActiveView("vError");
         return;
       }
+
+      // ✅ aplica label do botão "Negociar/Agendar" conforme SASCAR_IRA
+      updateAutoButtonLabelByDebts(list);
 
       list.forEach(d => {
         const isSascarIra = norm(d.credorRaw).includes("SASCAR_IRA");
@@ -856,7 +828,6 @@
         left.appendChild(titleBox);
         header.appendChild(left);
 
-        // ✅ PARA SASCAR_IRA: não exibe valores na frente do card
         if (!isSascarIra){
           const right = document.createElement("div");
           right.className = "debtRight";
@@ -881,7 +852,7 @@
         hint.className = "debtHint";
         hint.textContent = "Veja os detalhes antes de prosseguir.";
 
-        // ✅ Troca “Detalhes da dívida” por “Detalhes”
+        // ✅ "Detalhes" para TODOS os projetos
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "debtDetailsBtn";
@@ -898,13 +869,10 @@
         actions.appendChild(hint);
         actions.appendChild(btn);
 
-        // tabela
         const table = document.createElement("table");
         table.className = "debtTable";
 
         const thead = document.createElement("thead");
-
-        // ✅ TABELA ESPECIAL SASCAR_IRA
         if (isSascarIra){
           thead.innerHTML = `
             <tr>
@@ -914,7 +882,6 @@
             </tr>
           `;
         } else {
-          // ✅ ordem pedida: Documento > Vencimento > Valor
           thead.innerHTML = `
             <tr>
               <th>Documento</th>
@@ -973,7 +940,6 @@
       });
     }
 
-    // Consultar
     $("btnConsultar").addEventListener("click", async () => {
       const digits = onlyDigits($("docInput").value);
 
@@ -988,7 +954,6 @@
       try {
         const data = await callBackend("consulta_divida", { documento: digits });
 
-        // documento sem ficha / sem retorno
         if (!data){
           $("errorMsg").textContent =
             "Não identificamos débitos pendentes vinculados a este documento. Agradecemos o seu contato.";
@@ -996,7 +961,6 @@
           return;
         }
 
-        // tenta achar nome
         const fullName =
           data.fullName || data.displayName || data.nome || data.Nome ||
           data.razaoSocial || data.empresa || "CADASTRO LOCALIZADO";
@@ -1016,26 +980,24 @@
       }
     });
 
-    // Humano
+    // ✅ Ajuste: HUMANO decide link pelo "credorRaw" quando existir lista
     $("btnHumano").addEventListener("click", () => {
-      const credor = foundRecord?.credor || foundRecord?.Credor || "";
-      openChatForCredor(credor || "DEFAULT");
+      const list = normalizeDebtList(foundRecord || {});
+      const firstRaw = list[0]?.credorRaw || foundRecord?.credor || foundRecord?.Credor || "";
+      openChatForCredor(firstRaw || "DEFAULT");
     });
 
-    // Auto
     $("btnAuto").addEventListener("click", () => {
       $("errorMsg").textContent = "Autoatendimento ainda não está conectado ao CRM. (Aguardando mapeamento do back.)";
       setActiveView("vError");
     });
 
-    // Logo topo
     (function initLogo(){
       const img = $("logoImg");
       img.src = LOGO_URL;
       img.onerror = () => { img.style.display = "none"; };
     })();
 
-    // init
     setDocType("CPF");
   </script>
 </body>
