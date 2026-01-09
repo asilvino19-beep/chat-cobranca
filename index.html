@@ -59,7 +59,7 @@
     }
     .segInline button{
       border:0;background:transparent;padding:7px 11px;border-radius:999px;
-      font-weight:900;color:#64748b;cursor:pointer;font-size:12px;letter-spacing:.02em;line-height:1;
+      font-weight:900;color:var(--muted);cursor:pointer;font-size:12px;letter-spacing:.02em;line-height:1;
     }
     .segInline button.active{
       background:#fff;color:#111827;box-shadow:0 10px 18px rgba(15,23,42,.06);
@@ -96,12 +96,6 @@
     .btn.primary:active{transform:translateY(0px); opacity:.98}
     .btn.small{min-width:0; width:100%; padding:14px 18px; font-size:16px}
 
-    .msgBox{
-      width:100%;max-width:760px;border:1px solid var(--line);border-radius:18px;
-      padding:18px;background:#fff;color:#0f172a;font-size:19px;line-height:1.55;
-    }
-    .msgBox b{font-weight:900}
-
     .loadingWrap{display:flex;flex-direction:column;align-items:center;gap:14px;padding:14px 0 0;}
     .pill{display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:999px;background:#f2f4f8;font-weight:900;color:#0f172a;}
     .dot{width:10px;height:10px;border-radius:50%;background:var(--brand);box-shadow:0 0 0 6px rgba(200,16,46,.10);}
@@ -130,18 +124,15 @@
     .x{border:0;background:transparent;font-size:24px;cursor:pointer;color:#0b1222;padding:6px 10px;border-radius:10px;}
     .x:hover{background:#f3f5f9}
     .modalBody{padding:16px;overflow:auto;color:#0f172a;line-height:1.65;}
-    .modalBody h4{margin:14px 0 8px;font-size:16px}
-    .modalBody ul{margin:8px 0 10px 18px}
 
-    .modalBtns{display:flex;flex-direction:column;gap:10px;margin-top:8px;}
-    .modalHint{color:var(--muted);font-size:14px;margin-top:6px;}
-
-    /* ---- CARDS DE DÍVIDA ---- */
+    /* ------------------------
+       CARDS (AJUSTADOS)
+    -------------------------*/
 
     .debtCards{
       width:100%;
       max-width:820px;
-      margin:8px auto 4px;
+      margin:10px auto 0;
       display:flex;
       flex-direction:column;
       gap:14px;
@@ -171,21 +162,25 @@
       min-width:0;
     }
 
+    /* ✅ LOGO agora ocupa o espaço correto */
     .debtLogoWrap{
-      width:46px;
-      height:46px;
-      border-radius:999px;
-      background:#f9fafb;
+      width:62px;
+      height:62px;
+      border-radius:14px;
+      background:#fff;
       display:flex;
       align-items:center;
       justify-content:center;
       border:1px solid #e5e7eb;
+      overflow:hidden;
+      padding:6px;
     }
-
     .debtLogo{
-      max-width:34px;
-      max-height:26px;
+      width:100%;
+      height:100%;
       object-fit:contain;
+      object-position:center;
+      display:block;
     }
 
     .debtCredor{
@@ -335,7 +330,7 @@
             <span>←</span><span>Voltar</span>
           </div>
 
-          <!-- VIEW: START -->
+          <!-- START -->
           <div class="view active" id="vStart">
             <div class="panel">
               <h1 class="title">Portal de negociação</h1>
@@ -359,13 +354,12 @@
             </div>
           </div>
 
-          <!-- VIEW: LOADING -->
+          <!-- LOADING -->
           <div class="view" id="vLoading">
             <div class="panel">
               <p class="subtitle" style="margin-top:10px;">
                 Estamos localizando as informações vinculadas ao documento informado.
               </p>
-
               <div class="loadingWrap">
                 <div class="muted" style="font-size:20px;font-weight:600;">Aguarde um momento.</div>
                 <div class="pill"><span class="dot"></span>Carregando...</div>
@@ -373,15 +367,13 @@
             </div>
           </div>
 
-          <!-- VIEW: VALIDATION (nome / razão social) -->
+          <!-- VALIDATION (nome / razão social) -->
           <div class="view" id="vValidate">
             <div class="panel">
               <h1 class="title" id="validateTitle" style="font-size:42px;margin-bottom:6px;">
                 Para darmos sequência, confirme os dados
               </h1>
-              <p class="subtitle" id="validateSubtitle" style="margin-top:4px;">
-                Confirme o nome completo.
-              </p>
+              <p class="subtitle" id="validateSubtitle" style="margin-top:4px;">Confirme o nome completo.</p>
 
               <div class="stack" style="margin-top:8px;">
                 <div class="msgBox centerText" style="max-width:640px;">
@@ -393,7 +385,7 @@
             </div>
           </div>
 
-          <!-- VIEW: WRONG NAME -->
+          <!-- WRONG NAME -->
           <div class="view" id="vWrongName">
             <div class="panel">
               <h1 class="title" style="font-size:42px;">Não foi possível validar</h1>
@@ -402,19 +394,17 @@
                 Reinicie a consulta com o documento correto.
               </p>
 
-              <div class="row" style="margin-top:10px%;">
+              <div class="row" style="margin-top:10px;">
                 <button class="btn primary" id="btnNovaConsulta1" type="button">Nova consulta</button>
               </div>
             </div>
           </div>
 
-          <!-- VIEW: NEXT (cards de dívida + ações) -->
+          <!-- NEXT (cards + ações) -->
           <div class="view" id="vNext">
             <div class="panel">
               <h1 class="title" style="font-size:46px;" id="nextTitle">Resumo da pendência</h1>
-              <p class="subtitle" id="debtIntroText">
-                Revise o resumo da sua pendência.
-              </p>
+              <p class="subtitle" id="debtIntroText">Revise o resumo da sua pendência.</p>
 
               <div id="debtCardsContainer" class="debtCards"></div>
 
@@ -424,17 +414,13 @@
               </p>
 
               <div class="row" style="margin-top:14px;">
-                <button class="btn outline" id="btnAuto" type="button">
-                  Negociar pelo autoatendimento
-                </button>
-                <button class="btn outline" id="btnHumano" type="button">
-                  Falar com um atendente
-                </button>
+                <button class="btn outline" id="btnAuto" type="button">Negociar pelo autoatendimento</button>
+                <button class="btn outline" id="btnHumano" type="button">Falar com um atendente</button>
               </div>
             </div>
           </div>
 
-          <!-- VIEW: NEW CONSULTA -->
+          <!-- NEW CONSULTA -->
           <div class="view" id="vNewConsulta">
             <div class="panel">
               <h1 class="title" style="font-size:46px;">Nova consulta</h1>
@@ -446,20 +432,17 @@
             </div>
           </div>
 
-          <!-- VIEW: ERROR / SEM DÍVIDA / NÃO LOCALIZADO -->
+          <!-- ERROR -->
           <div class="view" id="vError">
             <div class="panel">
               <h1 class="title" style="font-size:42px;">Não foi possível concluir</h1>
-              <p class="subtitle" id="errorMsg">
-                Não foi possível se conectar. Verifique sua conexão e tente novamente.
-              </p>
+              <p class="subtitle" id="errorMsg">Não foi possível se conectar. Verifique sua conexão e tente novamente.</p>
 
               <div class="row" style="margin-top:10px;">
                 <button class="btn primary" id="btnNovaConsulta3" type="button">Nova consulta</button>
               </div>
             </div>
           </div>
-
         </div>
 
         <div class="foot">
@@ -471,7 +454,7 @@
     </div>
   </div>
 
-  <!-- MODAL: Termos e Política -->
+  <!-- MODAL: Termos -->
   <div class="overlay" id="termsOverlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-label="Termos e Política">
       <div class="modalHead">
@@ -488,7 +471,7 @@
     </div>
   </div>
 
-  <!-- MODAL: Escolher projeto para atendimento humano (quando houver mais de 1) -->
+  <!-- MODAL: HUMANO -->
   <div class="overlay" id="humanOverlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-label="Escolher projeto">
       <div class="modalHead">
@@ -506,15 +489,16 @@
   <script>
     const LOGO_URL = "https://cdn.jsdelivr.net/gh/asilvino19-beep/Logo@main/Logo.png";
 
-    // Logos específicos por credor
+    // Logos por credor
     const LOGO_AMIL         = "https://asilvino19-beep.github.io/LogoAmil/LogoAmil.jpg";
     const LOGO_MICHELIN     = "https://asilvino19-beep.github.io/LogoMichelin/LogoMichelin.png";
     const LOGO_SANTAHELENA  = "https://asilvino19-beep.github.io/LogoSham/LogoSham.jfif";
     const LOGO_REDEAMERICAS = "https://asilvino19-beep.github.io/LogoRedeAmericas/LogoRedeAmericas.jfif";
 
-    // URL do Cloudflare Worker que faz ponte com o n8n
+    // Worker
     const CRM_ENDPOINT = "https://billowing-voice-6efd.asilvino19.workers.dev/";
 
+    // Chats
     const CHAT_LINK_SASCAR = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-sascar?theme=blue&pickup=y";
     const CHAT_LINK_IRA    = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ira?theme=blue&pickup=y";
     const CHAT_LINK_DEFAULT= "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y";
@@ -531,11 +515,17 @@
         .replace(/\s+/g," ").trim();
     }
 
-    function normalizeText(str){
-      return (str || "")
-        .toString()
-        .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
-        .toLowerCase();
+    // ✅ Ajuste: data pt-BR para strings tipo "2025-09-18T00:00:00"
+    function formatDateBR(value){
+      if (!value) return "-";
+      const s = String(value);
+      const m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (m) return `${m[3]}/${m[2]}/${m[1]}`;
+      return s;
+    }
+
+    function formatCurrencyBR(v){
+      return Number(v || 0).toLocaleString("pt-BR", { style:"currency", currency:"BRL" });
     }
 
     function getChatLinkByCredor(credor){
@@ -550,7 +540,7 @@
       window.open(url, "_blank", "noopener,noreferrer");
     }
 
-    // Máscara / limite CPF
+    // Máscara CPF/CNPJ
     function maskCPF(digits){
       const d = digits.slice(0, 11);
       let out = d;
@@ -559,8 +549,6 @@
       if (d.length > 9) out = out.slice(0,11) + "-" + out.slice(11);
       return out;
     }
-
-    // Máscara / limite CNPJ
     function maskCNPJ(digits){
       const d = digits.slice(0, 14);
       let out = d;
@@ -571,27 +559,10 @@
       return out;
     }
 
-    function applyMask(){
-      const input = $("docInput");
-      const digits = onlyDigits(input.value);
+    let currentView = "vStart";
+    let docType = "CPF";
+    let foundRecord = null;
 
-      if (docType === "CPF"){
-        const masked = maskCPF(digits);
-        input.value = masked;
-        input.maxLength = 14; // 000.000.000-00
-      } else {
-        const masked = maskCNPJ(digits);
-        input.value = masked;
-        input.maxLength = 18; // 00.000.000/0000-00
-      }
-    }
-
-    function detectTypeFromDigits(d){
-      if (d.length >= 12) return "CNPJ";
-      return "CPF";
-    }
-
-    // Views
     function setActiveView(viewId){
       document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
       $(viewId).classList.add("active");
@@ -599,52 +570,21 @@
       currentView = viewId;
     }
 
-    // Overlays
-    function openOverlay(id){
-      const el = $(id);
-      el.classList.add("active");
-      el.setAttribute("aria-hidden", "false");
-    }
-    function closeOverlay(id){
-      const el = $(id);
-      el.classList.remove("active");
-      el.setAttribute("aria-hidden", "true");
-    }
-
-    let currentView = "vStart";
-    let docType = "CPF";
-    let currentDoc = "";
-    let foundRecord = null;
-
-    // ==== CHAMADA GENÉRICA PARA O BACK (step + payload) ====
-    async function callBackend(step, payload) {
-      const body = { step, ...payload };
-
-      const res = await fetch(CRM_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-
-      if (!res.ok) {
-        throw new Error("Falha ao consultar CRM");
+    function applyMask(){
+      const input = $("docInput");
+      const digits = onlyDigits(input.value);
+      if (docType === "CPF"){
+        input.value = maskCPF(digits);
+        input.maxLength = 14;
+      } else {
+        input.value = maskCNPJ(digits);
+        input.maxLength = 18;
       }
-
-      const data = await res.json();
-      return data;
     }
 
-    // Verifica se o retorno é "cliente não localizado"
-    function isNaoLocalizado(data){
-      if (!data || !Array.isArray(data.mensagens) || !data.mensagens.length) return false;
-      const texto = normalizeText(data.mensagens[0].texto);
-      return (
-        texto.includes("cliente nao localizado") ||
-        texto.includes("nao localizamos contrato vinculado a esse documento") ||
-        texto.includes("nao localizamos contrato vinculado a este documento") ||
-        texto.includes("nao localizamos contrato vinculado a este cpf") ||
-        texto.includes("nao localizamos contrato vinculado a este cnpj")
-      );
+    function detectTypeFromDigits(d){
+      if (d.length >= 12) return "CNPJ";
+      return "CPF";
     }
 
     function setDocType(type){
@@ -656,88 +596,140 @@
     }
 
     function goStart(){
-      currentDoc = "";
       foundRecord = null;
       $("docInput").value = "";
       setDocType("CPF");
       setActiveView("vStart");
     }
 
-    // Define textos da tela de validação conforme CPF/CNPJ
-    function setValidationTexts(isCnpj){
-      const s = $("validateSubtitle");
-      if (!s) return;
+    // Termos
+    function openOverlay(id){ $(id).classList.add("active"); }
+    function closeOverlay(id){ $(id).classList.remove("active"); }
 
-      if (isCnpj){
-        s.textContent = "Confirme a razão social (nome social) completa.";
-      } else {
-        s.textContent = "Confirme o nome completo.";
-      }
+    $("openTerms").addEventListener("click", (e)=>{ e.preventDefault(); openOverlay("termsOverlay"); });
+    $("closeTerms").addEventListener("click", ()=> closeOverlay("termsOverlay"));
+    $("termsOverlay").addEventListener("click", (e)=>{ if (e.target.id === "termsOverlay") closeOverlay("termsOverlay"); });
+
+    // Modal humano
+    $("closeHuman").addEventListener("click", ()=> closeOverlay("humanOverlay"));
+    $("humanOverlay").addEventListener("click", (e)=>{ if (e.target.id === "humanOverlay") closeOverlay("humanOverlay"); });
+
+    $("btnVoltar").addEventListener("click", goStart);
+    $("btnNovaConsulta1").addEventListener("click", goStart);
+    $("btnNovaConsulta2").addEventListener("click", goStart);
+    $("btnNovaConsulta3").addEventListener("click", goStart);
+
+    $("segCPF").addEventListener("click", ()=> setDocType("CPF"));
+    $("segCNPJ").addEventListener("click", ()=> setDocType("CNPJ"));
+
+    $("docInput").addEventListener("input", ()=>{
+      const digits = onlyDigits($("docInput").value);
+      const inferred = detectTypeFromDigits(digits);
+      if (inferred !== docType) setDocType(inferred);
+      applyMask();
+    });
+
+    async function callBackend(step, payload){
+      const body = { step, ...payload };
+      const res = await fetch(CRM_ENDPOINT, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) throw new Error("Falha ao consultar CRM");
+      return await res.json();
     }
 
-    // Gera opções de nome:
-    //  - 1ª opção: nome REAL do CRM (todo em maiúsculo)
-    //  - 2ª e 3ª: mesmas primeiras palavras, final diferente
-    function buildNameOptions(fullName, isCnpj){
-      let clean = (fullName || "").toString().trim();
-      if (!clean) clean = "CADASTRO LOCALIZADO";
+    // Ajuste texto do subtitle (CPF vs CNPJ)
+    function setValidationTexts(isCnpj){
+      $("validateSubtitle").textContent = isCnpj
+        ? "Confirme a razão social (nome social) completa."
+        : "Confirme o nome completo.";
+    }
 
+    // (mantém sua lógica de opções, sem mexer aqui)
+    function buildNameOptions(fullName, isCnpj){
+      const clean = (fullName || "").toString().trim() || "CADASTRO LOCALIZADO";
       const upper = clean.toUpperCase().replace(/\s+/g," ").trim();
       const tokens = upper.split(" ").filter(Boolean);
+      const base = (tokens.length >= 2) ? (tokens[0] + " " + tokens[1]) : tokens[0];
 
-      let baseTokens;
-      if (tokens.length >= 2) baseTokens = tokens.slice(0,2);
-      else baseTokens = tokens.slice(0,1);
-
-      const base = baseTokens.join(" ");
-
+      // ✅ 2 variações (mesmo início, final diferente)
       const suffixesPF   = [" SANTOS", " SILVA"];
       const suffixesCNPJ = [" COMÉRCIO LTDA", " SERVIÇOS LTDA"];
-
       const suffixes = isCnpj ? suffixesCNPJ : suffixesPF;
 
-      const optionsSet = new Set();
-      optionsSet.add(upper); // nome real
+      const out = [];
+      out.push(upper);
+      out.push((base + suffixes[0]).trim());
+      out.push((base + suffixes[1]).trim());
+      return out;
+    }
 
-      suffixes.forEach(suf => {
-        const alt = (base + suf).trim();
-        if (!optionsSet.has(alt)) optionsSet.add(alt);
+    function renderNameOptions(options, correctUpper){
+      const correct = (correctUpper || "").toString().toUpperCase().replace(/\s+/g," ").trim();
+      const wrap = $("nameOptions");
+      wrap.innerHTML = "";
+
+      const container = document.createElement("div");
+      container.style.width = "100%";
+      container.style.maxWidth = "640px";
+      container.style.display = "flex";
+      container.style.flexDirection = "column";
+      container.style.gap = "12px";
+
+      options.forEach(opt => {
+        const label = (opt || "").toUpperCase();
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "btn outline";
+        b.style.width = "100%";
+        b.style.minWidth = "0";
+        b.textContent = label;
+
+        b.addEventListener("click", () => {
+          const chosen = label.replace(/\s+/g," ").trim();
+          const isCorreto = !!correct && chosen === correct;
+
+          if (!isCorreto){
+            $("wrongNameText").textContent =
+              "Para sua segurança, o nome selecionado não corresponde ao cadastro encontrado. Reinicie a consulta com o documento correto.";
+            setActiveView("vWrongName");
+            return;
+          }
+
+          // ✅ Se correto: entra na tela de cards
+          renderDebtCardsFromRecord(foundRecord || {});
+          setActiveView("vNext");
+        });
+
+        container.appendChild(b);
       });
 
-      return Array.from(optionsSet);
+      wrap.appendChild(container);
     }
 
-    // -------- Helpers para dívidas / parcelas --------
-    function pickParcelDate(p){
-      return p?.vencimento || p?.Vencimento || p?.DataVencimento || p?.dataVencimento || "";
-    }
-
+    // ---------- DADOS PARCELAS (normalização) ----------
     function pickParcelDoc(p){
-      return p?.numeroDocumento || p?.NumeroDocumento || p?.Documento || p?.descricao || "";
+      return p?.numeroDocumento ?? p?.NumeroDocumento ?? p?.documento ?? p?.Documento ?? p?.Placa ?? p?.placa ?? "";
     }
-
+    function pickParcelDate(p){
+      return p?.vencimento ?? p?.Vencimento ?? p?.data ?? p?.Data ?? p?.DataOS ?? p?.dataOS ?? "";
+    }
     function pickParcelValue(p){
-      const v =
-        p?.valor ??
-        p?.Valor ??
-        p?.ValorParcela ??
-        p?.ValorAtualizado ??
-        p?._ValorEmAberto ??
-        0;
+      const v = p?.valor ?? p?.Valor ?? p?.ValorParcela ?? p?.ValorAtualizado ?? p?.valorAtualizado ?? p?._ValorEmAberto ?? 0;
       return Number(v) || 0;
     }
-
-    function formatCurrencyBR(v){
-      return Number(v || 0).toLocaleString("pt-BR", {
-        style:"currency",
-        currency:"BRL"
-      });
+    function pickParcelOS(p){
+      return p?.IraOS ?? p?.iraOS ?? p?.OS ?? p?.os ?? "";
     }
 
-    // Mapeia credor -> nome exibido + logo, considerando unidade
+    // ---------- MAPA CREDOR ----------
     function mapCredorInfo(rawCredor, unidade){
       const c = norm(rawCredor || "");
       const unidadeTrim = (unidade || "").toString().trim();
+
+      // default
       let display = rawCredor || "Projeto";
       let logo = LOGO_URL;
 
@@ -764,79 +756,71 @@
       return { display, logo };
     }
 
+    // Normaliza lista de dívidas vindas do backend
     function normalizeDebtList(rec){
-      // Estrutura ideal: rec.dividas = [ { credor, numeroContrato, valorAtualizado, parcelas: [], unidade } ]
+      // tenta em rec.dividas
       if (Array.isArray(rec?.dividas) && rec.dividas.length){
         return rec.dividas.map(d => {
           const parcelas = Array.isArray(d.parcelas) ? d.parcelas : [];
-          let total = Number(d.valorAtualizado || 0);
-          if (!total && parcelas.length){
-            total = parcelas.reduce((acc,p) => acc + pickParcelValue(p), 0);
-          }
+          const total = Number(d.valorAtualizado ?? d.valorTotal ?? 0) || parcelas.reduce((a,p)=> a + pickParcelValue(p), 0);
 
-          const rawCredor = d.credor || d.Credor || "Projeto";
-          const unidade   = d.unidade || d.Unidade || d.unidadeAtendimento || d.UnidadeAtendimento;
+          const rawCredor = d.credor ?? d.Credor ?? "Projeto";
+          const unidade   = d.unidade ?? d.Unidade ?? d.unidadeAtendimento ?? d.UnidadeAtendimento ?? "";
+
           const { display, logo } = mapCredorInfo(rawCredor, unidade);
 
           return {
             credorRaw: rawCredor,
             credor: display,
             logoUrl: logo,
-            numeroContrato: d.numeroContrato || d.NumeroContrato || d.contrato || "",
+            numeroContrato: d.numeroContrato ?? d.NumeroContrato ?? d.contrato ?? "",
             valorAtualizado: total,
             parcelas
           };
         });
       }
 
-      // Fallback: usar um único card com dados soltos
+      // tenta em rec (único)
       const parcelas = Array.isArray(rec?.parcelas) ? rec.parcelas : [];
-      let total = Number(rec?.valorAtualizado || rec?.valorTotal || 0);
-      if (!total && parcelas.length){
-        total = parcelas.reduce((acc,p) => acc + pickParcelValue(p), 0);
-      }
-      if (!parcelas.length && !total){
-        return [];
-      }
+      if (!parcelas.length) return [];
 
-      const rawCredor = rec?.credor || rec?.Credor || "Projeto";
-      const unidade   = rec?.unidade || rec?.Unidade || rec?.unidadeAtendimento || rec?.UnidadeAtendimento;
+      const rawCredor = rec.credor ?? rec.Credor ?? "Projeto";
+      const unidade   = rec.unidade ?? rec.Unidade ?? "";
+
       const { display, logo } = mapCredorInfo(rawCredor, unidade);
 
       return [{
         credorRaw: rawCredor,
         credor: display,
         logoUrl: logo,
-        numeroContrato: rec?.numeroContrato || rec?.NumeroContrato || rec?.idContrato || "",
-        valorAtualizado: total,
+        numeroContrato: rec.numeroContrato ?? rec.NumeroContrato ?? rec.contrato ?? "",
+        valorAtualizado: parcelas.reduce((a,p)=> a + pickParcelValue(p), 0),
         parcelas
       }];
     }
 
+    // ✅ RENDER CARDS (COM CARD ESPECIAL SASCAR_IRA)
     function renderDebtCardsFromRecord(rec){
       const container = $("debtCardsContainer");
-      if (!container) return;
-
       container.innerHTML = "";
 
       const list = normalizeDebtList(rec);
 
-      const intro = $("debtIntroText");
-      if (intro){
-        intro.textContent = list.length > 1
-          ? "Revise o resumo das suas pendências."
-          : "Revise o resumo da sua pendência.";
-      }
+      // frase singular/plural
+      $("debtIntroText").textContent = (list.length > 1)
+        ? "Revise o resumo das suas pendências."
+        : "Revise o resumo da sua pendência.";
 
       if (!list.length){
-        const msg = document.createElement("div");
-        msg.className = "msgBox centerText";
-        msg.textContent = "Não foi possível carregar o resumo das dívidas. Tente novamente em instantes.";
-        container.appendChild(msg);
+        $("errorMsg").textContent =
+          "Não identificamos débitos pendentes vinculados a este documento. Agradecemos o seu contato.";
+        setActiveView("vError");
         return;
       }
 
-      list.forEach((d) => {
+      list.forEach(d => {
+        const isSascarIra = norm(d.credorRaw).includes("SASCAR_IRA");
+
         const card = document.createElement("div");
         card.className = "debtCard";
 
@@ -856,50 +840,52 @@
         logoWrap.appendChild(logo);
 
         const titleBox = document.createElement("div");
+
         const credorEl = document.createElement("div");
         credorEl.className = "debtCredor";
         credorEl.textContent = d.credor || "Projeto";
 
         const metaEl = document.createElement("div");
         metaEl.className = "debtMeta";
-        metaEl.textContent = d.numeroContrato
-          ? `Contrato nº ${d.numeroContrato}`
-          : "Contrato em aberto";
+        metaEl.textContent = d.numeroContrato ? `Contrato nº ${d.numeroContrato}` : "Contrato em aberto";
 
         titleBox.appendChild(credorEl);
         titleBox.appendChild(metaEl);
 
         left.appendChild(logoWrap);
         left.appendChild(titleBox);
-
-        const right = document.createElement("div");
-        right.className = "debtRight";
-
-        const valEl = document.createElement("div");
-        valEl.className = "debtValue";
-        valEl.textContent = formatCurrencyBR(d.valorAtualizado || 0);
-
-        const contrEl = document.createElement("div");
-        contrEl.className = "debtContract";
-        contrEl.textContent = "Valor total atualizado";
-
-        right.appendChild(valEl);
-        right.appendChild(contrEl);
-
         header.appendChild(left);
-        header.appendChild(right);
+
+        // ✅ PARA SASCAR_IRA: não exibe valores na frente do card
+        if (!isSascarIra){
+          const right = document.createElement("div");
+          right.className = "debtRight";
+
+          const valEl = document.createElement("div");
+          valEl.className = "debtValue";
+          valEl.textContent = formatCurrencyBR(d.valorAtualizado || 0);
+
+          const contrEl = document.createElement("div");
+          contrEl.className = "debtContract";
+          contrEl.textContent = "Valor total atualizado";
+
+          right.appendChild(valEl);
+          right.appendChild(contrEl);
+          header.appendChild(right);
+        }
 
         const actions = document.createElement("div");
         actions.className = "debtActionsRow";
 
         const hint = document.createElement("div");
         hint.className = "debtHint";
-        hint.textContent = "Veja os detalhes antes de escolher como deseja negociar.";
+        hint.textContent = "Veja os detalhes antes de prosseguir.";
 
+        // ✅ Troca “Detalhes da dívida” por “Detalhes”
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "debtDetailsBtn";
-        btn.innerHTML = '<span class="chevron">›</span> Detalhes da dívida';
+        btn.innerHTML = '<span class="chevron">›</span> Detalhes';
 
         const details = document.createElement("div");
         details.className = "debtDetails";
@@ -912,45 +898,71 @@
         actions.appendChild(hint);
         actions.appendChild(btn);
 
-        // tabela de parcelas (Documento > Vencimento > Valor)
+        // tabela
         const table = document.createElement("table");
         table.className = "debtTable";
 
         const thead = document.createElement("thead");
-        thead.innerHTML = `
-          <tr>
-            <th>Documento</th>
-            <th>Vencimento</th>
-            <th>Valor</th>
-          </tr>
-        `;
-        table.appendChild(thead);
+
+        // ✅ TABELA ESPECIAL SASCAR_IRA
+        if (isSascarIra){
+          thead.innerHTML = `
+            <tr>
+              <th>Placa</th>
+              <th>Data OS</th>
+              <th>OS</th>
+            </tr>
+          `;
+        } else {
+          // ✅ ordem pedida: Documento > Vencimento > Valor
+          thead.innerHTML = `
+            <tr>
+              <th>Documento</th>
+              <th>Vencimento</th>
+              <th>Valor</th>
+            </tr>
+          `;
+        }
 
         const tbody = document.createElement("tbody");
 
         if (Array.isArray(d.parcelas) && d.parcelas.length){
           d.parcelas.forEach(p => {
             const tr = document.createElement("tr");
-            const doc = pickParcelDoc(p) || "-";
-            const dt  = pickParcelDate(p) || "-";
-            const val = formatCurrencyBR(pickParcelValue(p));
 
-            tr.innerHTML = `
-              <td>${doc}</td>
-              <td>${dt}</td>
-              <td>${val}</td>
-            `;
+            if (isSascarIra){
+              const placa = pickParcelDoc(p) || "-";
+              const dataOS = formatDateBR(pickParcelDate(p)) || "-";
+              const os = pickParcelOS(p) || "-";
+
+              tr.innerHTML = `
+                <td>${placa}</td>
+                <td>${dataOS}</td>
+                <td>${os}</td>
+              `;
+            } else {
+              const doc = pickParcelDoc(p) || "-";
+              const venc = formatDateBR(pickParcelDate(p)) || "-";
+              const val = formatCurrencyBR(pickParcelValue(p));
+
+              tr.innerHTML = `
+                <td>${doc}</td>
+                <td>${venc}</td>
+                <td>${val}</td>
+              `;
+            }
+
             tbody.appendChild(tr);
           });
         } else {
           const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td colspan="3">Não há parcelas detalhadas para exibir.</td>
-          `;
+          tr.innerHTML = `<td colspan="3">Não há detalhes para exibir.</td>`;
           tbody.appendChild(tr);
         }
 
+        table.appendChild(thead);
         table.appendChild(tbody);
+
         details.appendChild(table);
 
         card.appendChild(header);
@@ -961,38 +973,9 @@
       });
     }
 
-    // Eventos topo
-    $("segCPF").addEventListener("click", () => setDocType("CPF"));
-    $("segCNPJ").addEventListener("click", () => setDocType("CNPJ"));
-
-    $("docInput").addEventListener("input", () => {
-      const digits = onlyDigits($("docInput").value);
-      const inferred = detectTypeFromDigits(digits);
-      if (inferred !== docType) setDocType(inferred);
-      applyMask();
-    });
-
-    $("btnVoltar").addEventListener("click", () => {
-      goStart();
-    });
-
-    $("btnNovaConsulta1").addEventListener("click", goStart);
-    $("btnNovaConsulta2").addEventListener("click", goStart);
-    $("btnNovaConsulta3").addEventListener("click", goStart);
-
-    // Termos
-    $("openTerms").addEventListener("click", (e) => { e.preventDefault(); openOverlay("termsOverlay"); });
-    $("closeTerms").addEventListener("click", () => closeOverlay("termsOverlay"));
-    $("termsOverlay").addEventListener("click", (e) => { if (e.target.id === "termsOverlay") closeOverlay("termsOverlay"); });
-
-    // Modal humano
-    $("closeHuman").addEventListener("click", () => closeOverlay("humanOverlay"));
-    $("humanOverlay").addEventListener("click", (e) => { if (e.target.id === "humanOverlay") closeOverlay("humanOverlay"); });
-
-    // Consultar (step inicial consulta_divida)
+    // Consultar
     $("btnConsultar").addEventListener("click", async () => {
       const digits = onlyDigits($("docInput").value);
-      currentDoc = digits;
 
       if (!isCPF(digits) && !isCNPJ(digits)){
         $("errorMsg").textContent = "Documento inválido. Verifique e tente novamente.";
@@ -1005,158 +988,54 @@
       try {
         const data = await callBackend("consulta_divida", { documento: digits });
 
+        // documento sem ficha / sem retorno
         if (!data){
-          setActiveView("vNewConsulta");
-          return;
-        }
-
-        // 1) Documento sem ficha -> tela direta de "não localizamos contrato"
-        if (isNaoLocalizado(data)) {
           $("errorMsg").textContent =
             "Não identificamos débitos pendentes vinculados a este documento. Agradecemos o seu contato.";
           setActiveView("vError");
           return;
         }
 
+        // tenta achar nome
+        const fullName =
+          data.fullName || data.displayName || data.nome || data.Nome ||
+          data.razaoSocial || data.empresa || "CADASTRO LOCALIZADO";
+
         const tipoDocRaw = (data.tipoDocumento || (isCNPJ(digits) ? "cnpj" : "cpf")).toLowerCase();
         const isCnpjDoc = tipoDocRaw === "cnpj";
 
-        const fullName =
-          data.fullName ||
-          data.displayName ||
-          data.nome ||
-          data.nomeCliente ||
-          data.Nome ||
-          data.empresa ||
-          data.razaoSocial ||
-          "CADASTRO LOCALIZADO";
+        foundRecord = { ...data, fullName, tipoDocumento: tipoDocRaw, isCnpj: isCnpjDoc };
 
-        foundRecord = {
-          ...data,
-          fullName,
-          tipoDocumento: tipoDocRaw,
-          isCnpj: isCnpjDoc
-        };
-
-        const options = buildNameOptions(fullName, isCnpjDoc);
         setValidationTexts(isCnpjDoc);
+        const options = buildNameOptions(fullName, isCnpjDoc);
         renderNameOptions(options, fullName.toUpperCase());
         setActiveView("vValidate");
-      } catch (err) {
+      } catch (e) {
         $("errorMsg").textContent = "Não foi possível concluir a consulta no momento. Tente novamente.";
         setActiveView("vError");
       }
     });
 
-    function renderNameOptions(options, correctUpper){
-      const correct = (correctUpper || "").toString().toUpperCase().replace(/\s+/g," ").trim();
-      const wrap = $("nameOptions");
-      wrap.innerHTML = "";
-
-      const container = document.createElement("div");
-      container.style.width = "100%";
-      container.style.maxWidth = "640px";
-      container.style.display = "flex";
-      container.style.flexDirection = "column";
-      container.style.gap = "12px";
-
-      options.forEach(opt => {
-        const label = opt.toUpperCase();
-        const b = document.createElement("button");
-        b.type = "button";
-        b.className = "btn outline";
-        b.style.width = "100%";
-        b.style.minWidth = "0";
-        b.textContent = label;
-
-        b.addEventListener("click", () => {
-          const chosen = label.replace(/\s+/g," ").trim();
-          const isCorreto = !!correct && chosen === correct;
-
-          if (isCorreto) {
-            if (foundRecord && foundRecord.temDivida === false) {
-              $("errorMsg").textContent =
-                "Não identificamos débitos pendentes vinculados a este documento. Agradecemos o seu contato.";
-              setActiveView("vError");
-            } else {
-              // Tem dívida -> renderiza os cards e segue
-              renderDebtCardsFromRecord(foundRecord || {});
-              setActiveView("vNext");
-            }
-          } else if (!correct) {
-            renderDebtCardsFromRecord(foundRecord || {});
-            setActiveView("vNext");
-          } else {
-            $("wrongNameText").textContent =
-              "Para sua segurança, o nome selecionado não corresponde ao cadastro encontrado. Reinicie a consulta com o documento correto.";
-            setActiveView("vWrongName");
-          }
-        });
-
-        container.appendChild(b);
-      });
-
-      wrap.appendChild(container);
-    }
-
-    // HUMANO (links por credor via modal)
+    // Humano
     $("btnHumano").addEventListener("click", () => {
-      if (!foundRecord || !Array.isArray(foundRecord.cases) || foundRecord.cases.length === 0){
-        $("errorMsg").textContent = "Não foi possível identificar o projeto para atendimento. Tente novamente.";
-        return setActiveView("vError");
-      }
-
-      const cases = foundRecord.cases
-        .filter(c => c && c.credor)
-        .map(c => ({ credor: c.credor }));
-
-      const seen = new Set();
-      const unique = [];
-      for (const c of cases){
-        const k = norm(c.credor);
-        if (!seen.has(k)){
-          seen.add(k);
-          unique.push(c);
-        }
-      }
-
-      if (unique.length === 1){
-        openChatForCredor(unique[0].credor);
-        return;
-      }
-
-      const btnWrap = $("humanProjectBtns");
-      btnWrap.innerHTML = "";
-
-      unique.forEach(c => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "btn outline";
-        btn.style.minWidth = "0";
-        btn.textContent = c.credor;
-        btn.addEventListener("click", () => {
-          closeOverlay("humanOverlay");
-          openChatForCredor(c.credor);
-        });
-        btnWrap.appendChild(btn);
-      });
-
-      openOverlay("humanOverlay");
+      const credor = foundRecord?.credor || foundRecord?.Credor || "";
+      openChatForCredor(credor || "DEFAULT");
     });
 
-    // Autoatendimento (placeholder – depois você pode trocar para redirecionar)
+    // Auto
     $("btnAuto").addEventListener("click", () => {
       $("errorMsg").textContent = "Autoatendimento ainda não está conectado ao CRM. (Aguardando mapeamento do back.)";
       setActiveView("vError");
     });
 
-    // Logo
+    // Logo topo
     (function initLogo(){
       const img = $("logoImg");
       img.src = LOGO_URL;
       img.onerror = () => { img.style.display = "none"; };
     })();
 
+    // init
     setDocType("CPF");
   </script>
 </body>
