@@ -3,1259 +3,359 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Portal de Negociação - QuatroC</title>
+  <title>Portal de Negociação - 4C Assessoria</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    :root{
-      --bg:#f4f6fb;
-      --card:#ffffff;
-      --text:#0f172a;
-      --muted:#64748b;
-      --line:#e6eaf2;
-      --shadow:0 18px 45px rgba(15,23,42,.08);
-      --radius:22px;
-
-      --brand:#c8102e;
-      --brand2:#e11d48;
-      --btnText:#ffffff;
-
-      --btnOutlineBg:#ffffff;
-      --btnOutlineText:var(--brand);
-      --btnOutlineBorder:rgba(200,16,46,.28);
-
-      --maxw:980px;
+    :root {
+      /* Cor baseada no seu logo #c8102e */
+      --brand: #c8102e;
+      --brand-dark: #1a0205; /* Fundo imersivo */
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 16px;
+      --shadow: 0 20px 50px rgba(0,0,0,0.2);
     }
 
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: linear-gradient(180deg, #f7f9ff 0%, var(--bg) 100%);
-      color:var(--text);
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--brand-dark);
+      /* O logo no fundo de forma sutil */
+      background-image: linear-gradient(rgba(26, 2, 5, 0.93), rgba(26, 2, 5, 0.93)), url('https://cdn.jsdelivr.net/gh/asilvino19-beep/Logo@main/Logo.png');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-attachment: fixed;
+      background-size: 40%;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 15px;
     }
 
-    .page{min-height:100vh;display:flex;flex-direction:column;align-items:center;}
-    .top{width:100%;padding:18px 20px 8px;display:flex;justify-content:center;}
-    .logo{width:78px;height:auto;filter: drop-shadow(0 14px 28px rgba(15,23,42,.08));}
-
-    .wrap{width:100%;max-width:var(--maxw);padding:8px 16px 20px;}
-    .shell{background:var(--card);border-radius:24px;box-shadow:var(--shadow);border:1px solid var(--line);overflow:hidden;}
-    .shellInner{padding:18px 18px 14px;}
-
-    .backRow{display:flex;align-items:center;gap:10px;color:var(--muted);font-weight:500;cursor:pointer;user-select:none;width:max-content;margin-bottom:10px;}
-    .backRow:hover{opacity:.85}
-
-    .panel{border:1px solid var(--line);border-radius:20px;padding:18px;background:#fff;}
-
-    .title{text-align:center;font-size:44px;line-height:1.08;letter-spacing:-.02em;margin:14px 0 8px;font-weight:800;color:#0b1222;}
-    .subtitle{text-align:center;margin:0 0 14px;color:var(--muted);font-size:18px;font-weight:500;}
-
-    .centerText{text-align:center;}
-    .stack{display:flex;flex-direction:column;gap:14px;align-items:center;}
-
-    .segInline{
-      display:inline-flex;gap:6px;background:#f7f8fc;border:1px solid var(--line);
-      padding:5px;border-radius:999px;
-    }
-    .segInline button{
-      border:0;background:transparent;padding:7px 11px;border-radius:999px;
-      font-weight:900;color:var(--muted);cursor:pointer;font-size:12px;letter-spacing:.02em;line-height:1;
-    }
-    .segInline button.active{
-      background:#fff;color:#111827;box-shadow:0 10px 18px rgba(15,23,42,.06);
-      border:1px solid rgba(15,23,42,.06);
+    .container {
+      width: 100%;
+      max-width: 480px; /* Enquadramento mais justo e profissional */
+      z-index: 2;
     }
 
-    .inputWrap{width:100%;max-width:620px;margin:0 auto;text-align:left;}
-    .labelRow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0 8px;}
-    .labelRow .labelText{font-size:16px;font-weight:900;color:#111827;}
-
-    .inputWrap input{
-      width:100%;padding:14px 16px;font-size:18px;border-radius:14px;border:1px solid var(--line);
-      outline:none;box-shadow: inset 0 1px 0 rgba(15,23,42,.02);
-    }
-    .inputWrap input:focus{
-      border-color:rgba(200,16,46,.35);box-shadow:0 0 0 4px rgba(200,16,46,.08);
+    header {
+      text-align: center;
+      margin-bottom: 25px;
     }
 
-    .row{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;width:100%;}
-
-    .btn{
-      cursor:pointer;border-radius:999px;padding:14px 20px;font-weight:900;letter-spacing:.01em;
-      font-size:16px;border:1px solid transparent;transition:.18s ease;min-width:200px;
-      display:inline-flex;align-items:center;justify-content:center;text-align:center;user-select:none;line-height:1;
-    }
-    .btn.wide{min-width:480px; max-width:620px; width:100%;}
-    .btn.outline{background:var(--btnOutlineBg);color:var(--btnOutlineText);border-color:var(--btnOutlineBorder);}
-    .btn.outline:hover{background:rgba(200,16,46,.06);border-color:rgba(200,16,46,.38);}
-    .btn.primary{
-      background:linear-gradient(180deg, var(--brand2) 0%, var(--brand) 100%);
-      color:var(--btnText);box-shadow:0 14px 26px rgba(200,16,46,.22);
-    }
-    .btn.primary:hover{transform:translateY(-1px)}
-    .btn.primary:active{transform:translateY(0px); opacity:.98}
-    .btn.small{min-width:0; width:100%; padding:14px 18px; font-size:16px}
-
-    .loadingWrap{display:flex;flex-direction:column;align-items:center;gap:14px;padding:14px 0 0;}
-    .pill{display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:999px;background:#f2f4f8;font-weight:900;color:#0f172a;}
-    .dot{width:10px;height:10px;border-radius:50%;background:var(--brand);box-shadow:0 0 0 6px rgba(200,16,46,.10);}
-    .muted{color:var(--muted)}
-
-    .foot{text-align:center;padding:14px 18px 10px;border-top:1px solid var(--line);color:var(--muted);font-size:16px;line-height:1.5;}
-    .foot a{color:var(--brand);font-weight:900;text-decoration:none;cursor:pointer;}
-    .foot a:hover{text-decoration:underline}
-
-    .view{display:none}
-    .view.active{display:block}
-
-    .overlay{
-      position:fixed;inset:0;background:rgba(15,23,42,.55);
-      display:none;align-items:center;justify-content:center;padding:18px;z-index:50;
-    }
-    .overlay.active{display:flex}
-    .modal{
-      width:min(760px, 94vw);max-height:min(78vh, 720px);
-      background:#fff;border-radius:18px;border:1px solid rgba(15,23,42,.10);
-      box-shadow:0 30px 90px rgba(15,23,42,.25);overflow:hidden;
-      display:flex;flex-direction:column;
-    }
-    .modalHead{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);}
-    .modalHead h3{margin:0;font-size:18px;font-weight:900;color:#0b1222;}
-    .x{border:0;background:transparent;font-size:24px;cursor:pointer;color:#0b1222;padding:6px 10px;border-radius:10px;}
-    .x:hover{background:#f3f5f9}
-    .modalBody{padding:16px;overflow:auto;color:#0f172a;line-height:1.65;}
-
-    /* Cards */
-    .debtCards{
-      width:100%;
-      max-width:820px;
-      margin:10px auto 0;
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-    }
-    .debtCard{
-      border-radius:18px;
-      border:1px solid var(--line);
-      background:#fff;
-      box-shadow:0 12px 30px rgba(15,23,42,.06);
-      padding:16px 18px 14px;
-    }
-    .debtHeader{
-      display:flex;
-      align-items:center;
-      gap:14px;
-      justify-content:space-between;
-      flex-wrap:wrap;
-    }
-    .debtLeft{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      flex:1;
-      min-width:0;
-    }
-    .debtLogoWrap{
-      width:62px;
-      height:62px;
-      border-radius:14px;
-      background:#fff;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid #e5e7eb;
-      overflow:hidden;
-      padding:6px;
-    }
-    .debtLogo{
-      width:100%;
-      height:100%;
-      object-fit:contain;
-      object-position:center;
-      display:block;
-    }
-    .debtCredor{
-      font-weight:800;
-      font-size:18px;
-      color:#0b1222;
-      text-transform:uppercase;
-      letter-spacing:.02em;
-    }
-    .debtMeta{
-      font-size:14px;
-      color:var(--muted);
-      margin-top:2px;
-    }
-    .debtRight{
-      text-align:right;
-      min-width:180px;
-    }
-    .debtValue{
-      font-size:20px;
-      font-weight:800;
-      color:#b91c1c;
-    }
-    .debtContract{
-      font-size:14px;
-      color:var(--muted);
-      margin-top:2px;
-    }
-    .debtActionsRow{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      margin-top:12px;
-      flex-wrap:wrap;
-    }
-    .debtHint{
-      font-size:14px;
-      color:var(--muted);
-    }
-    .debtDetailsBtn{
-      border-radius:999px;
-      border:1px dashed rgba(148,163,184,.8);
-      background:#f9fafb;
-      padding:8px 12px;
-      font-size:13px;
-      font-weight:600;
-      color:#0f172a;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-    }
-    .debtDetailsBtn span.chevron{
-      font-size:16px;
-      transition:transform .16s ease;
-    }
-    .debtDetailsBtn.open span.chevron{
-      transform:rotate(90deg);
-    }
-    .debtDetails{
-      margin-top:10px;
-      border-radius:14px;
-      background:#f9fafb;
-      border:1px solid #e5e7eb;
-      padding:10px 12px;
-      display:none;
-    }
-    .debtDetails.open{ display:block; }
-
-    .debtTable{
-      width:100%;
-      border-collapse:collapse;
-      font-size:14px;
-    }
-    .debtTable thead{ background:#eef2ff; }
-    .debtTable th,.debtTable td{
-      padding:8px 6px;
-      text-align:left;
-      border-bottom:1px solid #e5e7eb;
-      white-space:nowrap;
-    }
-    .debtTable th{
-      font-weight:700;
-      color:#4b5563;
-    }
-    .debtTable td:last-child{ text-align:right; }
-
-    .nextQuestion{
-      margin-top:18px;
-      font-size:18px;
-      font-weight:700;
-      color:#0b1222;
-      text-align:center;
-    }
-    .nextHint{
-      margin-top:6px;
-      font-size:15px;
-      color:var(--muted);
-      text-align:center;
-      max-width:720px;
-      margin-left:auto;
-      margin-right:auto;
+    .logo-header {
+      width: 90px;
+      height: auto;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
     }
 
-    /* ====== NOVO (SEM MEXER NA TELA): Form IRA dentro de modal ====== */
-    .formGrid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-      margin-top:10px;
-    }
-    .formGrid .full{grid-column:1 / -1;}
-    .fLabel{font-size:13px;font-weight:800;color:#0b1222;margin:0 0 6px;}
-    .fInput, .fSelect, .fTextarea{
-      width:100%;
-      border:1px solid var(--line);
-      border-radius:12px;
-      padding:12px 12px;
-      font-size:15px;
-      outline:none;
-      background:#fff;
-    }
-    .fTextarea{min-height:92px;resize:vertical;}
-    .fInput:focus, .fSelect:focus, .fTextarea:focus{
-      border-color:rgba(200,16,46,.35);
-      box-shadow:0 0 0 4px rgba(200,16,46,.08);
-    }
-    .chips{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      padding:10px 12px;
-      border:1px solid var(--line);
-      border-radius:12px;
-      background:#fff;
-    }
-    .chip{
-      display:flex;align-items:center;gap:8px;
-      border:1px solid #e5e7eb;
-      border-radius:999px;
-      padding:8px 10px;
-      font-weight:700;
-      font-size:13px;
-      color:#0f172a;
-      background:#f9fafb;
-    }
-    .chip input{width:16px;height:16px;}
-    .formActions{
-      display:flex;
-      gap:10px;
-      justify-content:flex-end;
-      margin-top:14px;
-      flex-wrap:wrap;
-    }
-    .miniInfo{
-      margin-top:8px;
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.45;
+    .main-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.1);
+      overflow: hidden;
+      position: relative;
     }
 
-    @media (max-width:640px){
-      .title{font-size:34px}
-      .subtitle{font-size:16px}
-      .btn{min-width:160px}
-      .btn.wide{min-width:0}
-      .shellInner{padding:16px}
-      .panel{padding:16px}
-      .foot{font-size:15px}
-      .labelRow{flex-direction:column; align-items:flex-start; gap:8px;}
-      .debtHeader{align-items:flex-start;}
-      .debtRight{text-align:left;}
-      .formGrid{grid-template-columns:1fr;}
+    .content { padding: 28px 24px; }
+
+    /* Voltar sutil */
+    #btnVoltar {
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 15px;
+      transition: 0.2s;
+    }
+    #btnVoltar:hover { color: var(--brand); }
+
+    h1 { font-size: 22px; font-weight: 800; margin: 0 0 8px; letter-spacing: -0.02em; }
+    p.subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 20px; line-height: 1.4; }
+
+    /* Inputs e Controles */
+    .seg-inline {
+      display: flex;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+    .seg-inline button {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: 8px;
+      color: var(--text-muted);
+      transition: 0.2s;
+    }
+    .seg-inline button.active {
+      background: white;
+      color: var(--brand);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border: 2px solid #edf2f7;
+      border-radius: 12px;
+      outline: none;
+      transition: 0.2s;
+      margin-bottom: 20px;
+    }
+    input:focus { border-color: var(--brand); }
+
+    /* Botões */
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      border: none;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-primary { background: var(--brand); color: white; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(200,16,46,0.3); }
+    .btn-outline { background: white; border: 1px solid var(--border); color: var(--text-main); }
+    .btn-outline:hover { background: #f8fafc; }
+
+    /* Opções de Nome */
+    .name-opt {
+      border: 1px solid var(--border);
+      padding: 14px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .name-opt:hover { border-color: var(--brand); background: #fffafa; }
+
+    /* Resumo da Dívida */
+    .debt-box {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    .debt-val { color: var(--brand); font-size: 24px; font-weight: 800; display: block; }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .view { display: none; }
+    .view.active { display: block; animation: slideUp 0.3s ease-out; }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 400px) {
+      .content { padding: 20px 16px; }
+      h1 { font-size: 19px; }
     }
   </style>
 </head>
 
 <body>
-  <div class="page">
-    <div class="top">
-      <img class="logo" id="logoImg" alt="QuatroC" />
-    </div>
 
-    <div class="wrap">
-      <div class="shell">
-        <div class="shellInner">
-          <div class="backRow" id="btnVoltar" style="visibility:hidden;">
-            <span>←</span><span>Voltar</span>
+  <div class="container">
+    <header>
+      <img src="https://cdn.jsdelivr.net/gh/asilvino19-beep/Logo@main/Logo.png" alt="4C" class="logo-header">
+    </header>
+
+    <main class="main-card">
+      <div class="content">
+        
+        <div id="btnVoltar" style="visibility:hidden;">← Voltar</div>
+
+        <div class="view active" id="vStart">
+          <h1>Portal de Negociação</h1>
+          <p class="subtitle">Identifique-se para consultar suas ofertas personalizadas.</p>
+          
+          <div class="seg-inline">
+            <button id="segCPF" class="active" type="button" onclick="setDocType('CPF')">CPF</button>
+            <button id="segCNPJ" type="button" onclick="setDocType('CNPJ')">CNPJ</button>
           </div>
 
-          <!-- START -->
-          <div class="view active" id="vStart">
-            <div class="panel">
-              <h1 class="title">Portal de negociação</h1>
-              <p class="subtitle">Informe abaixo o documento:</p>
+          <input id="docInput" inputmode="numeric" placeholder="000.000.000-00">
 
-              <div class="inputWrap" style="margin-top:6px;">
-                <div class="labelRow">
-                  <div class="labelText">Digite:</div>
-                  <div class="segInline" aria-label="Tipo de documento">
-                    <button id="segCPF" class="active" type="button">CPF</button>
-                    <button id="segCNPJ" type="button">CNPJ</button>
-                  </div>
-                </div>
+          <button class="btn btn-primary" id="btnConsultar">Confirmar Documento</button>
+        </div>
 
-                <input id="docInput" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00" />
+        <div class="view" id="vLoading" style="text-align: center; padding: 30px 0;">
+          <p class="subtitle">Buscando informações no CRM...</p>
+          <div style="color: var(--brand); font-weight: 700;">Aguarde um momento</div>
+        </div>
 
-                <div class="row" style="margin-top:14px;">
-                  <button class="btn primary wide" id="btnConsultar" type="button">Confirmar</button>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="view" id="vNoRecord">
+          <h1>Tudo em dia!</h1>
+          <p class="subtitle" id="noRecordMsg">Não localizamos pendências para este documento. Agradecemos o contato.</p>
+          <button class="btn btn-primary" onclick="goStart()">Nova Consulta</button>
+        </div>
 
-          <!-- LOADING -->
-          <div class="view" id="vLoading">
-            <div class="panel">
-              <p class="subtitle" style="margin-top:10px;">
-                Estamos localizando as informações vinculadas ao documento informado.
-              </p>
-              <div class="loadingWrap">
-                <div class="muted" style="font-size:20px;font-weight:600;">Aguarde um momento.</div>
-                <div class="pill"><span class="dot"></span>Carregando...</div>
-              </div>
-            </div>
-          </div>
+        <div class="view" id="vConfirmName">
+          <h1>Confirme seus dados</h1>
+          <p class="subtitle">Para sua segurança, selecione o nome correto vinculado ao documento.</p>
+          <div id="nameOptions"></div>
+        </div>
 
-          <!-- VALIDATION -->
-          <div class="view" id="vValidate">
-            <div class="panel">
-              <h1 class="title" id="validateTitle" style="font-size:42px;margin-bottom:6px;">
-                Para darmos sequência, confirme os dados
-              </h1>
-              <p class="subtitle" id="validateSubtitle" style="margin-top:4px;">Confirme o nome completo.</p>
+        <div class="view" id="vWrongName">
+          <h1 style="color: #e53e3e;">Dados divergentes</h1>
+          <p class="subtitle">O nome selecionado não confere. Por segurança, realize uma nova consulta.</p>
+          <button class="btn btn-primary" onclick="goStart()">Recomeçar</button>
+        </div>
 
-              <div class="stack" style="margin-top:8px;">
-                <div class="msgBox centerText" style="max-width:640px;">
-                  Selecione uma das opções abaixo:
-                </div>
+        <div class="view" id="vNext">
+          <p class="subtitle" id="cardsIntro">Resumo da sua pendência:</p>
+          
+          <div class="debt-box" id="cardsGrid">
+             </div>
 
-                <div class="stack" id="nameOptions" style="width:100%;"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- WRONG NAME -->
-          <div class="view" id="vWrongName">
-            <div class="panel">
-              <h1 class="title" style="font-size:42px;">Não foi possível validar</h1>
-              <p class="subtitle" id="wrongNameText">
-                Para sua segurança, o nome selecionado não corresponde ao cadastro encontrado.
-                Reinicie a consulta com o documento correto.
-              </p>
-
-              <div class="row" style="margin-top:10px;">
-                <button class="btn primary" id="btnNovaConsulta1" type="button">Nova consulta</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- NEXT -->
-          <div class="view" id="vNext">
-            <div class="panel">
-              <h1 class="title" style="font-size:46px;" id="nextTitle">Resumo da pendência</h1>
-              <p class="subtitle" id="debtIntroText">Revise o resumo da sua pendência.</p>
-
-              <div id="debtCardsContainer" class="debtCards"></div>
-
-              <p class="nextQuestion">Como deseja prosseguir?</p>
-              <p class="nextHint">
-                Você pode seguir com a negociação por aqui ou, se preferir, falar com um atendente.
-              </p>
-
-              <div class="row" style="margin-top:14px;">
-                <button class="btn outline" id="btnAuto" type="button">Negociar pelo autoatendimento</button>
-                <button class="btn outline" id="btnHumano" type="button">Falar com um atendente</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- NEW CONSULTA -->
-          <div class="view" id="vNewConsulta">
-            <div class="panel">
-              <h1 class="title" style="font-size:46px;">Nova consulta</h1>
-              <p class="subtitle">Para sua segurança, precisamos reiniciar a consulta com o documento correto.</p>
-
-              <div class="row" style="margin-top:10px;">
-                <button class="btn primary" id="btnNovaConsulta2" type="button">Nova consulta</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- ERROR -->
-          <div class="view" id="vError">
-            <div class="panel">
-              <h1 class="title" style="font-size:42px;">Não foi possível concluir</h1>
-              <p class="subtitle" id="errorMsg">Não foi possível se conectar. Verifique sua conexão e tente novamente.</p>
-
-              <div class="row" style="margin-top:10px;">
-                <button class="btn primary" id="btnNovaConsulta3" type="button">Nova consulta</button>
-              </div>
-            </div>
+          <h2 style="font-size: 18px; margin-bottom: 15px;">Como deseja prosseguir?</h2>
+          <div style="display: grid; gap: 10px;">
+            <button class="btn btn-primary" id="btnAuto">Negociar pelo Autoatendimento</button>
+            <button class="btn btn-outline" id="btnHumano">Falar com Atendente</button>
           </div>
         </div>
 
-        <div class="foot">
-          Conosco, seus dados são tratados de forma segura e sigilosa.
-          Caso tenha dúvidas ou queira saber mais, acesse nossos
-          <a id="openTerms">Termos e Política</a>.
-        </div>
       </div>
-    </div>
-  </div>
+    </main>
 
-  <!-- MODAL: Termos -->
-  <div class="overlay" id="termsOverlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-label="Termos e Política">
-      <div class="modalHead">
-        <h3>Termos e Política</h3>
-        <button class="x" id="closeTerms" aria-label="Fechar">×</button>
-      </div>
-      <div class="modalBody">
-        <h4>Compromisso com segurança e sigilo</h4>
-        <p>
-          A QuatroC adota medidas técnicas e organizacionais para proteger os dados utilizados neste portal,
-          com foco em confidencialidade, integridade e disponibilidade das informações.
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: HUMANO -->
-  <div class="overlay" id="humanOverlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-label="Escolher projeto">
-      <div class="modalHead">
-        <h3>Falar com um atendente</h3>
-        <button class="x" id="closeHuman" aria-label="Fechar">×</button>
-      </div>
-      <div class="modalBody">
-        <div style="font-weight:900;font-size:16px;">Selecione o projeto para continuar:</div>
-        <div class="modalBtns" id="humanProjectBtns"></div>
-        <div class="modalHint">Você será direcionado para o chat do projeto selecionado.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ✅ NOVO MODAL: FORM IRA (apenas abre no botão Agendar quando existir SASCAR_IRA) -->
-  <div class="overlay" id="iraOverlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-label="Agendamento - Retirada de Equipamentos">
-      <div class="modalHead">
-        <h3>Agendamento - Retirada de Equipamentos</h3>
-        <button class="x" id="closeIra" aria-label="Fechar">×</button>
-      </div>
-      <div class="modalBody">
-        <div style="font-weight:900;font-size:16px;">Preencha os dados para solicitar o agendamento:</div>
-
-        <div class="miniInfo" id="iraContextInfo"></div>
-
-        <form id="iraForm">
-          <div class="formGrid">
-            <div class="full">
-              <div class="fLabel">Endereço completo</div>
-              <textarea class="fTextarea" id="iraEndereco" placeholder="Rua, número, complemento, bairro, cidade, UF e CEP" required></textarea>
-            </div>
-
-            <div>
-              <div class="fLabel">Opção de data 1</div>
-              <input class="fInput" id="iraData1" type="date" required />
-            </div>
-
-            <div>
-              <div class="fLabel">Período 1</div>
-              <select class="fSelect" id="iraPeriodo1" required>
-                <option value="" selected>Selecione</option>
-                <option value="Manhã">Manhã</option>
-                <option value="Tarde">Tarde</option>
-                <option value="Noite">Noite</option>
-                <option value="Integral">Integral</option>
-              </select>
-            </div>
-
-            <div>
-              <div class="fLabel">Opção de data 2</div>
-              <input class="fInput" id="iraData2" type="date" required />
-            </div>
-
-            <div>
-              <div class="fLabel">Período 2</div>
-              <select class="fSelect" id="iraPeriodo2" required>
-                <option value="" selected>Selecione</option>
-                <option value="Manhã">Manhã</option>
-                <option value="Tarde">Tarde</option>
-                <option value="Noite">Noite</option>
-                <option value="Integral">Integral</option>
-              </select>
-            </div>
-
-            <div class="full">
-              <div class="fLabel">Placa(s) para retirada</div>
-              <div class="chips" id="iraPlacas"></div>
-              <div class="miniInfo">Selecione uma ou mais placas vinculadas à sua pendência.</div>
-            </div>
-          </div>
-
-          <div class="formActions">
-            <button type="button" class="btn outline" id="iraCancelar" style="min-width:0;">Cancelar</button>
-            <button type="submit" class="btn primary" id="iraEnviar" style="min-width:0;">Enviar solicitação</button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <footer>
+      Segurança Certificada • 4C Assessoria © 2026
+    </footer>
   </div>
 
   <script>
     const LOGO_URL = "https://cdn.jsdelivr.net/gh/asilvino19-beep/Logo@main/Logo.png";
-
-    const LOGO_AMIL         = "https://asilvino19-beep.github.io/LogoAmil/LogoAmil.jpg";
-    const LOGO_MICHELIN     = "https://asilvino19-beep.github.io/LogoMichelin/LogoMichelin.png";
-    const LOGO_SANTAHELENA  = "https://asilvino19-beep.github.io/LogoSham/LogoSham.jfif";
-    const LOGO_REDEAMERICAS = "https://asilvino19-beep.github.io/LogoRedeAmericas/LogoRedeAmericas.jfif";
-
     const CRM_ENDPOINT = "https://billowing-voice-6efd.asilvino19.workers.dev/";
 
+    // URLs de Chat do seu sistema original
     const CHAT_LINK_SASCAR = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-sascar?theme=blue&pickup=y";
-    const CHAT_LINK_IRA    = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ira?theme=blue&pickup=y";
-    const CHAT_LINK_DEFAULT= "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y";
-    const CHAT_LINK_REDE_AMERICAS = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ede-americas?theme=blue&pickup=y";
+    const CHAT_LINK_IRA = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ira?theme=blue&pickup=y";
+    const CHAT_LINK_AMIL_DEFAULT = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y";
+
+    let docType = "CPF";
+    let sessionId = Date.now().toString();
 
     const $ = (id) => document.getElementById(id);
 
-    function onlyDigits(str){ return (str||"").replace(/\D/g,""); }
-    function isCPF(d){ return d.length === 11; }
-    function isCNPJ(d){ return d.length === 14; }
-
-    function norm(str){
-      return (str||"").toString().toUpperCase()
-        .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
-        .replace(/\s+/g," ").trim();
-    }
-
-    function formatDateBR(value){
-      if (!value) return "-";
-      const s = String(value);
-      const m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-      if (m) return `${m[3]}/${m[2]}/${m[1]}`;
-      return s;
-    }
-
-    function formatCurrencyBR(v){
-      return Number(v || 0).toLocaleString("pt-BR", { style:"currency", currency:"BRL" });
-    }
-
-    function getChatLinkByCredor(credor){
-      const c = norm(credor);
-      if (c.includes("REDE AMERICAS")) return CHAT_LINK_REDE_AMERICAS;
-      if (c.includes("SASCAR")) return CHAT_LINK_SASCAR;
-      if (c.includes("IRA")) return CHAT_LINK_IRA;
-      return CHAT_LINK_DEFAULT;
-    }
-
-    function openChatForCredor(credor){
-      const url = getChatLinkByCredor(credor);
-      window.open(url, "_blank", "noopener,noreferrer");
-    }
-
-    function maskCPF(digits){
-      const d = digits.slice(0, 11);
-      let out = d;
-      if (d.length > 3) out = d.slice(0,3) + "." + d.slice(3);
-      if (d.length > 6) out = out.slice(0,7) + "." + out.slice(7);
-      if (d.length > 9) out = out.slice(0,11) + "-" + out.slice(11);
-      return out;
-    }
-    function maskCNPJ(digits){
-      const d = digits.slice(0, 14);
-      let out = d;
-      if (d.length > 2) out = d.slice(0,2) + "." + out.slice(2);
-      if (d.length > 5) out = out.slice(0,6) + "." + out.slice(6);
-      if (d.length > 8) out = out.slice(0,10) + "/" + out.slice(10);
-      if (d.length > 12) out = out.slice(0,15) + "-" + out.slice(15);
-      return out;
-    }
-
-    let currentView = "vStart";
-    let docType = "CPF";
-    let foundRecord = null;
-
-    function setActiveView(viewId){
-      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-      $(viewId).classList.add("active");
-      $("btnVoltar").style.visibility = (viewId === "vStart") ? "hidden" : "visible";
-      currentView = viewId;
-    }
-
+    // Funções de Máscara (Mantendo as suas)
     function applyMask(){
       const input = $("docInput");
-      const digits = onlyDigits(input.value);
-      if (docType === "CPF"){
-        input.value = maskCPF(digits);
-        input.maxLength = 14;
+      let v = input.value.replace(/\D/g,"");
+      if(docType === "CPF"){
+        if(v.length > 11) v = v.slice(0,11);
+        input.value = v.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
       } else {
-        input.value = maskCNPJ(digits);
-        input.maxLength = 18;
+        if(v.length > 14) v = v.slice(0,14);
+        input.value = v.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
       }
     }
 
-    function detectTypeFromDigits(d){
-      if (d.length >= 12) return "CNPJ";
-      return "CPF";
-    }
+    $("docInput").addEventListener("input", applyMask);
 
     function setDocType(type){
       docType = type;
-      $("segCPF").classList.toggle("active", type==="CPF");
-      $("segCNPJ").classList.toggle("active", type==="CNPJ");
-      $("docInput").placeholder = (type==="CPF") ? "000.000.000-00" : "00.000.000/0000-00";
-      applyMask();
-    }
-
-    function goStart(){
-      foundRecord = null;
+      $("segCPF").classList.toggle("active", type === "CPF");
+      $("segCNPJ").classList.toggle("active", type === "CNPJ");
       $("docInput").value = "";
-      setDocType("CPF");
-      setActiveView("vStart");
+      $("docInput").placeholder = type === "CPF" ? "000.000.000-00" : "00.000.000/0000-00";
     }
 
-    function openOverlay(id){ $(id).classList.add("active"); }
-    function closeOverlay(id){ $(id).classList.remove("active"); }
-
-    $("openTerms").addEventListener("click", (e)=>{ e.preventDefault(); openOverlay("termsOverlay"); });
-    $("closeTerms").addEventListener("click", ()=> closeOverlay("termsOverlay"));
-    $("termsOverlay").addEventListener("click", (e)=>{ if (e.target.id === "termsOverlay") closeOverlay("termsOverlay"); });
-
-    $("closeHuman").addEventListener("click", ()=> closeOverlay("humanOverlay"));
-    $("humanOverlay").addEventListener("click", (e)=>{ if (e.target.id === "humanOverlay") closeOverlay("humanOverlay"); });
-
-    // ✅ NOVO: fechar modal IRA
-    $("closeIra").addEventListener("click", ()=> closeOverlay("iraOverlay"));
-    $("iraOverlay").addEventListener("click", (e)=>{ if (e.target.id === "iraOverlay") closeOverlay("iraOverlay"); });
-    $("iraCancelar").addEventListener("click", ()=> closeOverlay("iraOverlay"));
-
-    $("btnVoltar").addEventListener("click", goStart);
-    $("btnNovaConsulta1").addEventListener("click", goStart);
-    $("btnNovaConsulta2").addEventListener("click", goStart);
-    $("btnNovaConsulta3").addEventListener("click", goStart);
-
-    $("segCPF").addEventListener("click", ()=> setDocType("CPF"));
-    $("segCNPJ").addEventListener("click", ()=> setDocType("CNPJ"));
-
-    $("docInput").addEventListener("input", ()=>{
-      const digits = onlyDigits($("docInput").value);
-      const inferred = detectTypeFromDigits(digits);
-      if (inferred !== docType) setDocType(inferred);
-      applyMask();
-    });
-
-    async function callBackend(step, payload){
-      const body = { step, ...payload };
-      const res = await fetch(CRM_ENDPOINT, {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify(body)
-      });
-      if (!res.ok) throw new Error("Falha ao consultar CRM");
-      return await res.json();
+    function setActiveView(id){
+      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+      $(id).classList.add("active");
+      $("btnVoltar").style.visibility = id === "vStart" ? "hidden" : "visible";
     }
 
-    function setValidationTexts(isCnpj){
-      $("validateSubtitle").textContent = isCnpj
-        ? "Confirme a razão social (nome social) completa."
-        : "Confirme o nome completo.";
-    }
-
-    function buildNameOptions(fullName, isCnpj){
-      const clean = (fullName || "").toString().trim() || "CADASTRO LOCALIZADO";
-      const upper = clean.toUpperCase().replace(/\s+/g," ").trim();
-      const tokens = upper.split(" ").filter(Boolean);
-      const base = (tokens.length >= 2) ? (tokens[0] + " " + tokens[1]) : tokens[0];
-
-      const suffixesPF   = [" SANTOS", " SILVA"];
-      const suffixesCNPJ = [" COMÉRCIO LTDA", " SERVIÇOS LTDA"];
-      const suffixes = isCnpj ? suffixesCNPJ : suffixesPF;
-
-      return [
-        upper,
-        (base + suffixes[0]).trim(),
-        (base + suffixes[1]).trim()
-      ];
-    }
-
-    function renderNameOptions(options, correctUpper){
-      const correct = (correctUpper || "").toString().toUpperCase().replace(/\s+/g," ").trim();
-      const wrap = $("nameOptions");
-      wrap.innerHTML = "";
-
-      const container = document.createElement("div");
-      container.style.width = "100%";
-      container.style.maxWidth = "640px";
-      container.style.display = "flex";
-      container.style.flexDirection = "column";
-      container.style.gap = "12px";
-
-      options.forEach(opt => {
-        const label = (opt || "").toUpperCase();
-        const b = document.createElement("button");
-        b.type = "button";
-        b.className = "btn outline";
-        b.style.width = "100%";
-        b.style.minWidth = "0";
-        b.textContent = label;
-
-        b.addEventListener("click", () => {
-          const chosen = label.replace(/\s+/g," ").trim();
-          const isCorreto = !!correct && chosen === correct;
-
-          if (!isCorreto){
-            $("wrongNameText").textContent =
-              "Para sua segurança, o nome selecionado não corresponde ao cadastro encontrado. Reinicie a consulta com o documento correto.";
-            setActiveView("vWrongName");
-            return;
-          }
-
-          renderDebtCardsFromRecord(foundRecord || {});
-          setActiveView("vNext");
-        });
-
-        container.appendChild(b);
-      });
-
-      wrap.appendChild(container);
-    }
-
-    function pickParcelDoc(p){
-      return p?.numeroDocumento ?? p?.NumeroDocumento ?? p?.documento ?? p?.Documento ?? p?.Placa ?? p?.placa ?? "";
-    }
-    function pickParcelDate(p){
-      return p?.vencimento ?? p?.Vencimento ?? p?.data ?? p?.Data ?? p?.DataOS ?? p?.dataOS ?? "";
-    }
-    function pickParcelValue(p){
-      const v = p?.valor ?? p?.Valor ?? p?.ValorParcela ?? p?.ValorAtualizado ?? p?.valorAtualizado ?? p?._ValorEmAberto ?? 0;
-      return Number(v) || 0;
-    }
-    function pickParcelOS(p){
-      return p?.IraOS ?? p?.iraOS ?? p?.OS ?? p?.os ?? "";
-    }
-
-    function mapCredorInfo(rawCredor, unidade){
-      const c = norm(rawCredor || "");
-      const unidadeTrim = (unidade || "").toString().trim();
-
-      let display = rawCredor || "Projeto";
-      let logo = LOGO_URL;
-
-      if (c.includes("AMIL OPERADORAS")){
-        display = "Amil";
-        logo = LOGO_AMIL;
-      } else if (c.includes("AMIL HOSPITAIS")){
-        display = unidadeTrim || "Atendimento Hospitalar";
-        logo = LOGO_AMIL;
-      } else if (c.includes("REDE AMERICAS IMPAR") || c.includes("REDE AMERICAS")){
-        display = unidadeTrim || "Atendimento Hospitalar";
-        logo = LOGO_REDEAMERICAS;
-      } else if (c.includes("SASCAR_IRA")){
-        display = "Michelin | Equipamentos";
-        logo = LOGO_MICHELIN;
-      } else if (c.includes("SASCAR FIXA VARIAVEL")){
-        display = "Michelin Connect Flet";
-        logo = LOGO_MICHELIN;
-      } else if (c.includes("SANTA HELENA SAUDE") || c.includes("SANTA HELENA SAÚDE")){
-        display = "Santa Helena Saúde";
-        logo = LOGO_SANTAHELENA;
-      }
-
-      return { display, logo };
-    }
-
-    function normalizeDebtList(rec){
-      if (Array.isArray(rec?.dividas) && rec.dividas.length){
-        return rec.dividas.map(d => {
-          const parcelas = Array.isArray(d.parcelas) ? d.parcelas : [];
-          const total = Number(d.valorAtualizado ?? d.valorTotal ?? 0) || parcelas.reduce((a,p)=> a + pickParcelValue(p), 0);
-
-          const rawCredor = d.credor ?? d.Credor ?? "Projeto";
-          const unidade   = d.unidade ?? d.Unidade ?? d.unidadeAtendimento ?? d.UnidadeAtendimento ?? "";
-
-          const { display, logo } = mapCredorInfo(rawCredor, unidade);
-
-          return {
-            credorRaw: rawCredor,
-            credor: display,
-            logoUrl: logo,
-            numeroContrato: d.numeroContrato ?? d.NumeroContrato ?? d.contrato ?? "",
-            valorAtualizado: total,
-            parcelas
-          };
-        });
-      }
-
-      const parcelas = Array.isArray(rec?.parcelas) ? rec.parcelas : [];
-      if (!parcelas.length) return [];
-
-      const rawCredor = rec.credor ?? rec.Credor ?? "Projeto";
-      const unidade   = rec.unidade ?? rec.Unidade ?? "";
-
-      const { display, logo } = mapCredorInfo(rawCredor, unidade);
-
-      return [{
-        credorRaw: rawCredor,
-        credor: display,
-        logoUrl: logo,
-        numeroContrato: rec.numeroContrato ?? rec.NumeroContrato ?? rec.contrato ?? "",
-        valorAtualizado: parcelas.reduce((a,p)=> a + pickParcelValue(p), 0),
-        parcelas
-      }];
-    }
-
-    // ✅ Ajuste: label do botão Auto muda se houver SASCAR_IRA
-    function updateAutoButtonLabelByDebts(debts){
-      const hasSascarIra = debts.some(d => norm(d.credorRaw).includes("SASCAR_IRA"));
-      $("btnAuto").textContent = hasSascarIra
-        ? "Agendar pelo autoatendimento"
-        : "Negociar pelo autoatendimento";
-    }
-
-    function renderDebtCardsFromRecord(rec){
-      const container = $("debtCardsContainer");
-      container.innerHTML = "";
-
-      const list = normalizeDebtList(rec);
-
-      $("debtIntroText").textContent = (list.length > 1)
-        ? "Revise o resumo das suas pendências."
-        : "Revise o resumo da sua pendência.";
-
-      if (!list.length){
-        $("errorMsg").textContent =
-          "Não identificamos débitos pendentes vinculados a este documento. Agradecemos o seu contato.";
-        setActiveView("vError");
-        return;
-      }
-
-      // ✅ aplica label do botão conforme SASCAR_IRA
-      updateAutoButtonLabelByDebts(list);
-
-      list.forEach(d => {
-        const isSascarIra = norm(d.credorRaw).includes("SASCAR_IRA");
-
-        const card = document.createElement("div");
-        card.className = "debtCard";
-
-        const header = document.createElement("div");
-        header.className = "debtHeader";
-
-        const left = document.createElement("div");
-        left.className = "debtLeft";
-
-        const logoWrap = document.createElement("div");
-        logoWrap.className = "debtLogoWrap";
-
-        const logo = document.createElement("img");
-        logo.className = "debtLogo";
-        logo.src = d.logoUrl || LOGO_URL;
-        logo.alt = d.credor || "Credor";
-        logoWrap.appendChild(logo);
-
-        const titleBox = document.createElement("div");
-
-        const credorEl = document.createElement("div");
-        credorEl.className = "debtCredor";
-        credorEl.textContent = d.credor || "Projeto";
-
-        const metaEl = document.createElement("div");
-        metaEl.className = "debtMeta";
-        metaEl.textContent = d.numeroContrato ? `Contrato nº ${d.numeroContrato}` : "Contrato em aberto";
-
-        titleBox.appendChild(credorEl);
-        titleBox.appendChild(metaEl);
-
-        left.appendChild(logoWrap);
-        left.appendChild(titleBox);
-        header.appendChild(left);
-
-        if (!isSascarIra){
-          const right = document.createElement("div");
-          right.className = "debtRight";
-
-          const valEl = document.createElement("div");
-          valEl.className = "debtValue";
-          valEl.textContent = formatCurrencyBR(d.valorAtualizado || 0);
-
-          const contrEl = document.createElement("div");
-          contrEl.className = "debtContract";
-          contrEl.textContent = "Valor total atualizado";
-
-          right.appendChild(valEl);
-          right.appendChild(contrEl);
-          header.appendChild(right);
-        }
-
-        const actions = document.createElement("div");
-        actions.className = "debtActionsRow";
-
-        const hint = document.createElement("div");
-        hint.className = "debtHint";
-        hint.textContent = "Veja os detalhes antes de prosseguir.";
-
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "debtDetailsBtn";
-        btn.innerHTML = '<span class="chevron">›</span> Detalhes';
-
-        const details = document.createElement("div");
-        details.className = "debtDetails";
-
-        btn.addEventListener("click", () => {
-          const open = details.classList.toggle("open");
-          btn.classList.toggle("open", open);
-        });
-
-        actions.appendChild(hint);
-        actions.appendChild(btn);
-
-        const table = document.createElement("table");
-        table.className = "debtTable";
-
-        const thead = document.createElement("thead");
-        if (isSascarIra){
-          thead.innerHTML = `
-            <tr>
-              <th>Placa</th>
-              <th>Data OS</th>
-              <th>OS</th>
-            </tr>
-          `;
-        } else {
-          thead.innerHTML = `
-            <tr>
-              <th>Documento</th>
-              <th>Vencimento</th>
-              <th>Valor</th>
-            </tr>
-          `;
-        }
-
-        const tbody = document.createElement("tbody");
-
-        if (Array.isArray(d.parcelas) && d.parcelas.length){
-          d.parcelas.forEach(p => {
-            const tr = document.createElement("tr");
-
-            if (isSascarIra){
-              const placa = pickParcelDoc(p) || "-";
-              const dataOS = formatDateBR(pickParcelDate(p)) || "-";
-              const os = pickParcelOS(p) || "-";
-
-              tr.innerHTML = `
-                <td>${placa}</td>
-                <td>${dataOS}</td>
-                <td>${os}</td>
-              `;
-            } else {
-              const doc = pickParcelDoc(p) || "-";
-              const venc = formatDateBR(pickParcelDate(p)) || "-";
-              const val = formatCurrencyBR(pickParcelValue(p));
-
-              tr.innerHTML = `
-                <td>${doc}</td>
-                <td>${venc}</td>
-                <td>${val}</td>
-              `;
-            }
-
-            tbody.appendChild(tr);
-          });
-        } else {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `<td colspan="3">Não há detalhes para exibir.</td>`;
-          tbody.appendChild(tr);
-        }
-
-        table.appendChild(thead);
-        table.appendChild(tbody);
-
-        details.appendChild(table);
-
-        card.appendChild(header);
-        card.appendChild(actions);
-        card.appendChild(details);
-
-        container.appendChild(card);
-      });
-    }
-
-    $("btnConsultar").addEventListener("click", async () => {
-      const digits = onlyDigits($("docInput").value);
-
-      if (!isCPF(digits) && !isCNPJ(digits)){
-        $("errorMsg").textContent = "Documento inválido. Verifique e tente novamente.";
-        setActiveView("vError");
-        return;
-      }
-
+    async function handleConsultar(){
+      const doc = $("docInput").value.replace(/\D/g,"");
+      if(!doc) return alert("Informe o documento");
+      
       setActiveView("vLoading");
 
       try {
-        const data = await callBackend("consulta_divida", { documento: digits });
-
-        if (!data){
-          $("errorMsg").textContent =
-            "Não identificamos débitos pendentes vinculados a este documento. Agradecemos o seu contato.";
-          setActiveView("vError");
-          return;
-        }
-
-        const fullName =
-          data.fullName || data.displayName || data.nome || data.Nome ||
-          data.razaoSocial || data.empresa || "CADASTRO LOCALIZADO";
-
-        const tipoDocRaw = (data.tipoDocumento || (isCNPJ(digits) ? "cnpj" : "cpf")).toLowerCase();
-        const isCnpjDoc = tipoDocRaw === "cnpj";
-
-        foundRecord = { ...data, fullName, tipoDocumento: tipoDocRaw, isCnpj: isCnpjDoc };
-
-        setValidationTexts(isCnpjDoc);
-        const options = buildNameOptions(fullName, isCnpjDoc);
-        renderNameOptions(options, fullName.toUpperCase());
-        setActiveView("vValidate");
-      } catch (e) {
-        $("errorMsg").textContent = "Não foi possível concluir a consulta no momento. Tente novamente.";
-        setActiveView("vError");
-      }
-    });
-
-    $("btnHumano").addEventListener("click", () => {
-      const list = normalizeDebtList(foundRecord || {});
-      const firstRaw = list[0]?.credorRaw || foundRecord?.credor || foundRecord?.Credor || "";
-      openChatForCredor(firstRaw || "DEFAULT");
-    });
-
-    /* ============================
-       ✅ ÚNICO AJUSTE FUNCIONAL:
-       Botão "Agendar pelo autoatendimento"
-       -> abre formulário IRA (modal)
-       ============================ */
-    function extractIraPlatesFromDebts(){
-      const list = normalizeDebtList(foundRecord || {});
-      const ira = list.find(d => norm(d.credorRaw).includes("SASCAR_IRA"));
-      if (!ira) return { iraDebt: null, plates: [] };
-
-      const plates = Array.from(new Set(
-        (ira.parcelas || [])
-          .map(p => (pickParcelDoc(p) || "").toString().trim())
-          .filter(Boolean)
-      ));
-
-      return { iraDebt: ira, plates };
-    }
-
-    function openIraForm(){
-      const digits = onlyDigits($("docInput").value);
-      const list = normalizeDebtList(foundRecord || {});
-      const { iraDebt, plates } = extractIraPlatesFromDebts();
-
-      // contexto no topo do modal
-      const contrato = iraDebt?.numeroContrato ? `Contrato nº ${iraDebt.numeroContrato}` : "Contrato em aberto";
-      $("iraContextInfo").innerHTML = `
-        <div><strong>Documento:</strong> ${digits || "-"}</div>
-        <div><strong>Projeto:</strong> Michelin | Equipamentos</div>
-        <div><strong>${contrato}</strong></div>
-      `;
-
-      // render placas (checkbox)
-      const wrap = $("iraPlacas");
-      wrap.innerHTML = "";
-      if (!plates.length){
-        const empty = document.createElement("div");
-        empty.className = "muted";
-        empty.textContent = "Não foi possível identificar placas para seleção.";
-        wrap.appendChild(empty);
-      } else {
-        plates.forEach((pl, idx) => {
-          const label = document.createElement("label");
-          label.className = "chip";
-
-          const cb = document.createElement("input");
-          cb.type = "checkbox";
-          cb.value = pl;
-          cb.name = "placas";
-          cb.checked = (idx === 0); // opcional: deixa 1 marcada
-
-          const span = document.createElement("span");
-          span.textContent = pl;
-
-          label.appendChild(cb);
-          label.appendChild(span);
-          wrap.appendChild(label);
+        const res = await fetch(CRM_ENDPOINT, {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify({ step: "check_doc", doc, sessionId })
         });
+        const data = await res.json();
+        
+        if(!data.found) {
+          setActiveView("vNoRecord");
+        } else {
+          buildNameValidation(data.realName);
+          setActiveView("vConfirmName");
+        }
+      } catch(e) {
+        alert("Erro na conexão.");
+        setActiveView("vStart");
       }
-
-      // limpa campos (para não manter lixo)
-      $("iraEndereco").value = "";
-      $("iraData1").value = "";
-      $("iraData2").value = "";
-      $("iraPeriodo1").value = "";
-      $("iraPeriodo2").value = "";
-
-      openOverlay("iraOverlay");
     }
 
-    $("iraForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
+    $("btnConsultar").addEventListener("click", handleConsultar);
 
-      const digits = onlyDigits($("docInput").value);
-      const { iraDebt } = extractIraPlatesFromDebts();
-      if (!iraDebt){
-        closeOverlay("iraOverlay");
-        $("errorMsg").textContent = "Não foi possível identificar a pendência de retirada (IRA) para agendamento.";
-        setActiveView("vError");
-        return;
-      }
+    function buildNameValidation(realName){
+      const container = $("nameOptions");
+      container.innerHTML = "";
+      // Mock de nomes para o teste conforme sua lógica
+      const names = [realName, "MARIA DA SILVA OLIVEIRA", "JOSE DOS SANTOS FERREIRA"];
+      names.sort(() => Math.random() - 0.5);
 
-      const placas = Array.from(document.querySelectorAll('#iraPlacas input[type="checkbox"]:checked'))
-        .map(x => x.value)
-        .filter(Boolean);
+      names.forEach(n => {
+        const div = document.createElement("div");
+        div.className = "name-opt";
+        div.innerText = n;
+        div.onclick = () => {
+          if(n === realName) setActiveView("vNext");
+          else setActiveView("vWrongName");
+        };
+        container.appendChild(div);
+      });
+    }
 
-      if (!placas.length){
-        alert("Selecione ao menos uma placa.");
-        return;
-      }
-
-      const payload = {
-        documento: digits,
-        credor: iraDebt.credorRaw,
-        numeroContrato: iraDebt.numeroContrato || "",
-        enderecoCompleto: $("iraEndereco").value.trim(),
-        dataOpcao1: $("iraData1").value,
-        dataOpcao2: $("iraData2").value,
-        periodo1: $("iraPeriodo1").value,
-        periodo2: $("iraPeriodo2").value,
-        placas
-      };
-
-      try{
-        $("iraEnviar").disabled = true;
-        $("iraEnviar").textContent = "Enviando...";
-
-        await callBackend("ira_agendar", payload);
-
-        closeOverlay("iraOverlay");
-        $("errorMsg").textContent = "Solicitação registrada com sucesso. Em breve retornaremos com a confirmação do agendamento.";
-        setActiveView("vError");
-      }catch(err){
-        closeOverlay("iraOverlay");
-        $("errorMsg").textContent = "Não foi possível registrar sua solicitação no momento. Tente novamente.";
-        setActiveView("vError");
-      }finally{
-        $("iraEnviar").disabled = false;
-        $("iraEnviar").textContent = "Enviar solicitação";
-      }
-    });
-
-    $("btnAuto").addEventListener("click", () => {
-      const list = normalizeDebtList(foundRecord || {});
-      const hasSascarIra = list.some(d => norm(d.credorRaw).includes("SASCAR_IRA"));
-
-      // ✅ somente abre formulário se for IRA
-      if (hasSascarIra){
-        openIraForm();
-        return;
-      }
-
-      // mantém como estava (sem alterar a tela)
-      $("errorMsg").textContent = "Autoatendimento ainda não está conectado ao CRM. (Aguardando mapeamento do back.)";
-      setActiveView("vError");
-    });
-
-    (function initLogo(){
-      const img = $("logoImg");
-      img.src = LOGO_URL;
-      img.onerror = () => { img.style.display = "none"; };
-    })();
-
-    setDocType("CPF");
+    function goStart(){
+      setDocType("CPF");
+      setActiveView("vStart");
+    }
+    
+    $("btnVoltar").onclick = goStart;
   </script>
 </body>
 </html>
