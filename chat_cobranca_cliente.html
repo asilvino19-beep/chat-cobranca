@@ -822,19 +822,54 @@
 
       // define label do botão auto (IRA apenas)
       const hasIRA = list.some(c => norm(c?.credor).includes("SASCAR_IRA"));
-      $("btnAuto").textContent = hasIRA ? "Agendar pelo autoatendimento" : "Negociar pelo autoatendimento";
+      $("btnAuto").addEventListener("click", async () => {
+  try {
+    // pega as dívidas que já estão na tela (do foundRecord)
+    const list = normalizeDebtList(foundRecord || {});
+    if (!list.length) {
+      $("errorMsg").textContent = "Não há pendências para seguir.";
+      setActiveView("vError");
+      return;
+    }
 
-      list.forEach((c, idx) => {
-        const credorRaw = c?.credor || c?.Credor || "";
-        const unidade = c?.unidade || c?.Unidade || c?.unidadeHospital || "";
-        const pres = getCredorPresentation(credorRaw, unidade);
+    // regra simples:
+    // - se tiver SASCAR_IRA em qualquer card -> step de agendamento IRA
+    // - senão -> step de negociação padrão
+    const hasSascarIra = list.some(d => norm(d.credorRaw).includes("SASCAR_IRA"));
+    const step = hasSascarIra ? "ira_agendar_auto" : "negociar_auto";
 
-        const contrato = c?.numeroContrato || c?.NumeroContrato || "não informado";
-        const total = sumParcelas(c?.parcelas);
+    // payload que o back precisa para identificar contrato/credor
+    // (manda o primeiro por enquanto; se você quiser “selecionar card”, eu ajusto depois)
+    const chosen = list[0];
 
-        const isIRA = norm(credorRaw).includes("SASCAR_IRA");
+    setActiveView("vLoading");
 
-        const card = document.createElement("div");
+    const resp = await callBackend(step, {
+      documento: onlyDigits($("docInput").value),
+      credor: chosen.credorRaw,
+      numeroContrato: chosen.numeroContrato,
+      idContrato: chosen.idContrato || foundRecord?.idContrato || null
+    });
+
+    // aqui você decide o que o back devolve:
+    // - se devolver url, abre
+    // - se devolver mensagens, renderiza
+    if (resp?.url) {
+      window.open(resp.url, "_blank", "noopener,noreferrer");
+      setActiveView("vNext");
+      return;
+    }
+
+    // fallback: mostra mensagem do back
+    $("errorMsg").textContent = resp?.mensagem || "Autoatendimento indisponível no momento.";
+    setActiveView("vError");
+
+  } catch (e) {
+    $("errorMsg").textContent = "Falha ao conectar no autoatendimento. Tente novamente.";
+    setActiveView("vError");
+  }
+});
+      
         card.className = "card";
 
         card.innerHTML = `
@@ -1173,3 +1208,4 @@
   </script>
 </body>
 </html>
+
