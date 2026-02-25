@@ -1,718 +1,1083 @@
-<!doctype html>
-<html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-pt" class="scroll-smooth">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
-  <title>Portal de Negociação - QuatroC</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quatro C | Gestão de Recebíveis e Cobrança Especializada</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            DEFAULT: '#00264d',
+                            dark: '#001a33',
+                            light: '#003d80'
+                        },
+                        accent: '#FF6600',
+                        neutralBg: '#F1F5F9'
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
 
-  <style>
-    :root {
-      --brand: #c8102e;
-      --brand-hover: #a00d25;
-      --bg-dark: #120204;
-      --card-white: #ffffff;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --line: #e2e8f0;
-      --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    }
+        /* Portal de Negociação (views) */
+        .view { display: none; }
+        .view.active { display: block; animation: fadeInPortal 0.35s ease; }
+        @keyframes fadeInPortal { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; font-family: 'Inter', sans-serif; }
+        .nav-blur { background: rgba(255, 255, 255, 0.9); backdrop-filter: saturate(180%) blur(20px); }
+        .hero-pattern { 
+            background-color: #ffffff;
+            background-image: radial-gradient(#00264d 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+            opacity: 0.05;
+        }
+        .soft-shadow { box-shadow: 0 10px 30px -10px rgba(0, 38, 77, 0.1); }
+        .cycle-line { background: repeating-linear-gradient(90deg, #FF6600 0, #FF6600 5px, transparent 5px, transparent 10px); }
+        
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-bounce-slow { animation: bounce-slow 3s infinite ease-in-out; }
 
-    body {
-      margin: 0;
-      background-color: var(--bg-dark);
-      background-image: radial-gradient(circle at center, #2a050a 0%, #120204 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    .logo-seal {
-      width: 100px; height: 100px;
-      background: white;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: -50px;
-      z-index: 10;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      border: 4px solid var(--bg-dark);
-      padding: 12px;
-    }
-    .logo-seal img { width: 100%; height: auto; object-fit: contain; }
-
-    .main-container {
-      width: 100%;
-      max-width: 550px;
-      background: var(--card-white);
-      border-radius: 32px;
-      padding: 70px 30px 40px;
-      box-shadow: var(--shadow);
-      position: relative;
-    }
-
-    .back-btn {
-      position: absolute;
-      top: 25px;
-      left: 30px;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: 0.2s;
-      user-select: none;
-    }
-    .back-btn:hover { color: var(--brand); }
-
-    h1 { font-size: 28px; font-weight: 800; color: var(--text-main); margin: 0 0 10px; letter-spacing: -1px; text-align: center; }
-    .subtitle { font-size: 16px; color: var(--text-muted); text-align: center; margin-bottom: 25px; line-height: 1.5; font-weight: 500; }
-
-    .doc-toggle {
-      display: flex;
-      background: #f1f5f9;
-      padding: 5px;
-      border-radius: 14px;
-      margin-bottom: 20px;
-    }
-    .doc-toggle button {
-      flex: 1; border: none; background: transparent; padding: 10px;
-      font-weight: 700; color: var(--text-muted); cursor: pointer; border-radius: 10px; transition: 0.2s;
-    }
-    .doc-toggle button.active { background: white; color: var(--brand); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-
-    input {
-      width: 100%; padding: 18px; font-size: 18px; border: 2px solid var(--line);
-      border-radius: 16px; outline: none; text-align: center; font-weight: 600; transition: 0.2s;
-    }
-    input:focus { border-color: var(--brand); background: #fffafb; }
-
-    .btn {
-      width: 100%; padding: 18px; border-radius: 16px; font-weight: 700; font-size: 16px;
-      cursor: pointer; border: none; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
-    }
-    .btn-primary { background: var(--brand); color: white; margin-top: 20px; box-shadow: 0 10px 20px rgba(200,16,46,0.2); }
-    .btn-primary:hover { transform: translateY(-2px); background: var(--brand-hover); }
-    .btn-outline { background: white; border: 2px solid var(--line); color: var(--text-main); margin-top: 10px; }
-    .btn-outline:hover { background: #f8fafc; border-color: var(--text-muted); }
-
-    .cards-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 25px; }
-    .offer-card {
-      border: 1px solid var(--line); border-radius: 20px; padding: 16px; background: #fdfdfd;
-      display: flex; flex-direction: column; gap: 10px;
-    }
-    .offer-header { display: flex; align-items: center; gap: 12px; }
-    .offer-logo { width: 45px; height: 45px; border-radius: 10px; object-fit: contain; background: white; border: 1px solid var(--line); }
-    .offer-info h4 { margin: 0; font-size: 15px; font-weight: 800; }
-    .offer-info span { font-size: 12px; color: var(--text-muted); font-weight: 600; }
-
-    .view { display: none; }
-    .view.active { display: block; animation: fadeIn 0.4s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    footer { margin-top: 30px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.4); font-weight: 500; }
-    footer a { color: rgba(255,255,255,0.6); text-decoration: none; }
-
-    .overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px);
-      display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px;
-    }
-    .overlay.active { display: flex; }
-    .modal {
-      background: white; border-radius: 24px; width: 100%; max-width: 500px;
-      max-height: 90vh; overflow-y: auto; padding: 30px; position: relative;
-    }
-
-    /* Mensagens simples */
-    .msg {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px;
-      background: #fff;
-      color: var(--text-main);
-      font-weight: 600;
-      text-align: center;
-      margin-bottom: 16px;
-    }
-
-    @media (max-width: 480px) {
-      .main-container { padding: 60px 20px 30px; }
-      h1 { font-size: 22px; }
-    }
-  </style>
+        @keyframes pulse-whatsapp {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+        .whatsapp-pulse { animation: pulse-whatsapp 2s infinite; }
+    </style>
 </head>
-
-<body>
-
-  <div class="logo-seal">
-    <img id="logoImg" src="https://cdn.jsdelivr.net/gh/asilvino19-beep/Logo@main/Logo.png" alt="QuatroC">
-  </div>
-
-  <div class="main-container">
-    <div class="back-btn" id="btnVoltar" style="visibility:hidden;">← Voltar</div>
-
-    <!-- START -->
-    <div class="view active" id="vStart">
-      <h1>Portal de Negociação</h1>
-      <p class="subtitle">Acesse suas ofertas personalizadas informando seu documento.</p>
-
-      <div class="doc-toggle">
-        <button id="segCPF" class="active" type="button">CPF</button>
-        <button id="segCNPJ" type="button">CNPJ</button>
-      </div>
-
-      <input id="docInput" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00">
-
-      <button class="btn btn-primary" id="btnConsultar" type="button">Localizar Contratos</button>
-    </div>
-
-    <!-- LOADING -->
-    <div class="view" id="vLoading">
-      <div style="text-align: center; padding: 40px 0;">
-        <div style="border: 4px solid #f3f3f3; border-top: 4px solid var(--brand); border-radius: 50%; width: 45px; height: 45px; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
-        <p class="subtitle" style="margin:0;">Buscando informações nos nossos credores...</p>
-      </div>
-    </div>
-
-    <!-- CONFIRM NAME -->
-    <div class="view" id="vConfirmName">
-      <h1>Confirme sua identidade</h1>
-      <p class="subtitle" id="confirmSubtitle">Selecione o nome/razão social correto vinculado ao documento:</p>
-      <div class="msg">Selecione uma das opções abaixo:</div>
-      <div id="nameOptions" style="display:grid; gap: 10px;"></div>
-    </div>
-
-    <!-- NEXT -->
-    <div class="view" id="vNext">
-      <h1>Suas Ofertas</h1>
-      <p class="subtitle" id="cardsIntro">Identificamos as seguintes pendências para negociação:</p>
-
-      <div class="cards-grid" id="cardsGrid"></div>
-
-      <button class="btn btn-primary" id="btnAuto" type="button">Negociar agora</button>
-      <button class="btn btn-outline" id="btnHumano" type="button">Falar com Atendente</button>
-    </div>
-
-    <!-- NO RECORD -->
-    <div class="view" id="vNoRecord">
-      <h1>Nada encontrado</h1>
-      <p class="subtitle" id="noRecordMsg">Não localizamos pendências para este documento. Verifique os dados e tente novamente.</p>
-      <button class="btn btn-primary" id="btnNovaConsultaNoRecord" type="button">Nova Consulta</button>
-    </div>
-
-    <!-- ERROR -->
-    <div class="view" id="vError">
-      <h1>Não foi possível concluir</h1>
-      <p class="subtitle" id="errorMsg">Não foi possível se conectar. Verifique sua conexão e tente novamente.</p>
-      <button class="btn btn-primary" id="btnNovaConsultaErr" type="button">Nova Consulta</button>
-    </div>
-
-  </div>
-
-  <footer>
-    Ambiente Seguro • 4C Assessoria © 2026<br>
-    <a href="#" id="openTerms">Termos e Privacidade</a>
-  </footer>
-
-  <!-- TERMS -->
-  <div class="overlay" id="termsOverlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-label="Termos e Política">
-      <h3 style="margin:0 0 10px;">Termos e Política</h3>
-      <p style="margin:0 0 20px;color:#334155;line-height:1.6;">
-        A QuatroC adota medidas técnicas e organizacionais para proteger os dados utilizados neste portal,
-        com foco em confidencialidade, integridade e disponibilidade das informações.
-      </p>
-      <button class="btn btn-primary" id="closeTerms" type="button">Entendi</button>
-    </div>
-  </div>
-
-  <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
-
-  <script>
-    // =========================
-    // CONFIG (DO HTML RAIZ)
-    // =========================
-    const LOGO_URL = "https://cdn.jsdelivr.net/gh/asilvino19-beep/Logo@main/Logo.png";
-
-    // Ponte Cloudflare Worker -> n8n
-    const CRM_ENDPOINT = "https://billowing-voice-6efd.asilvino19.workers.dev/";
-
-    // Chats
-    const CHAT_LINK_SASCAR        = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-sascar?theme=blue&pickup=y";
-    const CHAT_LINK_IRA           = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ira?theme=blue&pickup=y";
-    const CHAT_LINK_AMIL_DEFAULT  = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y";
-    const CHAT_LINK_REDE_AMERICAS = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ede-americas?theme=blue&pickup=y";
-
-    // Logos por credor
-    const LOGO_AMIL     = "https://asilvino19-beep.github.io/LogoAmil/LogoAmil.jpg";
-    const LOGO_MICHELIN = "https://asilvino19-beep.github.io/LogoMichelin/LogoMichelin.png";
-    const LOGO_SHAM     = "https://asilvino19-beep.github.io/LogoSham/LogoSham.jfif";
-    const LOGO_REDE     = "https://asilvino19-beep.github.io/LogoRedeAmericas/LogoRedeAmericas.jfif";
-
-    const $ = (id) => document.getElementById(id);
-
-    function onlyDigits(str){ return (str||"").replace(/\D/g,""); }
-    function isCPF(d){ return d.length === 11; }
-    function isCNPJ(d){ return d.length === 14; }
-
-    function norm(str){
-      return (str||"").toString().toUpperCase()
-        .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
-        .replace(/\s+/g," ").trim();
-    }
-
-    function formatBRL(v){
-      const n = Number(String(v ?? "0").replace(/[^0-9,.-]/g,"").replace(".","").replace(",", ".")) || 0;
-      return n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-    }
-
-    // ====== De/Para credor (nome + logo + chat) ======
-    function getCredorPresentation(credorRaw, unidade){
-      const c = norm(credorRaw);
-
-      const isAmilHosp =
-        c.includes("AMIL HOSPITAIS") ||
-        c.includes("REDE AMERICAS IMPAR") ||
-        c.includes("REDE AMERICAS");
-
-      if (isAmilHosp){
-        const nomeUnidade = (unidade && String(unidade).trim()) ? String(unidade).trim() : "Atendimento Hospitalar";
-        const logo = c.includes("REDE AMERICAS") ? LOGO_REDE : LOGO_AMIL;
-        const chat = c.includes("REDE AMERICAS") ? CHAT_LINK_REDE_AMERICAS : CHAT_LINK_AMIL_DEFAULT;
-        return { nome: nomeUnidade, logo, chat, credorTag: c };
-      }
-
-      if (c.includes("AMIL OPERADORAS")){
-        return { nome:"Amil", logo:LOGO_AMIL, chat:CHAT_LINK_AMIL_DEFAULT, credorTag:c };
-      }
-
-      if (c.includes("SASCAR_IRA")){
-        return { nome:"Michelin | Equipamentos", logo:LOGO_MICHELIN, chat:CHAT_LINK_IRA, credorTag:c };
-      }
-
-      if (c.includes("SASCAR FIXA VARIAVEL")){
-        return { nome:"Michelin Connect Fleet", logo:LOGO_MICHELIN, chat:CHAT_LINK_SASCAR, credorTag:c };
-      }
-
-      if (c.includes("SANTA HELENA")){
-        return { nome:"Santa Helena Saúde", logo:LOGO_SHAM, chat:CHAT_LINK_AMIL_DEFAULT, credorTag:c };
-      }
-
-      return { nome: credorRaw || "Projeto", logo: LOGO_URL, chat: CHAT_LINK_AMIL_DEFAULT, credorTag:c };
-    }
-
-    function openChat(url){
-      window.open(url, "_blank", "noopener,noreferrer");
-    }
-
-    // Máscaras (do raiz)
-    function maskCPF(digits){
-      const d = digits.slice(0, 11);
-      let out = d;
-      if (d.length > 3) out = d.slice(0,3) + "." + d.slice(3);
-      if (d.length > 6) out = out.slice(0,7) + "." + out.slice(7);
-      if (d.length > 9) out = out.slice(0,11) + "-" + out.slice(11);
-      return out;
-    }
-    function maskCNPJ(digits){
-      const d = digits.slice(0, 14);
-      let out = d;
-      if (d.length > 2) out = d.slice(0,2) + "." + d.slice(2);
-      if (d.length > 5) out = out.slice(0,6) + "." + out.slice(6);
-      if (d.length > 8) out = out.slice(0,10) + "/" + out.slice(10);
-      if (d.length > 12) out = out.slice(0,15) + "-" + out.slice(15);
-      return out;
-    }
-    function applyMask(){
-      const input = $("docInput");
-      const digits = onlyDigits(input.value);
-      if (docType === "CPF"){
-        input.value = maskCPF(digits);
-        input.maxLength = 14;
-      } else {
-        input.value = maskCNPJ(digits);
-        input.maxLength = 18;
-      }
-    }
-    function detectTypeFromDigits(d){
-      if (d.length >= 12) return "CNPJ";
-      return "CPF";
-    }
-
-    // Views (adaptado pro layout novo)
-    function setActiveView(viewId){
-      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-      $(viewId).classList.add("active");
-      $("btnVoltar").style.visibility = (viewId === "vStart") ? "hidden" : "visible";
-      currentView = viewId;
-    }
-
-    function openOverlay(id){
-      const el = $(id);
-      el.classList.add("active");
-      el.setAttribute("aria-hidden", "false");
-    }
-    function closeOverlay(id){
-      const el = $(id);
-      el.classList.remove("active");
-      el.setAttribute("aria-hidden", "true");
-    }
-
-    let currentView = "vStart";
-    let docType = "CPF";
-    let currentDoc = "";
-    let sessionId = Date.now().toString();
-    let foundRecord = null;
-
-    // ===== CHAMADA BACK (DO RAIZ - SEM TRY/CATCH QUE MASCARA ERRO) =====
-    async function callBackend(step, payload) {
-      const body = { step, sessionId, ...payload };
-
-      const res = await fetch(CRM_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-
-      if (!res.ok) throw new Error("Falha ao consultar back");
-      return await res.json();
-    }
-
-    function setDocType(type){
-      docType = type;
-      $("segCPF").classList.toggle("active", type==="CPF");
-      $("segCNPJ").classList.toggle("active", type==="CNPJ");
-      $("docInput").placeholder = (type==="CPF") ? "000.000.000-00" : "00.000.000/0000-00";
-      applyMask();
-    }
-
-    function goStart(){
-      currentDoc = "";
-      foundRecord = null;
-      $("docInput").value = "";
-      setDocType("CPF");
-      setActiveView("vStart");
-    }
-
-    // ====== Nomes para confirmação (DO RAIZ) ======
-    function buildNameOptions(realName, typeUpper){
-      const name = String(realName || "").trim();
-      const clean = name.replace(/\s+/g," ").trim();
-      const parts = clean.split(" ").filter(Boolean);
-
-      if (!clean || parts.length < 2){
-        const base = (typeUpper === "CNPJ") ? "Razão Social" : "Nome Completo";
-        return [
-          clean || base,
-          typeUpper==="CNPJ" ? "Empresa Exemplo LTDA" : "Maria Helena Santos",
-          typeUpper==="CNPJ" ? "Comercial Brasil SA" : "João Pedro Almeida"
-        ];
-      }
-
-      const first = parts[0];
-      const second = parts[1];
-      const prefix = `${first} ${second}`;
-
-      const pfSuf = ["DA SILVA","DE SOUZA","ALMEIDA","PEREIRA","ROCHA","FERREIRA"];
-      const pjSuf = ["SERVIÇOS LTDA","COMÉRCIO LTDA","LOGÍSTICA LTDA","INDÚSTRIA SA","SOLUÇÕES LTDA","DISTRIBUIDORA LTDA"];
-
-      const realUpper = clean.toUpperCase();
-
-      const s1 = (typeUpper==="CNPJ" ? pjSuf[0] : pfSuf[0]);
-      const s2 = (typeUpper==="CNPJ" ? pjSuf[1] : pfSuf[1]);
-
-      let v1 = `${prefix} ${s1}`.toUpperCase();
-      let v2 = `${prefix} ${s2}`.toUpperCase();
-      let real = realUpper;
-
-      if (v1 === real) v1 = `${prefix} ${(typeUpper==="CNPJ" ? pjSuf[2] : pfSuf[2])}`.toUpperCase();
-      if (v2 === real || v2 === v1) v2 = `${prefix} ${(typeUpper==="CNPJ" ? pjSuf[3] : pfSuf[3])}`.toUpperCase();
-
-      return [v1, real, v2];
-    }
-
-    function renderNameOptions(typeUpper, realName){
-      const wrap = $("nameOptions");
-      wrap.innerHTML = "";
-
-      $("confirmSubtitle").textContent =
-        (typeUpper === "CNPJ")
-          ? "Selecione a razão social / nome social correto vinculado ao documento:"
-          : "Selecione o nome completo correto vinculado ao documento:";
-
-      const opts = buildNameOptions(realName, typeUpper);
-
-      opts.forEach(opt => {
-        const b = document.createElement("button");
-        b.type = "button";
-        b.className = "btn btn-outline";
-        b.textContent = opt;
-
-        b.addEventListener("click", async () => {
-          const realUpper = String(realName || "").trim().toUpperCase();
-          const chosen = String(opt || "").trim().toUpperCase();
-
-          if (realUpper && chosen === realUpper){
-            try{
-              setActiveView("vLoading");
-
-              // mantém step do raiz
-              const data = await callBackend("confirmar_identidade", {
-                documento: currentDoc,
-                optionId: "identidade_sim"
-              });
-
-              foundRecord = { ...(foundRecord||{}), ...(data||{}) };
-              await loadResumoDividas();
-            }catch(e){
-              $("errorMsg").textContent = "Não foi possível confirmar os dados no momento. Tente novamente.";
-              setActiveView("vError");
-            }
-          } else {
-            alert("Nome incorreto para este documento por motivos de segurança.");
-            goStart();
-          }
-        });
-
-        wrap.appendChild(b);
-      });
-    }
-
-    // ====== Resumo / Cards (adaptado ao layout novo) ======
-    function sumParcelas(parcelas){
-      const arr = Array.isArray(parcelas) ? parcelas : [];
-      let t = 0;
-      for (const p of arr){
-        const v = Number(p?.Valor ?? p?.ValorOriginal ?? p?._ValorEmAberto ?? p?.valor ?? 0) || 0;
-        t += v;
-      }
-      return t;
-    }
-
-    function renderCards(cases){
-      const grid = $("cardsGrid");
-      grid.innerHTML = "";
-
-      const list = Array.isArray(cases) ? cases : [];
-
-      if (!list.length) {
-        $("noRecordMsg").textContent = "Não identificamos pendências vinculadas a este documento.";
-        setActiveView("vNoRecord");
-        return;
-      }
-
-      list.forEach((c, idx) => {
-        const credorRaw = c?.credor || c?.Credor || "";
-        const unidade = c?.unidade || c?.Unidade || "";
-        const pres = getCredorPresentation(credorRaw, unidade);
-
-        const contrato = c?.numeroContrato || c?.NumeroContrato || c?.Contrato || "-";
-        const total = sumParcelas(c?.parcelas || c?.Parcelas || []);
-
-        const card = document.createElement("div");
-        card.className = "offer-card";
-        card.innerHTML = `
-          <div class="offer-header">
-            <img src="${pres.logo}" class="offer-logo" alt="logo" onerror="this.style.display='none'">
-            <div class="offer-info">
-              <h4>${pres.nome}</h4>
-              <span>Contrato: ${String(contrato)}</span>
+<body class="bg-white text-slate-800 font-sans antialiased text-left">
+
+    <!-- Navegação -->
+    <nav class="nav-blur fixed w-full z-50 border-b border-slate-100 transition-all duration-300" id="main-nav">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-navy p-2 rounded-lg">
+                    <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M30 35H45V45H55V35H70V65H55V55H45V65H30V35Z" fill="white"/>
+                        <path d="M75 20L85 30L75 40" stroke="#FF6600" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xl font-extrabold text-navy tracking-tighter leading-none">QUATRO C</span>
+                    <span class="text-[8px] uppercase font-bold text-slate-400 tracking-[0.2em]">Gestão e Cobrança</span>
+                </div>
             </div>
-          </div>
+            
+            <div class="hidden lg:flex items-center space-x-10 text-[10px] font-bold uppercase tracking-widest">
+                <a href="#home" class="text-navy hover:text-accent transition-colors">Início</a>
+                <a href="#ciclo" class="text-navy hover:text-accent transition-colors">O Ciclo</a>
+                <a href="#servicos" class="text-navy hover:text-accent transition-colors">Serviços</a>
+                <a href="#autoatendimento" class="text-navy hover:text-accent transition-colors">Autoatendimento</a>
+                <a href="#contato" class="bg-accent text-white px-6 py-3 rounded-full hover:shadow-lg hover:shadow-orange-200 transition-all text-center">Consultoria</a>
+            </div>
+        </div>
+    </nav>
 
-          <div style="display:flex; justify-content:space-between; font-size:14px;">
-            <b>Valor:</b> <span>${formatBRL(total)}</span>
-          </div>
+    <!-- Hero Section -->
+    <header id="home" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-white">
+        <div class="absolute inset-0 hero-pattern"></div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <span class="inline-block px-4 py-1 rounded-full bg-slate-100 text-navy text-[10px] font-bold uppercase tracking-widest mb-6">Excelência em Recuperação</span>
+                    <h1 class="font-serif text-5xl lg:text-7xl text-navy leading-[1.1] mb-8">
+                        Inteligência na gestão de seus <span class="text-accent underline decoration-slate-200 underline-offset-8">recebíveis</span>.
+                    </h1>
+                    <p class="text-lg text-slate-500 mb-10 leading-relaxed max-w-lg">
+                        Atuamos como parceiros estratégicos do seu financeiro, otimizando todo o ciclo de crédito — do faturamento à liquidação extrajudicial.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#contato" class="bg-navy text-white px-10 py-4 rounded-full font-bold shadow-xl hover:bg-navy-light transition-all text-center">Auditar Carteira</a>
+                        <a href="#autoatendimento" class="bg-white border-2 border-slate-100 text-navy px-10 py-4 rounded-full font-bold hover:border-accent transition-all text-center text-sm">Portal do Devedor</a>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="bg-neutralBg rounded-[3rem] p-4 shadow-sm relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=1200" alt="Finance Professional" class="rounded-[2.5rem] grayscale hover:grayscale-0 transition duration-700">
+                        <div class="absolute bottom-10 left-10 bg-white p-6 rounded-3xl shadow-2xl border border-slate-100 animate-bounce-slow">
+                            <p class="text-4xl font-black text-navy leading-none mb-1">35%</p>
+                            <p class="text-[9px] uppercase font-bold text-slate-400 tracking-widest">Aumento na Liquidez</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-          <button class="btn btn-outline" type="button" data-idx="${idx}" style="margin-top:6px;">
-            Negociar este contrato
-          </button>
-        `;
+    <!-- O Ciclo -->
+    <section id="ciclo" class="py-24 bg-neutralBg/50 border-y border-slate-100">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col lg:flex-row justify-between items-end mb-20 gap-8">
+                <div class="max-w-xl">
+                    <h2 class="font-serif text-4xl text-navy mb-4 leading-tight tracking-tight">Um ciclo completo voltado para o seu fluxo de caixa.</h2>
+                    <p class="text-slate-500 font-medium italic">Monitorizamos cada fase da dívida com precisão e diplomacia.</p>
+                </div>
+                <div class="w-24 h-px bg-slate-200 hidden lg:block"></div>
+            </div>
 
-        // botão por card chama negociar_auto com o case específico
-        card.querySelector("button[data-idx]").addEventListener("click", async () => {
-          try{
-            setActiveView("vLoading");
-            const resp = await callBackend("negociar_auto", {
-              documento: currentDoc,
-              credor: credorRaw,
-              numeroContrato: c?.numeroContrato || c?.NumeroContrato || null,
-              idContrato: c?.idContrato || c?.IDContrato || null
-            });
+            <div class="relative grid md:grid-cols-4 gap-12">
+                <div class="absolute top-10 left-0 w-full h-px cycle-line hidden md:block opacity-20"></div>
+                
+                <div class="relative z-10 group">
+                    <div class="w-20 h-20 bg-white rounded-3xl flex items-center justify-center text-navy shadow-sm border border-slate-100 mb-8 group-hover:bg-navy group-hover:text-white transition-all duration-500">
+                        <i class="fas fa-shield-halved text-2xl"></i>
+                    </div>
+                    <h4 class="font-bold text-navy text-xs uppercase tracking-widest mb-4">01. Prevenção</h4>
+                    <p class="text-slate-500 text-xs leading-relaxed">Gestão de régua preventiva para evitar o atraso antes que ele ocorra.</p>
+                </div>
 
-            if (resp?.url){
-              window.open(resp.url, "_blank", "noopener,noreferrer");
-              setActiveView("vNext");
-              return;
+                <div class="relative z-10 group">
+                    <div class="w-20 h-20 bg-white rounded-3xl flex items-center justify-center text-navy shadow-sm border border-slate-100 mb-8 group-hover:bg-navy group-hover:text-white transition-all duration-500">
+                        <i class="fas fa-paper-plane text-2xl"></i>
+                    </div>
+                    <h4 class="font-bold text-navy text-xs uppercase tracking-widest mb-4">02. Administrativo</h4>
+                    <p class="text-slate-500 text-xs leading-relaxed">Contactos iniciais focados em manutenção de rotina e lembretes amigáveis.</p>
+                </div>
+
+                <div class="relative z-10 group">
+                    <div class="w-20 h-20 bg-accent rounded-3xl flex items-center justify-center text-white shadow-lg border border-orange-100 mb-8 transform scale-110">
+                        <i class="fas fa-chess-knight text-2xl"></i>
+                    </div>
+                    <h4 class="font-bold text-navy text-xs uppercase tracking-widest mb-4">03. Estratégico</h4>
+                    <p class="text-slate-500 text-xs leading-relaxed font-bold">Intervenção técnica para títulos que requerem mediação especializada.</p>
+                </div>
+
+                <div class="relative z-10 group">
+                    <div class="w-20 h-20 bg-white rounded-3xl flex items-center justify-center text-navy shadow-sm border border-slate-100 mb-8 group-hover:bg-navy group-hover:text-white transition-all duration-500">
+                        <i class="fas fa-handshake-angle text-2xl"></i>
+                    </div>
+                    <h4 class="font-bold text-navy text-xs uppercase tracking-widest mb-4">04. Extrajudicial</h4>
+                    <p class="text-slate-500 text-xs leading-relaxed">Esforço intensivo de negociação e quitação definitiva de débitos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Serviços -->
+    <section id="servicos" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-3 gap-8">
+                
+                <div class="lg:row-span-2 bg-navy text-white p-12 rounded-[3rem] flex flex-col justify-between">
+                    <div>
+                        <h2 class="font-serif text-4xl mb-6 leading-tight italic">Nossa atuação é a extensão do seu faturamento.</h2>
+                        <p class="text-slate-400 font-light mb-8">Personalizamos a nossa abordagem conforme a cultura da sua empresa.</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3 bg-white/5 p-4 rounded-2xl border border-white/10">
+                            <i class="fas fa-check-circle text-accent"></i>
+                            <span class="text-[10px] font-bold uppercase tracking-widest">Resolução Amigável</span>
+                        </div>
+                        <div class="flex items-center gap-3 bg-white/5 p-4 rounded-2xl border border-white/10">
+                            <i class="fas fa-check-circle text-accent"></i>
+                            <span class="text-[10px] font-bold uppercase tracking-widest">Preservação da Imagem</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-neutralBg p-10 rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-md transition">
+                    <i class="fas fa-list-check text-2xl text-accent mb-6"></i>
+                    <h4 class="font-bold text-navy text-lg mb-2">Gestão de Régua</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Automação e execução de toda a comunicação financeira pré e pós vencimento.</p>
+                </div>
+
+                <div class="bg-neutralBg p-10 rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-md transition">
+                    <i class="fas fa-fingerprint text-2xl text-navy mb-6"></i>
+                    <h4 class="font-bold text-navy text-lg mb-2">Enriquecimento</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Localização precisa através de tecnologia avançada de cruzamento de dados.</p>
+                </div>
+
+                <div class="bg-neutralBg p-10 rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-md transition">
+                    <i class="fas fa-balance-scale text-2xl text-navy mb-6"></i>
+                    <h4 class="font-bold text-navy text-lg mb-2">Conciliação</h4>
+                    <p class="text-slate-600 text-sm leading-relaxed font-semibold italic">Transformamos dívidas antigas em novos fluxos de pagamentos ativos.</p>
+                </div>
+
+                <div class="bg-neutralBg p-10 rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-md transition">
+                    <i class="fas fa-chart-bar text-2xl text-accent mb-6"></i>
+                    <h4 class="font-bold text-navy text-lg mb-2">BI & Insights</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Relatórios estratégicos com indicadores reais de saúde financeira.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Autoatendimento -->
+    <section id="autoatendimento" class="py-24 bg-navy relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-1/2 h-full bg-accent/5 -skew-x-12 translate-x-1/2"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                <div class="text-white">
+                    <h2 class="font-serif text-4xl lg:text-5xl mb-8 italic">Portal de Negociação Automática.</h2>
+                    <p class="text-slate-400 text-lg font-light leading-relaxed mb-10">
+                        Oferecemos ao seu cliente uma plataforma discreta e segura para resolver pendências de forma instantânea. Menos atrito, mais liquidez.
+                    </p>
+                    <ul class="space-y-4 mb-10">
+                        <li class="flex items-center gap-4 text-sm font-medium"><i class="fas fa-check-double text-accent"></i> Acordos Personalizados</li>
+                        <li class="flex items-center gap-4 text-sm font-medium"><i class="fas fa-clock text-accent"></i> Disponível 24/7</li>
+                        <li class="flex items-center gap-4 text-sm font-medium"><i class="fas fa-user-shield text-accent"></i> Sigilo e Segurança Total</li>
+                    </ul>
+                </div>
+
+
+                <div class="bg-white rounded-[3rem] p-1 shadow-2xl">
+                    <div class="bg-white rounded-[2.8rem] p-8 md:p-10 border border-slate-100">
+                        <!-- Portal de Negociação (integrado ao layout do site) -->
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 font-sans">Ambiente seguro</p>
+                                <h3 class="text-navy font-bold text-2xl font-sans tracking-tight">Portal de Negociação</h3>
+                            </div>
+                            <button id="btnVoltar" type="button"
+                                class="text-slate-500 hover:text-accent transition font-bold text-xs uppercase tracking-widest font-sans"
+                                style="visibility:hidden;">
+                                ← Voltar
+                            </button>
+                        </div>
+
+                        <!-- VIEWS -->
+                        <div class="view active" id="vStart">
+                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-6 font-sans">
+                                Acesse suas ofertas personalizadas informando seu documento.
+                            </p>
+
+                            <div class="bg-slate-50 p-2 rounded-2xl flex gap-2 mb-4 border border-slate-100">
+                                <button id="segCPF" type="button"
+                                    class="flex-1 py-3 rounded-xl font-bold text-xs uppercase tracking-widest font-sans transition bg-white text-accent shadow-sm">
+                                    CPF
+                                </button>
+                                <button id="segCNPJ" type="button"
+                                    class="flex-1 py-3 rounded-xl font-bold text-xs uppercase tracking-widest font-sans transition text-slate-500 hover:text-accent">
+                                    CNPJ
+                                </button>
+                            </div>
+
+                            <input id="docInput" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00"
+                                class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent text-center font-bold tracking-widest transition font-sans">
+
+                            <button id="btnConsultar" type="button"
+                                class="w-full mt-4 bg-navy text-white font-bold py-5 rounded-2xl hover:bg-accent transition shadow-lg uppercase tracking-widest text-xs font-sans flex items-center justify-center gap-2">
+                                Localizar Contratos
+                            </button>
+
+                            <p class="mt-4 text-[10px] text-slate-400 font-bold uppercase tracking-widest font-sans text-center">
+                                Seus dados são tratados com sigilo e segurança.
+                            </p>
+                        </div>
+
+                        <div class="view" id="vLoading">
+                            <div class="text-center py-10">
+                                <div class="mx-auto mb-5 w-12 h-12 rounded-full border-4 border-slate-200 border-t-accent animate-spin"></div>
+                                <p class="text-slate-500 font-medium font-sans">Buscando informações nos nossos credores...</p>
+                            </div>
+                        </div>
+
+                        <div class="view" id="vConfirmName">
+                            <h4 class="text-navy font-bold text-xl font-sans mb-2">Confirme sua identidade</h4>
+                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-4 font-sans" id="confirmSubtitle">
+                                Selecione o nome/razão social correto vinculado ao documento:
+                            </p>
+
+                            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 text-slate-600 font-semibold text-sm text-center mb-5 font-sans">
+                                Selecione uma das opções abaixo:
+                            </div>
+
+                            <div id="nameOptions" class="grid gap-3"></div>
+
+                            <p class="mt-4 text-[10px] text-slate-400 font-bold uppercase tracking-widest font-sans text-center">
+                                Proteção antifraude ativa.
+                            </p>
+                        </div>
+
+                        <div class="view" id="vNext">
+                            <h4 class="text-navy font-bold text-xl font-sans mb-2">Suas Ofertas</h4>
+                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-5 font-sans" id="cardsIntro">
+                                Identificamos as seguintes pendências para negociação:
+                            </p>
+
+                            <div class="grid gap-4 mb-6" id="cardsGrid"></div>
+
+                            <button id="btnAuto" type="button"
+                                class="w-full bg-navy text-white font-bold py-5 rounded-2xl hover:bg-accent transition shadow-lg uppercase tracking-widest text-xs font-sans">
+                                Negociar agora
+                            </button>
+
+                            <button id="btnHumano" type="button"
+                                class="w-full mt-3 bg-white border-2 border-slate-100 text-navy font-bold py-5 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans">
+                                Falar com Atendente
+                            </button>
+                        </div>
+
+                        <div class="view" id="vNoRecord">
+                            <h4 class="text-navy font-bold text-xl font-sans mb-2">Nada encontrado</h4>
+                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-6 font-sans" id="noRecordMsg">
+                                Não localizamos pendências para este documento. Verifique os dados e tente novamente.
+                            </p>
+                            <button id="btnNovaConsultaNoRecord" type="button"
+                                class="w-full bg-navy text-white font-bold py-5 rounded-2xl hover:bg-accent transition shadow-lg uppercase tracking-widest text-xs font-sans">
+                                Nova Consulta
+                            </button>
+                        </div>
+
+                        <div class="view" id="vError">
+                            <h4 class="text-navy font-bold text-xl font-sans mb-2">Não foi possível concluir</h4>
+                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-6 font-sans" id="errorMsg">
+                                Não foi possível se conectar. Verifique sua conexão e tente novamente.
+                            </p>
+                            <button id="btnNovaConsultaErr" type="button"
+                                class="w-full bg-navy text-white font-bold py-5 rounded-2xl hover:bg-accent transition shadow-lg uppercase tracking-widest text-xs font-sans">
+                                Nova Consulta
+                            </button>
+                        </div>
+
+                        <div class="mt-8 text-center">
+                            <a href="#" id="openTerms" class="text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-accent transition font-sans">
+                                Termos e Privacidade
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TERMS OVERLAY -->
+                <div id="termsOverlay" class="fixed inset-0 hidden items-center justify-center z-[100] p-6"
+                     aria-hidden="true">
+                    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+                    <div class="relative bg-white rounded-3xl w-full max-w-lg p-8 border border-slate-100 shadow-2xl">
+                        <h3 class="text-navy font-bold text-xl font-sans mb-3">Termos e Política</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed font-sans mb-6">
+                            A QuatroC adota medidas técnicas e organizacionais para proteger os dados utilizados neste portal,
+                            com foco em confidencialidade, integridade e disponibilidade das informações.
+                        </p>
+                        <button id="closeTerms" type="button"
+                            class="w-full bg-navy text-white font-bold py-4 rounded-2xl hover:bg-accent transition shadow-lg uppercase tracking-widest text-xs font-sans">
+                            Entendi
+                        </button>
+                    </div>
+                </div>
+
+        </div>
+    </section>
+
+    <!-- Contato: Integrado ao Bitrix24 -->
+    <section id="contato" class="py-24 bg-white px-6">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-4xl text-navy mb-4 italic">Solicitar Diagnóstico Especializado</h2>
+                <p class="text-slate-500 font-medium leading-relaxed max-w-lg mx-auto">Preencha os dados abaixo. Um consultor sénior entrará em contacto para realizar a auditoria da sua carteira.</p>
+            </div>
+            
+            <form id="diagnostico-form" class="bg-neutralBg p-10 md:p-16 rounded-[4rem] shadow-sm border border-slate-100">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest font-sans">Nome do Contato</label>
+                        <input type="text" name="nome_contato" id="nome_contato" required class="w-full p-4 bg-white rounded-2xl outline-none focus:ring-2 focus:ring-accent transition shadow-sm font-sans" placeholder="Ex: João Silva">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest font-sans">Empresa</label>
+                        <input type="text" name="nome_empresa" id="nome_empresa" required class="w-full p-4 bg-white rounded-2xl outline-none focus:ring-2 focus:ring-accent transition shadow-sm font-sans" placeholder="Razão Social ou Fantasia">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest font-sans">E-mail Corporativo</label>
+                        <input type="email" name="email_corporativo" id="email_corporativo" required class="w-full p-4 bg-white rounded-2xl outline-none focus:ring-2 focus:ring-accent transition shadow-sm font-sans" placeholder="exemplo@empresa.com">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest font-sans">Telefone / WhatsApp</label>
+                        <input type="tel" name="telefone" id="telefone" required class="w-full p-4 bg-white rounded-2xl outline-none focus:ring-2 focus:ring-accent transition shadow-sm font-sans" placeholder="(00) 00000-0000">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest font-sans">Preferência de Retorno</label>
+                        <select name="preferencia_contato" id="preferencia_contato" class="w-full p-4 bg-white rounded-2xl outline-none focus:ring-2 focus:ring-accent transition shadow-sm appearance-none font-semibold text-navy font-sans">
+                            <option value="WhatsApp">WhatsApp</option>
+                            <option value="Telefone">Ligação Telefónica</option>
+                            <option value="E-mail">E-mail</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest font-sans">Volume em Aberto</label>
+                        <select name="volume_inadimplencia" id="volume_inadimplencia" class="w-full p-4 bg-white rounded-2xl outline-none focus:ring-2 focus:ring-accent transition shadow-sm appearance-none font-semibold text-navy font-sans">
+                            <option value="Até R$ 100k">Até R$ 100k</option>
+                            <option value="R$ 100k - R$ 500k">De R$ 100k a R$ 500k</option>
+                            <option value="Acima de R$ 500k">Acima de R$ 500k</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="mt-12 text-center">
+                    <button type="submit" class="w-full md:w-auto md:px-24 bg-navy text-white font-bold py-6 rounded-3xl hover:bg-navy-light transition shadow-2xl uppercase tracking-[0.2em] text-xs font-sans">Solicitar Auditoria Gratuita</button>
+                    <p id="form-status" class="mt-6 text-[10px] font-bold uppercase tracking-widest hidden font-sans"></p>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer class="bg-white border-t border-slate-100 pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-20">
+            <div>
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="bg-navy p-2 rounded-lg">
+                        <svg width="24" height="24" viewBox="0 0 100 100" fill="none">
+                            <path d="M30 35H45V45H55V35H70V65H55V55H45V65H30V35Z" fill="white"/>
+                        </svg>
+                    </div>
+                    <span class="text-xl font-extrabold text-navy tracking-tighter uppercase font-sans">QUATRO C</span>
+                </div>
+                <p class="text-slate-400 text-sm italic leading-relaxed max-w-xs font-sans">
+                    Gestão estratégica de ciclo de crédito e recuperação especializada de ativos B2B e corporativos.
+                </p>
+            </div>
+            <div class="grid grid-cols-2 gap-10 font-sans">
+                <div>
+                    <h5 class="text-navy font-bold text-[10px] uppercase tracking-widest mb-6">Links</h5>
+                    <ul class="text-slate-400 text-xs space-y-4 font-semibold">
+                        <li><a href="#home" class="hover:text-accent transition">Home</a></li>
+                        <li><a href="#ciclo" class="hover:text-accent transition">O Ciclo</a></li>
+                        <li><a href="#servicos" class="hover:text-accent transition">Serviços</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-navy font-bold text-[10px] uppercase tracking-widest mb-6">Suporte</h5>
+                    <ul class="text-slate-400 text-xs space-y-4 font-semibold">
+                        <li><a href="#autoatendimento" class="hover:text-accent transition">Autoatendimento</a></li>
+                        <li><a href="#contato" class="hover:text-accent transition">Privacidade</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <h5 class="text-navy font-bold text-[10px] uppercase tracking-widest mb-6 font-sans text-left">Contacto</h5>
+                <p class="text-slate-500 text-xs font-bold mb-4 flex items-center gap-2 font-sans text-left"><i class="fas fa-envelope text-accent"></i> comercial@quatroc.pt</p>
+                <div class="flex gap-4 mt-8">
+                    <a href="#" class="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-navy hover:bg-accent hover:text-white transition-all shadow-sm"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-navy hover:bg-accent hover:text-white transition-all shadow-sm"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 border-t border-slate-50 mt-20 pt-10 text-center font-sans">
+            <p class="text-[9px] font-black text-slate-300 uppercase tracking-[0.5em]">&copy; 2026 Quatro C Inteligência Financeira. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- WhatsApp -->
+    <div class="fixed bottom-10 right-10 z-50">
+        <a href="#" target="_blank" class="flex items-center bg-white p-2 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-slate-50 hover:scale-105 transition-all duration-300 group">
+            <div class="relative">
+                <div class="absolute inset-0 bg-[#25D366] rounded-full whatsapp-pulse opacity-25"></div>
+                <div class="relative bg-[#25D366] text-white w-14 h-14 flex items-center justify-center rounded-full shadow-lg">
+                    <i class="fab fa-whatsapp text-3xl"></i>
+                </div>
+            </div>
+            <div class="overflow-hidden max-w-0 opacity-0 group-hover:max-w-xs group-hover:opacity-100 transition-all duration-500 ease-in-out">
+                <div class="pl-4 pr-6">
+                    <p class="text-[10px] font-black uppercase text-navy tracking-widest whitespace-nowrap font-sans">Suporte Especializado</p>
+                    <p class="text-[9px] text-slate-400 whitespace-nowrap font-sans">Resposta em poucos minutos</p>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <script>
+        /**
+         * CONFIGURAÇÃO BITRIX24 PRODUÇÃO
+         */
+        const BITRIX_ENDPOINT = "https://grupoasserth.bitrix24.com.br/rest/1/15a2h0vrp7wfb31l/crm.lead.add.json";
+
+        document.getElementById('diagnostico-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button');
+            const status = document.getElementById('form-status');
+            
+            const nomeContato = document.getElementById('nome_contato').value;
+            const nomeEmpresa = document.getElementById('nome_empresa').value;
+            const emailCorp = document.getElementById('email_corporativo').value;
+            const telefone = document.getElementById('telefone').value;
+            const preferencia = document.getElementById('preferencia_contato').value;
+            const volume = document.getElementById('volume_inadimplencia').value;
+
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2 text-[10px]"></i> PROCESSANDO SOLICITAÇÃO...';
+            btn.disabled = true;
+
+            // Payload formatado para Bitrix24
+            const payload = {
+                fields: {
+                    "TITLE": `Lead Portal Quatro C: ${nomeEmpresa}`,
+                    "NAME": nomeContato,
+                    "COMPANY_TITLE": nomeEmpresa,
+                    "EMAIL": [{ "VALUE": emailCorp, "VALUE_TYPE": "WORK" }],
+                    "PHONE": [{ "VALUE": telefone, "VALUE_TYPE": "WORK" }],
+                    "COMMENTS": `Preferência de Contato: ${preferencia} | Volume de Inadimplência: ${volume}`,
+                    "SOURCE_ID": "WEB",
+                    "UTM_SOURCE": "portal_corporativo"
+                },
+                params: { "REGISTER_SONET_EVENT": "Y" }
+            };
+
+            try {
+                const response = await fetch(BITRIX_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    status.innerHTML = '<i class="fas fa-check-circle mr-2 text-green-500"></i> Diagnóstico solicitado! A nossa equipa entrará em contacto em breve.';
+                    status.classList.remove('hidden', 'text-red-500');
+                    status.classList.add('text-green-600');
+                    this.reset();
+                } else {
+                    throw new Error("Erro Bitrix");
+                }
+            } catch (error) {
+                status.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i> Houve um erro no envio. Por favor, tente o WhatsApp para um retorno imediato.';
+                status.classList.remove('hidden', 'text-green-600');
+                status.classList.add('text-red-500');
+                console.error("CORS Error: This form must be hosted on a real server (HTTPS) to communicate with Bitrix24.");
+            } finally {
+                btn.innerHTML = 'Solicitar Auditoria Gratuita';
+                btn.disabled = false;
             }
-
-            $("errorMsg").textContent = resp?.mensagem || "Autoatendimento indisponível no momento.";
-            setActiveView("vError");
-          }catch(e){
-            $("errorMsg").textContent = "Falha ao conectar no autoatendimento. Tente novamente.";
-            setActiveView("vError");
-          }
         });
 
-        grid.appendChild(card);
-      });
-    }
+        function handleSimSearch() {
+            const doc = document.getElementById('doc-id').value;
+            const searchBox = document.getElementById('search-box');
+            const resultBox = document.getElementById('result-box');
+            const btn = document.querySelector('#search-box button');
 
-    async function loadResumoDividas(){
-      try{
-        let data = foundRecord;
+            if (!doc.trim()) {
+                alert("Por favor, informe o documento para consulta.");
+                return;
+            }
 
-        // Se o back já devolveu cases, usa. Se não, pede pos_identidade
-        if (!data || !Array.isArray(data.cases) || data.cases.length === 0){
-          data = await callBackend("pos_identidade", { documento: currentDoc });
-          foundRecord = { ...(foundRecord||{}), ...(data||{}) };
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                searchBox.classList.add('hidden');
+                resultBox.classList.remove('hidden');
+            }, 1800);
         }
 
-        const cases = Array.isArray(foundRecord?.cases) ? foundRecord.cases : [];
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('main-nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('py-2', 'shadow-sm');
+                nav.classList.remove('py-4');
+            } else {
+                nav.classList.remove('py-2', 'shadow-sm');
+                nav.classList.add('py-4');
+            }
+        });
+    </script>
 
-        if (!cases.length){
+
+    <script>
+      // =========================
+      // PORTAL DE NEGOCIAÇÃO (motor do autoatendimento)
+      // Integrado ao layout do site (Tailwind + paleta do site)
+      // =========================
+
+      // Ponte Cloudflare Worker -> n8n
+      const CRM_ENDPOINT = "https://billowing-voice-6efd.asilvino19.workers.dev/";
+
+      // Chats
+      const CHAT_LINK_SASCAR        = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-sascar?theme=blue&pickup=y";
+      const CHAT_LINK_IRA           = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ira?theme=blue&pickup=y";
+      const CHAT_LINK_AMIL_DEFAULT  = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y";
+      const CHAT_LINK_REDE_AMERICAS = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ede-americas?theme=blue&pickup=y";
+
+      // Logos por credor
+      const LOGO_AMIL     = "https://asilvino19-beep.github.io/LogoAmil/LogoAmil.jpg";
+      const LOGO_MICHELIN = "https://asilvino19-beep.github.io/LogoMichelin/LogoMichelin.png";
+      const LOGO_SHAM     = "https://asilvino19-beep.github.io/LogoSham/LogoSham.jfif";
+      const LOGO_REDE     = "https://asilvino19-beep.github.io/LogoRedeAmericas/LogoRedeAmericas.jfif";
+
+      const $ = (id) => document.getElementById(id);
+
+      function onlyDigits(str){ return (str||"").replace(/\D/g,""); }
+      function isCPF(d){ return d.length === 11; }
+      function isCNPJ(d){ return d.length === 14; }
+
+      function norm(str){
+        return (str||"").toString().toUpperCase()
+          .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+          .replace(/\s+/g," ").trim();
+      }
+
+      function formatBRL(v){
+        const n = Number(String(v ?? "0").replace(/[^0-9,.-]/g,"").replace(".","").replace(",", ".")) || 0;
+        return n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+      }
+
+      // ====== De/Para credor (nome + logo + chat) ======
+      function getCredorPresentation(credorRaw, unidade){
+        const c = norm(credorRaw);
+
+        const isAmilHosp =
+          c.includes("AMIL HOSPITAIS") ||
+          c.includes("REDE AMERICAS IMPAR") ||
+          c.includes("REDE AMERICAS");
+
+        if (isAmilHosp){
+          const nomeUnidade = (unidade && String(unidade).trim()) ? String(unidade).trim() : "Atendimento Hospitalar";
+          const logo = c.includes("REDE AMERICAS") ? LOGO_REDE : LOGO_AMIL;
+          const chat = c.includes("REDE AMERICAS") ? CHAT_LINK_REDE_AMERICAS : CHAT_LINK_AMIL_DEFAULT;
+          return { nome: nomeUnidade, logo, chat, credorTag: c };
+        }
+
+        if (c.includes("AMIL OPERADORAS")){
+          return { nome:"Amil", logo:LOGO_AMIL, chat:CHAT_LINK_AMIL_DEFAULT, credorTag:c };
+        }
+
+        if (c.includes("SASCAR_IRA")){
+          return { nome:"Michelin | Equipamentos", logo:LOGO_MICHELIN, chat:CHAT_LINK_IRA, credorTag:c };
+        }
+
+        if (c.includes("SASCAR FIXA VARIAVEL")){
+          return { nome:"Michelin Connect Fleet", logo:LOGO_MICHELIN, chat:CHAT_LINK_SASCAR, credorTag:c };
+        }
+
+        if (c.includes("SANTA HELENA")){
+          return { nome:"Santa Helena Saúde", logo:LOGO_SHAM, chat:CHAT_LINK_AMIL_DEFAULT, credorTag:c };
+        }
+
+        return { nome: credorRaw || "Projeto", logo: "", chat: CHAT_LINK_AMIL_DEFAULT, credorTag:c };
+      }
+
+      function openChat(url){
+        window.open(url, "_blank", "noopener,noreferrer");
+      }
+
+      // Máscaras
+      function maskCPF(digits){
+        const d = digits.slice(0, 11);
+        let out = d;
+        if (d.length > 3) out = d.slice(0,3) + "." + d.slice(3);
+        if (d.length > 6) out = out.slice(0,7) + "." + out.slice(7);
+        if (d.length > 9) out = out.slice(0,11) + "-" + out.slice(11);
+        return out;
+      }
+      function maskCNPJ(digits){
+        const d = digits.slice(0, 14);
+        let out = d;
+        if (d.length > 2) out = d.slice(0,2) + "." + d.slice(2);
+        if (d.length > 5) out = out.slice(0,6) + "." + out.slice(6);
+        if (d.length > 8) out = out.slice(0,10) + "/" + out.slice(10);
+        if (d.length > 12) out = out.slice(0,15) + "-" + out.slice(15);
+        return out;
+      }
+
+      let currentView = "vStart";
+      let docType = "CPF";
+      let currentDoc = "";
+      let sessionId = Date.now().toString();
+      let foundRecord = null;
+
+      function applyMask(){
+        const input = $("docInput");
+        const digits = onlyDigits(input.value);
+        if (docType === "CPF"){
+          input.value = maskCPF(digits);
+          input.maxLength = 14;
+        } else {
+          input.value = maskCNPJ(digits);
+          input.maxLength = 18;
+        }
+      }
+      function detectTypeFromDigits(d){
+        if (d.length >= 12) return "CNPJ";
+        return "CPF";
+      }
+
+      function setActiveView(viewId){
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+        $(viewId).classList.add("active");
+        $("btnVoltar").style.visibility = (viewId === "vStart") ? "hidden" : "visible";
+        currentView = viewId;
+      }
+
+      function openOverlay(id){
+        const el = $(id);
+        el.classList.remove("hidden");
+        el.classList.add("flex");
+        el.setAttribute("aria-hidden", "false");
+      }
+      function closeOverlay(id){
+        const el = $(id);
+        el.classList.add("hidden");
+        el.classList.remove("flex");
+        el.setAttribute("aria-hidden", "true");
+      }
+
+      async function callBackend(step, payload) {
+        const body = { step, sessionId, ...payload };
+        const res = await fetch(CRM_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        if (!res.ok) throw new Error("Falha ao consultar back");
+        return await res.json();
+      }
+
+      function setDocType(type){
+        docType = type;
+
+        // Estado visual (Tailwind)
+        const cpf = $("segCPF");
+        const cnpj = $("segCNPJ");
+
+        if (type === "CPF"){
+          cpf.classList.add("bg-white","text-accent","shadow-sm");
+          cpf.classList.remove("text-slate-500");
+          cnpj.classList.remove("bg-white","text-accent","shadow-sm");
+          cnpj.classList.add("text-slate-500");
+        } else {
+          cnpj.classList.add("bg-white","text-accent","shadow-sm");
+          cnpj.classList.remove("text-slate-500");
+          cpf.classList.remove("bg-white","text-accent","shadow-sm");
+          cpf.classList.add("text-slate-500");
+        }
+
+        $("docInput").placeholder = (type==="CPF") ? "000.000.000-00" : "00.000.000/0000-00";
+        applyMask();
+      }
+
+      function goStart(){
+        currentDoc = "";
+        foundRecord = null;
+        $("docInput").value = "";
+        setDocType("CPF");
+        setActiveView("vStart");
+      }
+
+      // ====== Nomes para confirmação ======
+      function buildNameOptions(realName, typeUpper){
+        const name = String(realName || "").trim();
+        const clean = name.replace(/\s+/g," ").trim();
+        const parts = clean.split(" ").filter(Boolean);
+
+        if (!clean || parts.length < 2){
+          const base = (typeUpper === "CNPJ") ? "Razão Social" : "Nome Completo";
+          return [
+            clean || base,
+            typeUpper==="CNPJ" ? "Empresa Exemplo LTDA" : "Maria Helena Santos",
+            typeUpper==="CNPJ" ? "Comercial Brasil SA" : "João Pedro Almeida"
+          ];
+        }
+
+        const first = parts[0];
+        const second = parts[1];
+        const prefix = `${first} ${second}`;
+
+        const pfSuf = ["DA SILVA","DE SOUZA","ALMEIDA","PEREIRA","ROCHA","FERREIRA"];
+        const pjSuf = ["SERVIÇOS LTDA","COMÉRCIO LTDA","LOGÍSTICA LTDA","INDÚSTRIA SA","SOLUÇÕES LTDA","DISTRIBUIDORA LTDA"];
+
+        const realUpper = clean.toUpperCase();
+
+        const s1 = (typeUpper==="CNPJ" ? pjSuf[0] : pfSuf[0]);
+        const s2 = (typeUpper==="CNPJ" ? pjSuf[1] : pfSuf[1]);
+
+        let v1 = `${prefix} ${s1}`.toUpperCase();
+        let v2 = `${prefix} ${s2}`.toUpperCase();
+        let real = realUpper;
+
+        if (v1 === real) v1 = `${prefix} ${(typeUpper==="CNPJ" ? pjSuf[2] : pfSuf[2])}`.toUpperCase();
+        if (v2 === real || v2 === v1) v2 = `${prefix} ${(typeUpper==="CNPJ" ? pjSuf[3] : pfSuf[3])}`.toUpperCase();
+
+        return [v1, real, v2];
+      }
+
+      function renderNameOptions(typeUpper, realName){
+        const wrap = $("nameOptions");
+        wrap.innerHTML = "";
+
+        $("confirmSubtitle").textContent =
+          (typeUpper === "CNPJ")
+            ? "Selecione a razão social / nome social correto vinculado ao documento:"
+            : "Selecione o nome completo correto vinculado ao documento:";
+
+        const opts = buildNameOptions(realName, typeUpper);
+
+        opts.forEach(opt => {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-[11px] font-sans";
+          b.textContent = opt;
+
+          b.addEventListener("click", async () => {
+            const realUpper = String(realName || "").trim().toUpperCase();
+            const chosen = String(opt || "").trim().toUpperCase();
+
+            if (realUpper && chosen === realUpper){
+              try{
+                setActiveView("vLoading");
+
+                const data = await callBackend("confirmar_identidade", {
+                  documento: currentDoc,
+                  optionId: "identidade_sim"
+                });
+
+                foundRecord = { ...(foundRecord||{}), ...(data||{}) };
+                await loadResumoDividas();
+              }catch(e){
+                $("errorMsg").textContent = "Não foi possível confirmar os dados no momento. Tente novamente.";
+                setActiveView("vError");
+              }
+            } else {
+              alert("Nome incorreto para este documento por motivos de segurança.");
+              goStart();
+            }
+          });
+
+          wrap.appendChild(b);
+        });
+      }
+
+      // ====== Resumo / Cards ======
+      function sumParcelas(parcelas){
+        const arr = Array.isArray(parcelas) ? parcelas : [];
+        let t = 0;
+        for (const p of arr){
+          const v = Number(p?.Valor ?? p?.ValorOriginal ?? p?._ValorEmAberto ?? p?.valor ?? 0) || 0;
+          t += v;
+        }
+        return t;
+      }
+
+      function renderCards(cases){
+        const grid = $("cardsGrid");
+        grid.innerHTML = "";
+
+        const list = Array.isArray(cases) ? cases : [];
+
+        if (!list.length) {
           $("noRecordMsg").textContent = "Não identificamos pendências vinculadas a este documento.";
           setActiveView("vNoRecord");
           return;
         }
 
-        renderCards(cases);
-        setActiveView("vNext");
-      }catch(e){
-        $("errorMsg").textContent = "Não foi possível carregar o resumo no momento. Tente novamente.";
-        setActiveView("vError");
+        list.forEach((c, idx) => {
+          const credorRaw = c?.credor || c?.Credor || "";
+          const unidade = c?.unidade || c?.Unidade || "";
+          const pres = getCredorPresentation(credorRaw, unidade);
+
+          const contrato = c?.numeroContrato || c?.NumeroContrato || c?.Contrato || "-";
+          const total = sumParcelas(c?.parcelas || c?.Parcelas || []);
+
+          const card = document.createElement("div");
+          card.className = "p-6 border-2 border-slate-100 rounded-2xl hover:border-accent transition bg-white";
+
+          card.innerHTML = `
+            <div class="flex items-center gap-4">
+              <img src="${pres.logo || ""}" class="w-12 h-12 rounded-xl bg-white border border-slate-100 object-contain" alt="logo"
+                   onerror="this.style.display='none'">
+              <div>
+                <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 font-sans">Credor</p>
+                <p class="text-navy font-extrabold text-base font-sans leading-tight">${pres.nome}</p>
+                <p class="text-slate-500 text-xs font-semibold font-sans">Contrato: ${String(contrato)}</p>
+              </div>
+            </div>
+
+            <div class="mt-5 flex items-center justify-between">
+              <span class="text-slate-500 text-sm font-semibold font-sans">Valor</span>
+              <span class="text-navy text-lg font-black font-sans">${formatBRL(total)}</span>
+            </div>
+
+            <button class="w-full mt-4 bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans"
+                    type="button" data-idx="${idx}">
+              Negociar este contrato
+            </button>
+          `;
+
+          card.querySelector("button[data-idx]").addEventListener("click", async () => {
+            try{
+              setActiveView("vLoading");
+              const resp = await callBackend("negociar_auto", {
+                documento: currentDoc,
+                credor: credorRaw,
+                numeroContrato: c?.numeroContrato || c?.NumeroContrato || null,
+                idContrato: c?.idContrato || c?.IDContrato || null
+              });
+
+              if (resp?.url){
+                window.open(resp.url, "_blank", "noopener,noreferrer");
+                setActiveView("vNext");
+                return;
+              }
+
+              $("errorMsg").textContent = resp?.mensagem || "Autoatendimento indisponível no momento.";
+              setActiveView("vError");
+            }catch(e){
+              $("errorMsg").textContent = "Falha ao conectar no autoatendimento. Tente novamente.";
+              setActiveView("vError");
+            }
+          });
+
+          grid.appendChild(card);
+        });
       }
-    }
 
-    // =========================
-    // EVENTOS (layout novo + motor raiz)
-    // =========================
-    $("segCPF").addEventListener("click", () => setDocType("CPF"));
-    $("segCNPJ").addEventListener("click", () => setDocType("CNPJ"));
+      async function loadResumoDividas(){
+        try{
+          let data = foundRecord;
 
-    $("docInput").addEventListener("input", () => {
-      const digits = onlyDigits($("docInput").value);
-      const inferred = detectTypeFromDigits(digits);
-      if (inferred !== docType) setDocType(inferred);
-      applyMask();
-    });
+          if (!data || !Array.isArray(data.cases) || data.cases.length === 0){
+            data = await callBackend("pos_identidade", { documento: currentDoc });
+            foundRecord = { ...(foundRecord||{}), ...(data||{}) };
+          }
 
-    $("btnVoltar").addEventListener("click", goStart);
-    $("btnNovaConsultaNoRecord").addEventListener("click", goStart);
-    $("btnNovaConsultaErr").addEventListener("click", goStart);
+          const cases = Array.isArray(foundRecord?.cases) ? foundRecord.cases : [];
 
-    $("openTerms").addEventListener("click", (e) => { e.preventDefault(); openOverlay("termsOverlay"); });
-    $("closeTerms").addEventListener("click", () => closeOverlay("termsOverlay"));
-    $("termsOverlay").addEventListener("click", (e) => { if (e.target.id === "termsOverlay") closeOverlay("termsOverlay"); });
+          if (!cases.length){
+            $("noRecordMsg").textContent = "Não identificamos pendências vinculadas a este documento.";
+            setActiveView("vNoRecord");
+            return;
+          }
 
-    // Consultar (consulta_divida do raiz)
-    $("btnConsultar").addEventListener("click", async () => {
-      const digits = onlyDigits($("docInput").value);
-      currentDoc = digits;
-
-      if (!isCPF(digits) && !isCNPJ(digits)){
-        $("errorMsg").textContent = "Documento inválido. Verifique e tente novamente.";
-        setActiveView("vError");
-        return;
+          renderCards(cases);
+          setActiveView("vNext");
+        }catch(e){
+          $("errorMsg").textContent = "Não foi possível carregar o resumo no momento. Tente novamente.";
+          setActiveView("vError");
+        }
       }
 
-      setActiveView("vLoading");
+      // =========================
+      // EVENTOS
+      // =========================
+      $("segCPF").addEventListener("click", () => setDocType("CPF"));
+      $("segCNPJ").addEventListener("click", () => setDocType("CNPJ"));
 
-      try {
-        const data = await callBackend("consulta_divida", { documento: digits });
+      $("docInput").addEventListener("input", () => {
+        const digits = onlyDigits($("docInput").value);
+        const inferred = detectTypeFromDigits(digits);
+        if (inferred !== docType) setDocType(inferred);
+        applyMask();
+      });
 
-        // Se não localizou
-        if (!data || data.clienteLocalizado === false || (data.temDivida === false && data.proximoStep === "consulta_divida")){
-          $("noRecordMsg").textContent = (data?.mensagens?.[0]?.texto)
-            ? data.mensagens[0].texto
-            : "Não localizamos contrato vinculado a este documento. Verifique se o documento informado está correto.";
-          setActiveView("vNoRecord");
+      $("btnVoltar").addEventListener("click", goStart);
+      $("btnNovaConsultaNoRecord").addEventListener("click", goStart);
+      $("btnNovaConsultaErr").addEventListener("click", goStart);
+
+      $("openTerms").addEventListener("click", (e) => { e.preventDefault(); openOverlay("termsOverlay"); });
+      $("closeTerms").addEventListener("click", () => closeOverlay("termsOverlay"));
+      $("termsOverlay").addEventListener("click", (e) => { if (e.target.id === "termsOverlay") closeOverlay("termsOverlay"); });
+
+      $("btnConsultar").addEventListener("click", async () => {
+        const digits = onlyDigits($("docInput").value);
+        currentDoc = digits;
+
+        if (!isCPF(digits) && !isCNPJ(digits)){
+          $("errorMsg").textContent = "Documento inválido. Verifique e tente novamente.";
+          setActiveView("vError");
           return;
         }
 
-        foundRecord = data;
-
-        const typeUpper = (data.type || (isCNPJ(digits) ? "CNPJ" : "CPF")).toUpperCase();
-        const realName = (data.fullName || data.displayName || "").trim();
-
-        if (!realName){
-          $("noRecordMsg").textContent = "Não localizamos cadastro vinculado a este documento. Verifique os dados e tente novamente.";
-          setActiveView("vNoRecord");
-          return;
-        }
-
-        renderNameOptions(typeUpper, realName);
-        setActiveView("vConfirmName");
-
-      } catch (err) {
-        $("errorMsg").textContent = "Não foi possível concluir a consulta no momento. Tente novamente.";
-        setActiveView("vError");
-      }
-    });
-
-    // Botão "Negociar agora" (usa o primeiro case)
-    $("btnAuto").addEventListener("click", async () => {
-      const cases = Array.isArray(foundRecord?.cases) ? foundRecord.cases : [];
-      if (!cases.length){
-        $("errorMsg").textContent = "Não há pendências para seguir.";
-        return setActiveView("vError");
-      }
-
-      const chosen = cases[0];
-      const credorRaw = chosen?.credor || chosen?.Credor || "";
-
-      try{
         setActiveView("vLoading");
 
-        const resp = await callBackend("negociar_auto", {
-          documento: currentDoc,
-          credor: credorRaw,
-          numeroContrato: chosen?.numeroContrato || chosen?.NumeroContrato || null,
-          idContrato: chosen?.idContrato || chosen?.IDContrato || null
-        });
+        try {
+          const data = await callBackend("consulta_divida", { documento: digits });
 
-        if (resp?.url){
-          window.open(resp.url, "_blank", "noopener,noreferrer");
-          setActiveView("vNext");
-          return;
+          if (!data || data.clienteLocalizado === false || (data.temDivida === false && data.proximoStep === "consulta_divida")){
+            $("noRecordMsg").textContent = (data?.mensagens?.[0]?.texto)
+              ? data.mensagens[0].texto
+              : "Não localizamos contrato vinculado a este documento. Verifique se o documento informado está correto.";
+            setActiveView("vNoRecord");
+            return;
+          }
+
+          foundRecord = data;
+
+          const typeUpper = (data.type || (isCNPJ(digits) ? "CNPJ" : "CPF")).toUpperCase();
+          const realName = (data.fullName || data.displayName || "").trim();
+
+          if (!realName){
+            $("noRecordMsg").textContent = "Não localizamos cadastro vinculado a este documento. Verifique os dados e tente novamente.";
+            setActiveView("vNoRecord");
+            return;
+          }
+
+          renderNameOptions(typeUpper, realName);
+          setActiveView("vConfirmName");
+
+        } catch (err) {
+          $("errorMsg").textContent = "Não foi possível concluir a consulta no momento. Tente novamente.";
+          setActiveView("vError");
+        }
+      });
+
+      $("btnAuto").addEventListener("click", async () => {
+        const cases = Array.isArray(foundRecord?.cases) ? foundRecord.cases : [];
+        if (!cases.length){
+          $("errorMsg").textContent = "Não há pendências para seguir.";
+          return setActiveView("vError");
         }
 
-        $("errorMsg").textContent = resp?.mensagem || "Autoatendimento indisponível no momento.";
-        setActiveView("vError");
-      }catch(e){
-        $("errorMsg").textContent = "Falha ao conectar no autoatendimento. Tente novamente.";
-        setActiveView("vError");
-      }
-    });
+        const chosen = cases[0];
+        const credorRaw = chosen?.credor || chosen?.Credor || "";
 
-    // Botão "Falar com Atendente" (abre chat do 1º case; se quiser modal de escolha eu adiciono depois)
-    $("btnHumano").addEventListener("click", () => {
-      const cases = Array.isArray(foundRecord?.cases) ? foundRecord.cases : [];
-      if (!cases.length){
-        $("errorMsg").textContent = "Não foi possível identificar o projeto para atendimento.";
-        return setActiveView("vError");
-      }
+        try{
+          setActiveView("vLoading");
 
-      const c = cases[0];
-      const credorRaw = c?.credor || c?.Credor || "";
-      const unidade = c?.unidade || c?.Unidade || "";
-      const pres = getCredorPresentation(credorRaw, unidade);
+          const resp = await callBackend("negociar_auto", {
+            documento: currentDoc,
+            credor: credorRaw,
+            numeroContrato: chosen?.numeroContrato || chosen?.NumeroContrato || null,
+            idContrato: chosen?.idContrato || chosen?.IDContrato || null
+          });
 
-      openChat(pres.chat);
-    });
+          if (resp?.url){
+            window.open(resp.url, "_blank", "noopener,noreferrer");
+            setActiveView("vNext");
+            return;
+          }
 
-    // init
-    (function init(){
-      $("logoImg").src = LOGO_URL;
-      setDocType("CPF");
-    })();
-  </script>
+          $("errorMsg").textContent = resp?.mensagem || "Autoatendimento indisponível no momento.";
+          setActiveView("vError");
+        }catch(e){
+          $("errorMsg").textContent = "Falha ao conectar no autoatendimento. Tente novamente.";
+          setActiveView("vError");
+        }
+      });
+
+      $("btnHumano").addEventListener("click", () => {
+        const cases = Array.isArray(foundRecord?.cases) ? foundRecord.cases : [];
+        if (!cases.length){
+          $("errorMsg").textContent = "Não foi possível identificar o projeto para atendimento.";
+          return setActiveView("vError");
+        }
+
+        const c = cases[0];
+        const credorRaw = c?.credor || c?.Credor || "";
+        const unidade = c?.unidade || c?.Unidade || "";
+        const pres = getCredorPresentation(credorRaw, unidade);
+
+        openChat(pres.chat);
+      });
+
+      // init
+      (function init(){
+        setDocType("CPF");
+      })();
+    </script>
+
 </body>
 </html>
